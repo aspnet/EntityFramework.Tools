@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0-preview3-*",
+  "dependencies": {
+    "Microsoft.Extensions.CommandLineUtils.Sources": {
+      "version": "1.1.0-*",
+      "type": "build"
+    }
+  },
+  "buildOptions": {
+    "outputName": "ef",
+    "emitEntryPoint": true,
+    "keyFile": "../../tools/Key.snk",
+    "compile": {
+      "includeFiles": [
+        "../Shared/CommandLineApplicationExtensions.cs",
+        "../Microsoft.EntityFrameworkCore.Design/Design/IOperationLogHandler.cs",
+        "../Microsoft.EntityFrameworkCore.Design/Design/IOperationResultHandler.cs",
+        "../Microsoft.EntityFrameworkCore.Design/Design/OperationLogHandler.cs",
+        "../Microsoft.EntityFrameworkCore.Design/Design/OperationResultHandler.cs"
+      ]
+    }
+  },
+  "configurations": {
+    "Debug_x86": {
+      "buildOptions": {
+        "platform": "anycpu32bitpreferred",
+        "define": [
+          "DEBUG"
+        ],
+        "outputName": "ef.x86"
+      }
+    },
+    "Release_x86": {
+      "buildOptions": {
+        "platform": "anycpu32bitpreferred",
+        "outputName": "ef.x86"
+      }
+    }
+  },
+  "frameworks": {
+    "net451": { },
+    "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.0"
+        }
+      }
+    }
+  }
+}

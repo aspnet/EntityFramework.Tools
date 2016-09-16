@@ -1,0 +1,30 @@
+﻿{
+  "version": "1.0.0-preview3-*",
+  "buildOptions": {
+    "emitEntryPoint": true,
+    "outputName": "dotnet-ef",
+    "keyFile": "../../tools/Key.snk",
+    "compile": {
+      "includeFiles": [
+        "../Shared/CommandLineApplicationExtensions.cs"
+      ]
+    }
+  },
+  "dependencies": {
+    "Microsoft.DotNet.Cli.Utils": "1.0.0-*",
+    "Microsoft.Extensions.CommandLineUtils.Sources": {
+      "version": "1.1.0-*",
+      "type": "build"
+    }
+  },
+  "frameworks": {
+    "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "version": "1.0.0",
+          "type": "platform"
+        }
+      }
+    }
+  }
+}

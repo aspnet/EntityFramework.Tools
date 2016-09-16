@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0-*",
+  "dependencies": {
+    "Microsoft.EntityFrameworkCore.Sqlite": "1.0.1",
+    "Microsoft.EntityFrameworkCore.Design": {
+      "target": "project"
+    },
+    "NETStandard.Library": "1.6.0"
+  },
+  "frameworks": {
+    "netstandard1.3": {}
+  }
+}

@@ -1,0 +1,21 @@
+{
+    "adx": { // Packages written by the ADX team and that ship on NuGet.org
+        "rules": [
+            "AdxVerificationCompositeRule"
+        ],
+        "packages": {
+            "Microsoft.EntityFrameworkCore.Design": { },
+            "Microsoft.EntityFrameworkCore.Tools.DotNet": {
+                "DOC_MISSING": {
+                    "lib/netcoreapp1.0/dotnet-ef.dll": "Not a class library. Docs not required for CLI tools"
+                }
+            },
+            "Microsoft.EntityFrameworkCore.Tools.VisualStudio": { }
+        }
+    },
+    "Default": { // Rules to run for packages not listed in any other set.
+        "rules": [
+            "DefaultCompositeRule"
+        ]
+    }
+}

@@ -1,0 +1,20 @@
+{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "emitEntryPoint": true
+  },
+  "dependencies": {
+    "Microsoft.EntityFrameworkCore.Design": {
+      "type": "build",
+      "target": "project"
+    },
+    "Microsoft.EntityFrameworkCore.Sqlite.Design": "1.0.1",
+    "Microsoft.AspNetCore.Hosting": "1.0.0",
+    "DesktopClassLibrary": {
+      "target": "project"
+    }
+  },
+  "frameworks": {
+    "net451": {}
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "buildOptions": {
+    "keyFile": "../../tools/Key.snk",
+    "preserveCompilationContext": true
+  },
+  "dependencies": {
+    "Tools.Console": {
+      "target": "project"
+    },
+    "Microsoft.EntityFrameworkCore.Design.FunctionalTests": {
+      "target": "project"
+    }
+  },
+  "testRunner": "xunit",
+  "frameworks": {
+    "net451": {}
+  }
+}
