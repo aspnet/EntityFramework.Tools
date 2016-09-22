@@ -11,8 +11,8 @@
   "dependencies": {
     "dotnet-test-xunit": "2.2.0-*",
     "Microsoft.DotNet.Cli.Utils": "1.0.0-*",
-    "Tools.DotNet": "1.0.0-*",
-    "Tools.Console": "1.0.0-*",
+    "Microsoft.EntityFrameworkCore.Tools.DotNet": "1.0.0-*",
+    "ef": "1.0.0-*",
     "xunit": "2.2.0-*"
   },
   "testRunner": "xunit",

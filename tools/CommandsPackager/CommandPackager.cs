@@ -32,12 +32,12 @@ namespace CommandPackager
 
         private async Task PackToolsVisualStudio()
         {
-            var project = ProjectContext.Create(Path.Combine(_baseDir, "src", "Tools.VisualStudio"), FrameworkConstants.CommonFrameworks.Net451);
+            var project = ProjectContext.Create(Path.Combine(_baseDir, "src", "Microsoft.EntityFrameworkCore.Tools.VisualStudio"), FrameworkConstants.CommonFrameworks.Net451);
             var props = "configuration=" + _config;
 
             var version = project.ProjectFile.Version.ToNormalizedString();
             await Nuget("pack",
-                Path.Combine(_baseDir, "src", "Tools.VisualStudio", "project.nuspec"),
+                Path.Combine(_baseDir, "src", "Microsoft.EntityFrameworkCore.Tools.VisualStudio", "Microsoft.EntityFrameworkCore.Tools.VisualStudio.nuspec"),
                 "-Verbosity", "detailed",
                 "-OutputDirectory", Path.Combine(_baseDir, "artifacts/build"),
                 "-Version", version,
@@ -46,14 +46,14 @@ namespace CommandPackager
 
         private async Task PackToolsDotNet()
         {
-            var project = ProjectContext.Create(Path.Combine(_baseDir, "src", "Tools.DotNet"), FrameworkConstants.CommonFrameworks.NetCoreApp10);
+            var project = ProjectContext.Create(Path.Combine(_baseDir, "src", "Microsoft.EntityFrameworkCore.Tools.DotNet"), FrameworkConstants.CommonFrameworks.NetCoreApp10);
             var props = "configuration=" + _config;
             props += ";dotnetcliutils=" + GetLockFileVersion(project, "Microsoft.DotNet.Cli.Utils");
             props += ";netcoreapp=" + GetLockFileVersion(project, "Microsoft.NETCore.App");
 
             var version = project.ProjectFile.Version.ToNormalizedString();
             await Nuget("pack",
-                Path.Combine(project.ProjectDirectory, "project.nuspec"),
+                Path.Combine(project.ProjectDirectory, "Microsoft.EntityFrameworkCore.Tools.DotNet.nuspec"),
                 "-Verbosity", "detailed",
                 "-OutputDirectory", Path.Combine(_baseDir, "artifacts/build"),
                 "-Version", version,

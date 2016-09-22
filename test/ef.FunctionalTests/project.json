@@ -4,7 +4,7 @@
     "preserveCompilationContext": true
   },
   "dependencies": {
-    "Tools.Console": {
+    "ef": {
       "target": "project"
     },
     "Microsoft.EntityFrameworkCore.Design.FunctionalTests": {

@@ -1,14 +1,25 @@
 ﻿{
   "version": "1.0.0-*",
+  "description": ".NET Core SDK command line tools for Entity Framework Core.",
   "buildOptions": {
     "emitEntryPoint": true,
     "outputName": "dotnet-ef",
     "keyFile": "../../tools/Key.snk",
     "compile": {
       "includeFiles": [
-        "../Shared/CommandLineApplicationExtensions.cs"
+        "../ef/Extensions/CommandLineApplicationExtensions.cs"
       ]
     }
+  },
+  "packOptions": {
+    "tags": [
+      "Entity Framework Core",
+      "entity-framework-core",
+      "EF",
+      "Data",
+      "O/RM"
+    ],
+    "packageType": "DotnetCliTool"
   },
   "dependencies": {
     "Microsoft.DotNet.Cli.Utils": "1.0.0-*",

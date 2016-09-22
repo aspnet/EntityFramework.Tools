@@ -1,5 +1,6 @@
 {
   "version": "1.0.0-*",
+  "description": "Command-line tools for Entity Framework Core",
   "dependencies": {
     "Microsoft.Extensions.CommandLineUtils.Sources": {
       "version": "1.1.0-*",
@@ -7,12 +8,10 @@
     }
   },
   "buildOptions": {
-    "outputName": "ef",
     "emitEntryPoint": true,
     "keyFile": "../../tools/Key.snk",
     "compile": {
       "includeFiles": [
-        "../Shared/CommandLineApplicationExtensions.cs",
         "../Microsoft.EntityFrameworkCore.Design/Design/IOperationLogHandler.cs",
         "../Microsoft.EntityFrameworkCore.Design/Design/IOperationResultHandler.cs",
         "../Microsoft.EntityFrameworkCore.Design/Design/OperationLogHandler.cs",

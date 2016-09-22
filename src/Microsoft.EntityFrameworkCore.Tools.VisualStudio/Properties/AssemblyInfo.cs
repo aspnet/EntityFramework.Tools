@@ -9,4 +9,3 @@ using System.Resources;
 [assembly: AssemblyCompany("Microsoft Corporation.")]
 [assembly: AssemblyCopyright("© Microsoft Corporation. All rights reserved.")]
 [assembly: AssemblyProduct("Microsoft EntityFramework Core")]
-[assembly: AssemblyDescription("Command-line tools for Entity Framework Core")]

@@ -22,12 +22,11 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="../Shared/_._" target="lib/netstandard1.3/" />
-    <file src="../Shared/_._" target="lib/net451/" />
+    <file src="lib/**/*" target="" />
     <file src="bin/$configuration$/net451/Microsoft.EntityFrameworkCore.Tools.VisualStudio.dll" target="tools/" />
     <file src="tools/**/*" target=""/>
-    <file src="../Tools.Console/bin/$configuration$/net451/ef.exe" target="tools/net451/" />
-    <file src="../Tools.Console/bin/$configuration$_x86/net451/ef.x86.exe" target="tools/net451/" />
-    <file src="../Tools.Console/bin/$configuration$/netcoreapp1.0/ef.dll" target="tools/netcoreapp1.0/" />
+    <file src="../ef/bin/$configuration$/net451/ef.exe" target="tools/net451/" />
+    <file src="../ef/bin/$configuration$_x86/net451/ef.x86.exe" target="tools/net451/" />
+    <file src="../ef/bin/$configuration$/netcoreapp1.0/ef.dll" target="tools/netcoreapp1.0/" />
   </files>
 </package>

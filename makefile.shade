@@ -14,7 +14,7 @@ k-standard-goals
   @{
     Directory.CreateDirectory(BUILD_DIR_LOCAL);
     foreach (var p in Files
-      .Include(Path.Combine(BUILD_DIR_LOCAL, "**\\Tools.*.nupkg"))
+      .Include(Path.Combine(BUILD_DIR_LOCAL, "ef.*.nupkg"))
       )
     {
       Log.Info("Deleting " + p);
@@ -25,6 +25,6 @@ k-standard-goals
 #repack-tools .remove-intermediates target='compile' if='Directory.Exists("src") && !IsTravisCi'
   @{
         var configurationX86 = E("Configuration") + "_x86";
-        DotnetBuild("src/Tools.Console", configurationX86, "net451");
+        DotnetBuild("src/ef", configurationX86, "net451");
         Dotnet("run -p tools/CommandsPackager " + E("Configuration"));
    }
