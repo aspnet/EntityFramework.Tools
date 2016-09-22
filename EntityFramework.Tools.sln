@@ -13,7 +13,7 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ef", "src\ef\ef.xproj", "{E
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.EntityFrameworkCore.Tools.DotNet", "src\Microsoft.EntityFrameworkCore.Tools.DotNet\Microsoft.EntityFrameworkCore.Tools.DotNet.xproj", "{31132653-55A2-4ADB-BABB-60F386D2A98E}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.EntityFrameworkCore.Tools.VisualStudio", "src\Microsoft.EntityFrameworkCore.Tools.VisualStudio\Microsoft.EntityFrameworkCore.Tools.VisualStudio.xproj", "{61B63762-135C-4891-BD9C-7AC200DBE3EE}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.EntityFrameworkCore.Tools", "src\Microsoft.EntityFrameworkCore.Tools\Microsoft.EntityFrameworkCore.Tools.xproj", "{61B63762-135C-4891-BD9C-7AC200DBE3EE}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.EntityFrameworkCore.Design.FunctionalTests", "test\Microsoft.EntityFrameworkCore.Design.FunctionalTests\Microsoft.EntityFrameworkCore.Design.FunctionalTests.xproj", "{F8639B0E-DC5D-4E65-BBCD-C5010E640CA4}"
 EndProject
@@ -23,7 +23,7 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ef.FunctionalTests", "test\
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.EntityFrameworkCore.Tools.DotNet.FunctionalTests", "test\Microsoft.EntityFrameworkCore.Tools.DotNet.FunctionalTests\Microsoft.EntityFrameworkCore.Tools.DotNet.FunctionalTests.xproj", "{100C88C9-C14D-4B4D-ADE9-50FBC6A03B88}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.EntityFrameworkCore.Tools.VisualStudio.Tests", "test\Microsoft.EntityFrameworkCore.Tools.VisualStudio.Tests\Microsoft.EntityFrameworkCore.Tools.VisualStudio.Tests.xproj", "{6B78CB0B-7B3D-4ED3-B584-F9FA7B16E41F}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.EntityFrameworkCore.Tools.Tests", "test\Microsoft.EntityFrameworkCore.Tools.Tests\Microsoft.EntityFrameworkCore.Tools.Tests.xproj", "{6B78CB0B-7B3D-4ED3-B584-F9FA7B16E41F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

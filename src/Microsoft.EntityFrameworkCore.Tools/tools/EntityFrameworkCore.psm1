@@ -858,7 +858,7 @@ function InvokeOperation($commonParams, [switch] $json, [switch] $skipBuild) {
 
         Write-Verbose "Running '$exe'"
 
-        # Invoke-Process comes from the native module Microsoft.EntityFrameworkCore.Tools.VisualStudio
+        # Invoke-Process comes from the native module Microsoft.EntityFrameworkCore.Tools
         if ($json) {
             Invoke-Process -Executable $exe -Arguments $arguments -RedirectByPrefix -ErrorAction SilentlyContinue -ErrorVariable invokeErrors -JsonOutput | ConvertFrom-Json
         } else {
