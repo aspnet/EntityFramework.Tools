@@ -9,15 +9,7 @@
   },
   "buildOptions": {
     "emitEntryPoint": true,
-    "keyFile": "../../tools/Key.snk",
-    "compile": {
-      "includeFiles": [
-        "../Microsoft.EntityFrameworkCore.Design/Design/IOperationLogHandler.cs",
-        "../Microsoft.EntityFrameworkCore.Design/Design/IOperationResultHandler.cs",
-        "../Microsoft.EntityFrameworkCore.Design/Design/OperationLogHandler.cs",
-        "../Microsoft.EntityFrameworkCore.Design/Design/OperationResultHandler.cs"
-      ]
-    }
+    "keyFile": "../../tools/Key.snk"
   },
   "configurations": {
     "Debug_x86": {
