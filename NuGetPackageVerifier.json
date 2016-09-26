@@ -5,9 +5,12 @@
         ],
         "packages": {
             "Microsoft.EntityFrameworkCore.Tools.DotNet": {
-                "DOC_MISSING": {
-                    "lib/netcoreapp1.0/dotnet-ef.dll": "Not a class library. Docs not required for CLI tools"
-                }
+                "nowarn": {
+                    "DOC_MISSING": {
+                        "lib/netcoreapp1.0/dotnet-ef.dll": "Not a class library. Docs not required for CLI tools"
+                    }
+                },
+                "packageTypes": [ "DotnetCliTool" ]
             },
             "Microsoft.EntityFrameworkCore.Tools": { }
         }
