@@ -12,7 +12,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Internal
     {
         private readonly object _executor;
         private readonly Assembly _commandsAssembly;
-        private const string LogHandlerTypeName = "Microsoft.EntityFrameworkCore.Design.OperationLogHandler";
+        private const string ReportHandlerTypeName = "Microsoft.EntityFrameworkCore.Design.OperationReportHandler";
         private const string ResultHandlerTypeName = "Microsoft.EntityFrameworkCore.Design.OperationResultHandler";
         private readonly Type _resultHandlerType;
 
@@ -27,18 +27,17 @@ namespace Microsoft.EntityFrameworkCore.Tools.Internal
             : base(assembly, startupAssembly, projectDir, contentRootPath, dataDirectory, rootNamespace, environment)
         {
             _commandsAssembly = Assembly.Load(new AssemblyName { Name = DesignAssemblyName });
-            var logHandlerType = _commandsAssembly.GetType(LogHandlerTypeName, throwOnError: true, ignoreCase: false);
+            var reportHandlerType = _commandsAssembly.GetType(ReportHandlerTypeName, throwOnError: true, ignoreCase: false);
 
-            var logHandler = Activator.CreateInstance(logHandlerType,
-                (Action<string>)Reporter.Error,
+            var reportHandler = Activator.CreateInstance(
+                reportHandlerType,
                 (Action<string>)Reporter.Warning,
                 (Action<string>)Reporter.Output,
-                (Action<string>)Reporter.Verbose,
                 (Action<string>)Reporter.Verbose);
 
             _executor = Activator.CreateInstance(
                 _commandsAssembly.GetType(ExecutorTypeName, throwOnError: true, ignoreCase: false),
-                logHandler,
+                reportHandler,
                 new Dictionary<string, string>
                 {
                     { "targetName", AssemblyFileName },

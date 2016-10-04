@@ -3,13 +3,11 @@
 
 namespace Microsoft.EntityFrameworkCore.Design
 {
-    public interface IOperationLogHandler
+    public interface IOperationReportHandler
     {
         int Version { get; }
-        void WriteError(string message);
-        void WriteWarning(string message);
-        void WriteInformation(string message);
-        void WriteDebug(string message);
-        void WriteTrace(string message);
+        void OnWarning(string message);
+        void OnInformation(string message);
+        void OnVerbose(string message);
     }
 }

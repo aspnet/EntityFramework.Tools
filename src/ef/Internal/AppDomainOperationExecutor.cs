@@ -40,12 +40,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Internal
                 _domain.SetData("DataDirectory", dataDirectory);
             }
 
-            var logHandler = new OperationLogHandler(
-                Reporter.Error,
-                Reporter.Warning,
-                Reporter.Output,
-                Reporter.Verbose,
-                Reporter.Verbose);
+            var reportHandler = new OperationReportHandler();
 
             _executor = _domain.CreateInstanceAndUnwrap(
                 DesignAssemblyName,
@@ -55,7 +50,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Internal
                 null,
                 new object[]
                 {
-                    logHandler,
+                    reportHandler,
                     new Hashtable
                     {
                         { "targetName", AssemblyFileName },
@@ -66,7 +61,8 @@ namespace Microsoft.EntityFrameworkCore.Tools.Internal
                         { "environment", EnvironmentName }
                     }
                 },
-                null, null);
+                null,
+                null);
         }
 
         protected override object CreateResultHandler()
