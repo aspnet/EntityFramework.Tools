@@ -59,11 +59,11 @@
     # Functions to export from this module
     FunctionsToExport = (
         'Add-Migration',
+        'Drop-Database',
         'Enable-Migrations',
         'Remove-Migration',
         'Scaffold-DbContext',
         'Script-Migration',
-        'Drop-Database',
         'Update-Database',
         'Use-DbContext'
     )
