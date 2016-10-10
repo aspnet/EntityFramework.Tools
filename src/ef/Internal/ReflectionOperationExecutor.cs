@@ -31,6 +31,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Internal
 
             var reportHandler = Activator.CreateInstance(
                 reportHandlerType,
+                (Action<string>)Reporter.Error,
                 (Action<string>)Reporter.Warning,
                 (Action<string>)Reporter.Output,
                 (Action<string>)Reporter.Verbose);

@@ -6,6 +6,7 @@ namespace Microsoft.EntityFrameworkCore.Design
     public interface IOperationReportHandler
     {
         int Version { get; }
+        void OnError(string message);
         void OnWarning(string message);
         void OnInformation(string message);
         void OnVerbose(string message);

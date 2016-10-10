@@ -13,6 +13,9 @@ namespace Microsoft.EntityFrameworkCore.Tools.Internal
         public int Version
             => 0;
 
+        public void OnError(string message)
+            => Reporter.Error(message);
+
         public void OnWarning(string message)
             => Reporter.Warning(message);
 
