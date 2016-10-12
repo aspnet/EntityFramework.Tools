@@ -10,11 +10,11 @@
     },
     "Microsoft.EntityFrameworkCore.Design": {
       "type": "build",
-      "version": "1.1.0-*"
+      "version": "1.0.1"
     },
     "Microsoft.EntityFrameworkCore.Sqlite.Design": {
       "type": "build",
-      "version": "1.1.0-*"
+      "version": "1.0.1"
     },
     "Microsoft.AspNetCore.Hosting": "1.0.0",
     "NetStandardClassLibrary": {
