@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
 
-#if NETCOREAPP1_1
+#if NETCOREAPP1_0
 using System.Linq;
 using Microsoft.Extensions.DependencyModel;
 #endif
@@ -15,7 +15,7 @@ namespace Microsoft.EntityFrameworkCore.Design.TestUtilities
 {
     public class BuildReference
     {
-#if NETCOREAPP1_1
+#if NETCOREAPP1_0
         private static readonly DependencyContext DefaultDependencyContext =
             DependencyContext.Load(typeof(BuildReference).GetTypeInfo().Assembly);
 #endif
@@ -34,7 +34,7 @@ namespace Microsoft.EntityFrameworkCore.Design.TestUtilities
 
         public static BuildReference ByName(string name, bool copyLocal = false, Assembly depContextAssembly = null)
         {
-#if NETCOREAPP1_1
+#if NETCOREAPP1_0
             var depContext = depContextAssembly == null
                 ? DefaultDependencyContext
                 : DependencyContext.Load(depContextAssembly);
