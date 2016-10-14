@@ -18,7 +18,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Internal
         void UpdateDatabase(string migration, string contextType);
         IEnumerable<IDictionary> GetContextTypes();
 
-        IEnumerable<string> ReverseEngineer(
+        IEnumerable<string> ScaffoldContext(
             string provider,
             string connectionString,
             string outputDir,

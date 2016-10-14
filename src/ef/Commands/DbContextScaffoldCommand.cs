@@ -107,7 +107,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
 
         public void Run(IOperationExecutor executor)
         {
-            var filesCreated = executor.ReverseEngineer(_provider, _connection, _outputDir, _context, _schemas, _tables, _dataAnnotations, _force);
+            var filesCreated = executor.ScaffoldContext(_provider, _connection, _outputDir, _context, _schemas, _tables, _dataAnnotations, _force);
             if (_json)
             {
                 ReportJsonResults(filesCreated);

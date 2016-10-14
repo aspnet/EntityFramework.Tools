@@ -165,7 +165,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Internal
         public IEnumerable<IDictionary> GetContextTypes()
             => InvokeOperation<IEnumerable<IDictionary>>("GetContextTypes");
 
-        public IEnumerable<string> ReverseEngineer(string provider,
+        public IEnumerable<string> ScaffoldContext(string provider,
             string connectionString,
             string outputDir,
             string dbContextClassName,
@@ -173,7 +173,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Internal
             IEnumerable<string> tableFilters,
             bool useDataAnnotations,
             bool overwriteFiles)
-            => InvokeOperation<IEnumerable<string>>("ReverseEngineer",
+            => InvokeOperation<IEnumerable<string>>("ScaffoldContext",
                 new Dictionary<string, object>
                 {
                     ["provider"] = provider,
