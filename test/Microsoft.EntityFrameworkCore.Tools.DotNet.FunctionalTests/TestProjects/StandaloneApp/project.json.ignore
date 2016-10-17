@@ -7,9 +7,9 @@
     "Microsoft.NETCore.App": "1.1.0-*",
     "Microsoft.EntityFrameworkCore.Design": {
       "type": "build",
-      "version": "1.1.0-*"
+      "version": "1.0.1"
     },
-    "Microsoft.EntityFrameworkCore.Sqlite": "1.1.0-*"
+    "Microsoft.EntityFrameworkCore.Sqlite": "1.0.1"
   },
   "frameworks": {
     "netcoreapp1.0": {}
