@@ -691,6 +691,8 @@ function GetCsprojArguments($startupProject, $outputFileName) {
         $dataDirectory = Join-Path $startupProjectDir 'App_Data'
     } elseif ($appConfig) {
         $configurationFile = GetProperty $appConfig.Properties FullPath
+    } elseif (IsUwpProject $startupProject) {
+        $configurationFile = Join-Path $PSScriptRoot 'uap10.0/ef.exe.config'
     }
 
     $arch = GetProperty $startupProject.ConfigurationManager.ActiveConfiguration.Properties PlatformTarget
@@ -870,7 +872,9 @@ function InvokeOperation($commonParams, [switch] $json, [switch] $skipBuild) {
         if ($exeCopied) {
             Write-Debug "Cleaning up '$exe' and '$configFile'"
             Remove-Item $exe -ErrorAction SilentlyContinue | Out-Null
-            Remove-Item $configFile -ErrorAction SilentlyContinue | Out-Null
+            if ($configFile) {
+                Remove-Item $configFile -ErrorAction SilentlyContinue | Out-Null
+            }
         }
     }
 
