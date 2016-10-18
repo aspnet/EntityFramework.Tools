@@ -121,6 +121,6 @@
     <value>Cannot execute this command because the version of Microsoft.EntityFrameworkCore.Design installed is not compatible with this tool.</value>
   </data>
   <data name="DesignDependencyNotFound" xml:space="preserve">
-    <value>Cannot execute this command because Microsoft.EntityFrameworkCore.Design is not installed.</value>
+    <value>Cannot execute this command because Microsoft.EntityFrameworkCore.Design is not installed. Install the version of that package that matches the installed version of Microsoft.EntityFrameworkCore and try again.</value>
   </data>
 </root>

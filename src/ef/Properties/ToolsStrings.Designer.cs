@@ -69,7 +69,7 @@ namespace Tools.Console.Properties {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Cannot execute this command because Microsoft.EntityFrameworkCore.Design is not installed..
+        ///    Looks up a localized string similar to Cannot execute this command because Microsoft.EntityFrameworkCore.Design is not installed. Install the version of that package that matches the installed version of Microsoft.EntityFrameworkCore and try again..
         /// </summary>
         public static string DesignDependencyNotFound {
             get {
