@@ -41,7 +41,6 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet.Internal
                 ? _paths.RuntimeFiles.Executable
                 : _paths.RuntimeFiles.Assembly;
 
-        public Project Project => _project.ProjectFile;
         public string ProjectFullPath => _project.ProjectFile.ProjectFilePath;
         public string ProjectName => _project.ProjectFile.Name;
         public string RootNamespace => _project.ProjectFile.Name;

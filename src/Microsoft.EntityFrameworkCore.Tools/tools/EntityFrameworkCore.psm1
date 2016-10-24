@@ -930,7 +930,7 @@ function GetProjectItem($project, $path) {
     return $null
 }
 
-function GetStartUpProject($name, $fallbackProject) {
+function GetStartupProject($name, $fallbackProject) {
     if ($name) {
         return Get-Project $name
     }

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.DotNet.Cli.Utils;
 using Microsoft.EntityFrameworkCore.Tools.DotNet.Properties;
 
@@ -12,7 +13,18 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet.Internal
     {
         public void EnsureBuild(IProjectContext project)
         {
-            var buildExitCode = CreateBuildCommand(project)
+            ICommand command;
+            if (project is DotNetProjectContext)
+            {
+                command = CreateDotNetBuildCommand(project);
+            }
+            else
+            {
+                Debug.Assert(project is MsBuildProjectContext, "Unexpected project type.");
+                command = CreateMsBuildBuildCommand(project);
+            }
+
+            var buildExitCode = command
                 .ForwardStdErr()
                 .ForwardStdOut()
                 .Execute()
@@ -24,13 +36,8 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet.Internal
             }
         }
 
-        private static ICommand CreateBuildCommand(IProjectContext projectContext)
+        private static ICommand CreateDotNetBuildCommand(IProjectContext projectContext)
         {
-            if (!(projectContext is DotNetProjectContext))
-            {
-                throw new PlatformNotSupportedException("Currently only .NET Core Projects (project.json/xproj) are supported");
-            }
-
             var args = new List<string>
             {
                 projectContext.ProjectFullPath,
@@ -49,6 +56,28 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet.Internal
                 args,
                 projectContext.TargetFramework,
                 projectContext.Configuration);
+        }
+
+        private static ICommand CreateMsBuildBuildCommand(IProjectContext projectContext)
+        {
+            var args = new List<string>
+            {
+                projectContext.ProjectFullPath,
+                "--configuration", projectContext.Configuration,
+                "--framework", projectContext.TargetFramework.GetShortFolderName()
+            };
+
+            if (projectContext.TargetDirectory != null)
+            {
+                args.Add("--output");
+                args.Add(projectContext.TargetDirectory);
+            }
+
+            // Force deps.json file to be generated
+            args.Add("/p:GenerateDependencyFile=true");
+
+            // TODO 'build3' is a placeholder name
+            return Command.CreateDotNet("build3", args);
         }
     }
 }
