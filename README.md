@@ -3,7 +3,7 @@ EntityFramework.Tools
 AppVeyor: [![AppVeyor][1]][2]  
 Travis:   [![Travis][3]][4]
 
-The EntityFramework.Tools repo contains the NuGet Package Manager Console, .NET Core SDK, and Command-line tools for Entity Framework Core.
+The EntityFramework.Tools repo contains the Entity Framework Core Command Line, .NET Command Line, and Package Manager Console Tools.
 
 Please use the [aspnet/EntityFramework][5] issue tracker.
 

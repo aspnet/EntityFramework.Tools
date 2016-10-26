@@ -1,6 +1,6 @@
 {
   "version": "1.0.0-*",
-  "description": "Command-line tools for Entity Framework Core",
+  "description": "Entity Framework Core Command Line Tools",
   "buildOptions": {
     "emitEntryPoint": true,
     "keyFile": "../../tools/Key.snk"

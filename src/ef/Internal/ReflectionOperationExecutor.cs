@@ -6,6 +6,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
+#if NET451
+using System.IO;
+#endif
+
 namespace Microsoft.EntityFrameworkCore.Tools.Internal
 {
     public class ReflectionOperationExecutor : OperationExecutorBase
@@ -26,6 +30,10 @@ namespace Microsoft.EntityFrameworkCore.Tools.Internal
             string environment)
             : base(assembly, startupAssembly, projectDir, contentRootPath, dataDirectory, rootNamespace, environment)
         {
+#if NET451
+            AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
+#endif
+
             _commandsAssembly = Assembly.Load(new AssemblyName { Name = DesignAssemblyName });
             var reportHandlerType = _commandsAssembly.GetType(ReportHandlerTypeName, throwOnError: true, ignoreCase: false);
 
@@ -61,5 +69,36 @@ namespace Microsoft.EntityFrameworkCore.Tools.Internal
                 _executor,
                 resultHandler,
                 arguments);
+
+#if NET451
+        private Assembly ResolveAssembly(object sender, ResolveEventArgs args)
+        {
+            var assemblyName = new AssemblyName(args.Name);
+
+            foreach (var extension in new[] { ".dll", ".exe" })
+            {
+                var path = Path.Combine(AppBasePath, assemblyName.Name + extension);
+                if (File.Exists(path))
+                {
+                    try
+                    {
+                        return Assembly.LoadFrom(path);
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            AppDomain.CurrentDomain.AssemblyResolve -= ResolveAssembly;
+        }
+#endif
     }
 }
