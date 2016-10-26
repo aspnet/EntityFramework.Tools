@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections;
+using System.IO;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore.Design;
 
@@ -23,15 +24,16 @@ namespace Microsoft.EntityFrameworkCore.Tools.Internal
             string contentRootPath,
             string dataDirectory,
             string rootNamespace,
-            string environment,
-            string configFile)
+            string environment)
             : base(assembly, startupAssembly, projectDir, contentRootPath, dataDirectory, rootNamespace, environment)
         {
-            var info = new AppDomainSetup
+            var info = new AppDomainSetup { ApplicationBase = AppBasePath };
+
+            var configurationFile = (startupAssembly ?? assembly) + ".config";
+            if (File.Exists(configurationFile))
             {
-                ApplicationBase = AppBasePath,
-                ConfigurationFile = configFile
-            };
+                info.ConfigurationFile = configurationFile;
+            }
 
             _domain = AppDomain.CreateDomain("EntityFrameworkCore.DesignDomain", null, info);
 

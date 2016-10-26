@@ -1,53 +1,53 @@
 $ErrorActionPreference = 'Stop'
 
-$versionErrorMessage = "EF Core commands do not support PowerShell version $($PSVersionTable.PSVersion). Please upgrade PowerShell to 3.0 or greater and restart Visual Studio."
+$versionErrorMessage = 'The Entity Framework Core Package Manager Console Tools don''t support PowerShell version ' +
+    "$($PSVersionTable.PSVersion). Upgrade to PowerShell version 3.0 or higher, restart Visual Studio, and try again."
 
-function Add-Migration {
-    Hint-Upgrade $MyInvocation.MyCommand
+function Add-Migration
+{
+    WarnIfEF6 'Add-Migration'
+
     throw $versionErrorMessage
 }
 
-function Remove-Migration {
+function Drop-Database
+{
     throw $versionErrorMessage
 }
 
-function Scaffold-DbContext {
+function Enable-Migrations
+{
+    WarnIfEF6 'Enable-Migrations'
+
     throw $versionErrorMessage
 }
 
-function Script-Migration {
+function Remove-Migration
+{
     throw $versionErrorMessage
 }
 
-function Drop-Database {
+function Scaffold-DbContext
+{
     throw $versionErrorMessage
 }
 
-function Update-Database {
-    Hint-Upgrade $MyInvocation.MyCommand
+function Script-Migration
+{
     throw $versionErrorMessage
 }
 
-function Use-DbContext {
+function Update-Database
+{
+    WarnIfEF6 'Update-Database'
+
     throw $versionErrorMessage
 }
 
-#
-# Enable-Migrations (Obsolete)
-#
-
-function Enable-Migrations {
-    # TODO: Link to some docs on the changes to Migrations
-    Hint-Upgrade $MyInvocation.MyCommand
-    Write-Warning 'Enable-Migrations is obsolete. Use Add-Migration to start using Migrations.'
-}
-
-#
-# Private functions
-#
-
-function Hint-Upgrade ($name) {
-    if (Get-Module | Where { $_.Name -eq 'EntityFramework' }) {
-        Write-Warning "Both Entity Framework Core and Entity Framework 6.x commands are installed. The Entity Framework Core version is executing. You can fully qualify the command to select which one to execute, 'EntityFramework\$name' for EF6.x and 'EntityFrameworkCore\$name' for EF Core."
+function WarnIfEF6($cmdlet)
+{
+    if (Get-Module 'EntityFramework')
+    {
+        Write-Warning "Both Entity Framework Core and Entity Framework 6 are installed. The Entity Framework Core tools are running. Use 'EntityFramework\$cmdlet' for Entity Framework 6."
     }
 }

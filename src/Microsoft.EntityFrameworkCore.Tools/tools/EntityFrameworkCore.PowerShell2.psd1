@@ -18,7 +18,7 @@
     Copyright = '(c) .NET Foundation. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description = 'Entity Framework PowerShell module used for the Package Manager Console'
+    Description = 'Entity Framework Core Package Manager Console Tools'
 
     # Minimum version of the Windows PowerShell engine required by this module
     PowerShellVersion = '1.0'
@@ -64,8 +64,7 @@
         'Remove-Migration',
         'Scaffold-DbContext',
         'Script-Migration',
-        'Update-Database',
-        'Use-DbContext'
+        'Update-Database'
     )
 
     # Cmdlets to export from this module

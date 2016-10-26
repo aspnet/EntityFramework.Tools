@@ -10,12 +10,13 @@ TOPIC
     about_EntityFrameworkCore
 
 SHORT DESCRIPTION
-    Provides information about Entity Framework Core commands.
+    Provides information about the Entity Framework Core Package Manager Console Tools.
 
 LONG DESCRIPTION
-    This topic describes the Entity Framework Core commands. See https://docs.efproject.net for information on Entity Framework Core.
+    This topic describes the Entity Framework Core Package Manager Console Tools. See https://docs.efproject.net for
+    information on Entity Framework Core.
 
-    The following Entity Framework cmdlets are included.
+    The following Entity Framework Core commands are available.
 
         Cmdlet                      Description
         --------------------------  ---------------------------------------------------
@@ -25,13 +26,11 @@ LONG DESCRIPTION
 
         Remove-Migration            Removes the last migration.
 
-        Scaffold-DbContext          Scaffolds a DbContext and entity type classes for a specified database.
+        Scaffold-DbContext          Scaffolds a DbContext and entity types for a database.
 
         Script-Migration            Generates a SQL script from migrations.
 
         Update-Database             Updates the database to a specified migration.
-
-        Use-DbContext               Sets the default DbContext to use.
 
 SEE ALSO
     Add-Migration
@@ -40,4 +39,3 @@ SEE ALSO
     Scaffold-DbContext
     Script-Migration
     Update-Database
-    Use-DbContext

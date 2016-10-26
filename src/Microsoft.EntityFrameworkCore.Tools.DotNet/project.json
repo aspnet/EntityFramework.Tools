@@ -1,6 +1,6 @@
 ﻿{
   "version": "1.0.0-*",
-  "description": ".NET Core SDK command line tools for Entity Framework Core.",
+  "description": "Entity Framework Core .NET Command Line Tools. Includes dotnet-ef.",
   "buildOptions": {
     "emitEntryPoint": true,
     "outputName": "dotnet-ef",

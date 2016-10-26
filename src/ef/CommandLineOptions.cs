@@ -20,7 +20,6 @@ namespace Microsoft.EntityFrameworkCore.Tools
         public string ProjectDirectory { get; set; }
         public string DataDirectory { get; set; }
         public string StartupAssembly { get; set; }
-        public string AppConfigFile { get; set; }
         public bool NoAppDomain { get; set; }
 
         public static CommandLineOptions Parse(params string[] args)
@@ -58,8 +57,6 @@ namespace Microsoft.EntityFrameworkCore.Tools
             var assembly = app.Option("--assembly <assembly>",
                 "The assembly file to load.", inherited: true);
 #if NET451
-            var appConfig = app.Option("--config <configfile>",
-                "The application config file", inherited: true);
             var noAppDomain = app.Option("--no-appdomain",
                 "Do not use app domains to execute the command");
 #endif
@@ -101,7 +98,6 @@ namespace Microsoft.EntityFrameworkCore.Tools
             options.RootNamespace = rootNamespace.Value();
             options.EnvironmentName = environment.Value();
 #if NET451
-            options.AppConfigFile = appConfig.Value();
             options.NoAppDomain = noAppDomain.HasValue();
 #endif
 
