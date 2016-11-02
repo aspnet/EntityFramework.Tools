@@ -646,7 +646,7 @@ function GetDotNetArguments($startupProject, $outputFileName) {
         # TODO determine if desktop app is x86 or has a different runtimes
         $outputPath = Join-Path $outputPath "$config/$tfm/win7-x64/"
         $exe = Join-Path $PSScriptRoot 'net451/ef.exe'
-    } elseif ($tfm -eq 'netcoreapp1.0') {
+    } elseif ($tfm -like 'netcoreapp1.*') {
         # TODO handle self-contained apps
 
         $outputPath = Join-Path $outputPath "$config/$tfm"
@@ -658,7 +658,7 @@ function GetDotNetArguments($startupProject, $outputFileName) {
         $arguments += Join-Path $PSScriptRoot 'netcoreapp1.0/ef.dll'
         $startupOutputFileName = "$assemblyName.dll"
     } else {
-        throw "Commands could not invoke on target framework '$tfm'.`nCommands on ASP.NET Core and .NET Core projects currently only support .NET Core ('netcoreapp1.0') or .NET Framework (e.g. 'net451') target frameworks."
+        throw "Commands could not invoke on target framework '$tfm'.`nCommands on ASP.NET Core and .NET Core projects currently only support .NET Core ('netcoreapp1.x') or .NET Framework (e.g. 'net451') target frameworks."
     }
 
 
