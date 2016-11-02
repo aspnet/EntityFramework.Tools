@@ -733,6 +733,10 @@ function ProcessCommonParameters($startupProjectName, $projectName, $contextType
     $startupProjectDir = GetProperty $startupProject.Properties FullPath
 
     # Enforce project-type restrictions
+    if ($project.Kind -eq '{9A19103F-16F7-4668-BE54-9A1E7A4F7556}') {
+        throw 'The Entity Framework Core commands for the Package Manager Console don''t yet support csproj-based .NET Core projects. Use the .NET Command Line Tools (i.e. dotnet ef) instead. For more details, see https://go.microsoft.com/fwlink/?linkid=834381.'
+    }
+
     if ((IsUwpProject $startupProject) -and (IsClassLibrary $startupProject)) {
         throw "This command cannot use '$($startupProject.Name)' as the startup project because it is a Univeral Windows class library project. Change the startup project to a Universal Windows application project and run this command again."
     }
