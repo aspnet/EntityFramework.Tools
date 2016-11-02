@@ -1,15 +1,12 @@
 {
   "version": "1.0.0-*",
   "description": "Command-line tools for Entity Framework Core",
-  "dependencies": {
-    "Microsoft.Extensions.CommandLineUtils.Sources": {
-      "version": "1.1.0-*",
-      "type": "build"
-    }
-  },
   "buildOptions": {
     "emitEntryPoint": true,
-    "keyFile": "../../tools/Key.snk"
+    "keyFile": "../../tools/Key.snk",
+    "compile": {
+      "include": "../Shared/**/*.cs"
+    }
   },
   "configurations": {
     "Debug_x86": {

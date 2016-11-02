@@ -6,8 +6,9 @@
     "outputName": "dotnet-ef",
     "keyFile": "../../tools/Key.snk",
     "compile": {
-      "includeFiles": [
-        "../ef/Extensions/CommandLineApplicationExtensions.cs"
+      "include": [
+        "../ef/Extensions/CommandLineApplicationExtensions.cs",
+        "../Shared/**/*.cs"
       ]
     }
   },
@@ -22,11 +23,7 @@
     "packageType": "DotnetCliTool"
   },
   "dependencies": {
-    "Microsoft.DotNet.Cli.Utils": "1.0.0-*",
-    "Microsoft.Extensions.CommandLineUtils.Sources": {
-      "version": "1.1.0-*",
-      "type": "build"
-    }
+    "Microsoft.DotNet.Cli.Utils": "1.0.0-preview2-003121"
   },
   "frameworks": {
     "netcoreapp1.0": {
