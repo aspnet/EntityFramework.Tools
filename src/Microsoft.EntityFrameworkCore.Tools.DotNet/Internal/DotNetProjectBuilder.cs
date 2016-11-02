@@ -76,8 +76,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet.Internal
             // Force deps.json file to be generated
             args.Add("/p:GenerateDependencyFile=true");
 
-            // TODO 'build3' is a placeholder name
-            return Command.CreateDotNet("build3", args);
+            return Command.CreateDotNet("build", args);
         }
     }
 }
