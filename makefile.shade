@@ -22,6 +22,11 @@ k-standard-goals
     }
   }
 
+#publish-tool target='compile'
+  @{
+    Dotnet("publish src/Microsoft.EntityFrameworkCore.Tools.DotNet/ -c " + E("Configuration"));
+  }
+
 #repack-tools .remove-intermediates target='compile' if='Directory.Exists("src") && !IsTravisCi'
   @{
         var configurationX86 = E("Configuration") + "_x86";
