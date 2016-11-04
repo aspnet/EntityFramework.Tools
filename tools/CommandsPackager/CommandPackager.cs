@@ -41,8 +41,7 @@ namespace CommandPackager
                 "-Verbosity", "detailed",
                 "-OutputDirectory", Path.Combine(_baseDir, "artifacts/build"),
                 "-Version", version,
-                "-Properties", props,
-                "-NoPackageAnalysis");
+                "-Properties", props);
         }
 
         private async Task PackToolsDotNet()
@@ -58,8 +57,7 @@ namespace CommandPackager
                 "-Verbosity", "detailed",
                 "-OutputDirectory", Path.Combine(_baseDir, "artifacts/build"),
                 "-Version", version,
-                "-Properties", props,
-                "-NoPackageAnalysis");
+                "-Properties", props);
         }
 
         private static string GetLockFileVersion(ProjectContext project, string name) =>
