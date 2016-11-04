@@ -55,7 +55,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet.Internal
             var project = SelectCompatibleFramework(
                 framework,
                 ProjectContext.CreateContextForEachFramework(filePath,
-                    runtimeIdentifiers: RuntimeEnvironmentRidExtensions.GetAllCandidateRuntimeIdentifiers()));
+                    runtimeIdentifiers: Microsoft.DotNet.Cli.Utils.RuntimeEnvironmentRidExtensions.GetAllCandidateRuntimeIdentifiers()));
 
             return new DotNetProjectContext(project,
                 configuration,

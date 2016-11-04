@@ -37,8 +37,8 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet.FunctionalTests.Utilities
             rootDirectory = globalSettings?.DirectoryPath ?? rootDirectory;
             _nugetPackageDir = PackageDependencyProvider.ResolvePackagesPath(rootDirectory, globalSettings);
             var appName = GetType().GetTypeInfo().Assembly.GetName().Name;
-            _runtimeConfig = Path.Combine(AppContext.BaseDirectory, appName + FileNameSuffixes.RuntimeConfigJson);
-            _depsJson = Path.Combine(AppContext.BaseDirectory, appName + FileNameSuffixes.DepsJson);
+            _runtimeConfig = Path.Combine(AppContext.BaseDirectory, appName + Microsoft.DotNet.Cli.Utils.FileNameSuffixes.RuntimeConfigJson);
+            _depsJson = Path.Combine(AppContext.BaseDirectory, appName + Microsoft.DotNet.Cli.Utils.FileNameSuffixes.DepsJson);
         }
 
         private static readonly string _dotnetEfPath = Path.Combine(AppContext.BaseDirectory, "dotnet-ef.dll");

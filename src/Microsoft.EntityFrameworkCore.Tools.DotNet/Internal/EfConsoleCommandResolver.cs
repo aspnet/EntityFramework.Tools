@@ -7,7 +7,6 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Microsoft.DotNet.Cli.Utils;
-using Microsoft.DotNet.ProjectModel;
 
 namespace Microsoft.EntityFrameworkCore.Tools.DotNet.Internal
 {

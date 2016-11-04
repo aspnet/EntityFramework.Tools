@@ -23,7 +23,8 @@
     "packageType": "DotnetCliTool"
   },
   "dependencies": {
-    "Microsoft.DotNet.Cli.Utils": "1.0.0-preview2-003121"
+    "Microsoft.DotNet.Cli.Utils": "1.0.0-preview3-004050",
+    "Microsoft.DotNet.ProjectModel": "1.0.0-rc3-003121"
   },
   "frameworks": {
     "netcoreapp1.0": {
