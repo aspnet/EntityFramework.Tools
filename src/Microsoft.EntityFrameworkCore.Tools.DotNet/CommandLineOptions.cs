@@ -27,7 +27,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet
             var app = new CommandLineApplication(throwOnUnexpectedArg: false)
             {
                 Name = "dotnet ef",
-                FullName = "Entity Framework Core .NET Command Line Tools"
+                FullName = "Entity Framework .NET Core CLI Commands"
             };
 
             var options = new CommandLineOptions();
@@ -44,10 +44,10 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet
         {
             var project = app.Option(
                 "-p|--project <project>",
-                "The project to target (defaults to the project in the current directory).");
+                "The project to target (defaults to the project in the current directory). Can be a path to a project.json or a project directory.");
             var startupProject = app.Option(
                 "-s|--startup-project <project>",
-                "The path to the project containing Startup (defaults to the target project).");
+                "The path to the project containing Startup (defaults to the target project). Can be a path to a project.json or a project directory.");
             var configuration = app.Option(
                 "--configuration <configuration>",
                 $"Configuration under which to load (defaults to {Constants.DefaultConfiguration})");
