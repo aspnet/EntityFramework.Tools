@@ -3,10 +3,7 @@
   "description": "Command-line tools for Entity Framework Core",
   "buildOptions": {
     "emitEntryPoint": true,
-    "keyFile": "../../tools/Key.snk",
-    "compile": {
-      "include": "../Shared/**/*.cs"
-    }
+    "keyFile": "../../tools/Key.snk"
   },
   "configurations": {
     "Debug_x86": {

@@ -6,9 +6,13 @@
     "outputName": "dotnet-ef",
     "keyFile": "../../tools/Key.snk",
     "compile": {
-      "include": [
+      "includeFiles": [
         "../ef/Extensions/CommandLineApplicationExtensions.cs",
-        "../Shared/**/*.cs"
+        "../ef/External/CommandArgument.cs",
+        "../ef/External/CommandLineApplication.cs",
+        "../ef/External/CommandOption.cs",
+        "../ef/External/CommandOptionType.cs",
+        "../ef/External/CommandParsingException.cs"
       ]
     }
   },
