@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="_EFGetProjectMetadata">
+    <MSBuild Projects="$(MSBuildProjectFile)"
+             Targets="_EFGetProjectMetadata"
+             Properties="TargetFramework=$(TargetFrameworks.Split(';')[0]);_EFProjectMetadataFile=$(_EFProjectMetadataFile)" />
+  </Target>
+</Project>

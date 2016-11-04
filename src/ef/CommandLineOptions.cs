@@ -30,11 +30,11 @@ namespace Microsoft.EntityFrameworkCore.Tools
             var app = new CommandLineApplication
             {
 #if NET451
-                Name = "ef.exe",
+                Name = "ef",
 #else
-                Name = "ef.dll",
+                Name = "ef",
 #endif
-                FullName = "Entity Framework Core Console Commands"
+                FullName = "Entity Framework Core Command Line Tools"
             };
 
             app.HelpOption();
