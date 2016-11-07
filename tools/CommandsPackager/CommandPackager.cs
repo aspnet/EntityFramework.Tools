@@ -34,6 +34,7 @@ namespace CommandPackager
         {
             var project = ProjectContext.Create(Path.Combine(_baseDir, "src", "Microsoft.EntityFrameworkCore.Tools"), FrameworkConstants.CommonFrameworks.Net451);
             var props = "configuration=" + _config;
+            props += ";efcoredesign=" + GetLockFileVersion(project, "Microsoft.EntityFrameworkCore.Design");
 
             var version = project.ProjectFile.Version.ToNormalizedString();
             await Nuget("pack",

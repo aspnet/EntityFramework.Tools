@@ -10,6 +10,16 @@
     <description>Entity Framework Core Package Manager Console Tools. Includes Scaffold-DbContext, Add-Migration, and Update-Database.</description>
     <tags>Entity Framework Core,entity-framework-core,EF,Data,O/RM</tags>
     <serviceable>true</serviceable>
+    <dependencies>
+      <group targetFramework=".NETStandard1.3">
+        <!-- this is only a "dependency" to make installing easier. It's not actaully build against this assembly. -->
+        <dependency id="Microsoft.EntityFrameworkCore.Design" version="$efcoredesign$" />
+      </group>
+      <group targetFramework=".NETFramework4.5.1">
+        <!-- this is only a "dependency" to make installing easier. It's not actaully build against this assembly. -->
+        <dependency id="Microsoft.EntityFrameworkCore.Design" version="$efcoredesign$" />
+      </group>
+    </dependencies>
   </metadata>
   <files>
     <file src="build/**/*" target="" />
