@@ -10,6 +10,16 @@
     <description>Visual Studio commands for Entity Framework Core. Includes the Scaffold-DbContext, Add-Migration, and Update-Database commands for the Package Manager Console in Visual Studio.</description>
     <tags>Entity Framework Core,entity-framework-core,EF,Data,O/RM</tags>
     <serviceable>true</serviceable>
+    <dependencies>
+      <group targetFramework=".NETStandard1.3">
+        <!-- this is only a "dependency" to make installing easier. It's not actaully build against this assembly. -->
+        <dependency id="Microsoft.EntityFrameworkCore.Design" version="$efcoredesign$" />
+      </group>
+      <group targetFramework=".NETFramework4.5.1">
+        <!-- this is only a "dependency" to make installing easier. It's not actaully build against this assembly. -->
+        <dependency id="Microsoft.EntityFrameworkCore.Design" version="$efcoredesign$" />
+      </group>
+    </dependencies>
   </metadata>
   <files>
     <file src="lib/**/*" target="" />
