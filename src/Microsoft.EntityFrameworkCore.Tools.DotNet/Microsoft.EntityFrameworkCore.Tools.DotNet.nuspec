@@ -6,7 +6,7 @@
     <authors>Microsoft</authors>
     <owners>Microsoft</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>.NET Core SDK command line tools for Entity Framework Core.</description>
+    <description>Entity Framework Core .NET Command Line Tools. Includes dotnet-ef.</description>
     <tags>Entity Framework Core,entity-framework-core,EF,Data,O/RM</tags>
     <serviceable>true</serviceable>
     <packageTypes>

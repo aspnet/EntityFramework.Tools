@@ -121,7 +121,7 @@
     <value>Build failed on '{0}'.</value>
   </data>
   <data name="ClassLibrariesNotSupported" xml:space="preserve">
-    <value>Could not invoke this command on the startup project '{0}'. This version of Entity Framework tools does not support commands on class library projects in ASP.NET Core and .NET Core applications. See http://go.microsoft.com/fwlink/?LinkId=798221 for details and workarounds.</value>
+    <value>Could not invoke this command on the startup project '{0}'. This version of the Entity Framework Core .NET Command Line Tools does not support commands on class library projects in ASP.NET Core and .NET Core applications. See http://go.microsoft.com/fwlink/?LinkId=798221 for details and workarounds.</value>
   </data>
   <data name="DesktopCommandsRequiresWindows" xml:space="preserve">
     <value>Could not invoke this command on this project. Commands for framework '{0}' are only supported on Windows.</value>

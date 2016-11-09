@@ -7,7 +7,7 @@
     <owners>Microsoft</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <developmentDependency>true</developmentDependency>
-    <description>Visual Studio commands for Entity Framework Core. Includes the Scaffold-DbContext, Add-Migration, and Update-Database commands for the Package Manager Console in Visual Studio.</description>
+    <description>Entity Framework Core Package Manager Console Tools. Includes Scaffold-DbContext, Add-Migration, and Update-Database.</description>
     <tags>Entity Framework Core,entity-framework-core,EF,Data,O/RM</tags>
     <serviceable>true</serviceable>
     <dependencies>
@@ -28,5 +28,6 @@
     <file src="../ef/bin/$configuration$/net451/ef.exe" target="tools/net451/" />
     <file src="../ef/bin/$configuration$_x86/net451/ef.x86.exe" target="tools/net451/" />
     <file src="../ef/bin/$configuration$/netcoreapp1.0/ef.dll" target="tools/netcoreapp1.0/" />
+    <file src="../ef/bin/$configuration$/netcoreapp1.0/ef.runtimeconfig.json" target="tools/netcoreapp1.0/" />
   </files>
 </package>
