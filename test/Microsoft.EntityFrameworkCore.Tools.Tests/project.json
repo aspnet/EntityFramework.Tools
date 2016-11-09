@@ -1,11 +1,11 @@
-﻿{
+{
   "buildOptions": {
     "keyFile": "../../tools/Key.snk"
   },
   "dependencies": {
     "xunit": "2.2.0-*",
     "dotnet-test-xunit": "2.2.0-*",
-    "Microsoft.EntityFrameworkCore.Tools": "1.1.0-*"
+    "Microsoft.EntityFrameworkCore.Tools": "1.2.0-*"
   },
   "testRunner": "xunit",
   "frameworks": {

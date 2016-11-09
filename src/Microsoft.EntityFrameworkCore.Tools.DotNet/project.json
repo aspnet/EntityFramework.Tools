@@ -1,5 +1,5 @@
-﻿{
-  "version": "1.1.0-*",
+{
+  "version": "1.2.0-*",
   "description": ".NET Core SDK command line tools for Entity Framework Core.",
   "buildOptions": {
     "emitEntryPoint": true,
@@ -24,7 +24,7 @@
   "dependencies": {
     "Microsoft.DotNet.Cli.Utils": "1.0.0-*",
     "Microsoft.Extensions.CommandLineUtils.Sources": {
-      "version": "1.1.0-*",
+      "version": "1.2.0-*",
       "type": "build"
     }
   },
