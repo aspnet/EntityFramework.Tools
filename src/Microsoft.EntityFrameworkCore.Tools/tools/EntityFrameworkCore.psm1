@@ -391,7 +391,7 @@ function Script-Migration
     $dteStartupProject = GetStartupProject $StartupProject $dteProject
 
     $projectDir = GetProperty $dteProject.Properties 'FullPath'
-    $intermediatePath = GetProperty $dteProject.ConfigurationManager.ActiveConfiguration.Properties 'IntermediatePath'
+    $intermediatePath = GetIntermediatePath $dteProject
     $scriptFileName = [IO.Path]::ChangeExtension([IO.Path]::GetRandomFileName(), '.sql')
     $scriptPath = Join-Path (Join-Path $projectDir $intermediatePath) $scriptFileName
 
@@ -670,19 +670,6 @@ function EF($project, $startupProject, $params, [switch] $json, [switch] $skipBu
         }
     }
 
-    if (IsCsproj2 $startupProject)
-    {
-        throw "Starup project '$($startupProject.ProjectName)' is a .NET Core project. This version of the Entity " +
-            'Framework Core Package Manager Console Tools doesn''t support this type of project yet. Use the .NET ' +
-            'Command Line Tools (i.e. dotnet ef) instead. For more details, see ' +
-            'https://go.microsoft.com/fwlink/?linkid=834381.'
-    }
-    if (IsXproj $startupProject)
-    {
-        throw "Startup project '$($startupProject.ProjectName)' is an ASP.NET Core or .NET Core project for Visual " +
-            'Studio 2015. This version of the Entity Framework Core Package Manager Console Tools doesn''t support ' +
-            'these types of projects.'
-    }
     if (IsUWP $startupProject)
     {
         $useDotNetNative = GetProperty $startupProject.ConfigurationManager.ActiveConfiguration.Properties 'ProjectN.UseDotNetNativeToolchain'
@@ -724,28 +711,57 @@ function EF($project, $startupProject, $params, [switch] $json, [switch] $skipBu
         Write-Verbose 'Build succeeded.'
     }
 
-    $platformTarget = GetProperty $startupProject.ConfigurationManager.ActiveConfiguration.Properties 'PlatformTarget'
-    if ($platformTarget -eq 'x86')
+    $startupProjectDir = GetProperty $startupProject.Properties 'FullPath'
+    $outputPath = GetOutputPath $startupProject
+    $targetDir = Join-Path $startupProjectDir $outputPath
+    $startupTargetFileName = GetOutputFileName $startupProject
+    $startupTargetPath = Join-Path $targetDir $startupTargetFileName
+    $targetFramework = GetTargetFramework $startupProject
+
+    if ($targetFramework -in '.NETFramework', '.NETCore')
     {
-        $efPath = Join-Path $PSScriptRoot 'net451\ef.x86.exe'
+        $platformTarget = GetPlatformTarget $startupProject
+        if ($platformTarget -eq 'x86')
+        {
+            $exePath = Join-Path $PSScriptRoot 'net451\ef.x86.exe'
+        }
+        elseif ($platformTarget -in 'AnyCPU', 'x64')
+        {
+            $exePath = Join-Path $PSScriptRoot 'net451\ef.exe'
+        }
+        else
+        {
+            throw "Startup project '$($startupProject.ProjectName)' has an active platform of '$platformTarget'. Select " +
+                'a different platform and try again.'
+        }
     }
-    elseif ($platformTarget -in 'AnyCPU', 'x64')
+    elseif ($targetFramework -in '.NETCoreApp', '.NETStandard')
     {
-        $efPath = Join-Path $PSScriptRoot 'net451\ef.exe'
+        $exePath = (Get-Command 'dotnet').Path
+
+        $startupTargetName = GetProperty $startupProject.Properties 'AssemblyName'
+        $depsfile = Join-Path $targetDir ($startupTargetName + '.deps.json')
+        $nugetPackageRoot = (GetNuGetPackageRoot $startupProject).TrimEnd('\')
+        $runtimeconfig = Join-Path $targetDir ($startupTargetName + '.runtimeconfig.json')
+        $efPath = Join-Path $PSScriptRoot 'netcoreapp1.0\ef.dll'
+
+        $dotnetParams = 'exec', '--depsfile', $depsfile, '--additionalprobingpath', $nugetPackageRoot
+
+        if (Test-Path $runtimeconfig)
+        {
+            $dotnetParams += '--runtimeconfig', $runtimeconfig
+        }
+
+        $dotnetParams += $efPath
     }
     else
     {
-        throw "Startup project '$($startupProject.ProjectName)' has an active platform of '$platformTarget'. Select " +
-            'a different platform and try again.'
+        throw "Startup project '$($startupProject.ProjectName)' targets framework '$targetFramework'. " +
+            'The Entity Framework Core Package Manager Console Tools don''t support this framework.'
     }
 
     $projectDir = GetProperty $project.Properties 'FullPath'
-    $startupProjectDir = GetProperty $startupProject.Properties 'FullPath'
-    $outputPath = GetProperty $startupProject.ConfigurationManager.ActiveConfiguration.Properties 'OutputPath'
-    $targetDir = Join-Path $startupProjectDir $outputPath
-    $startupTargetFileName = GetProperty $startupProject.Properties 'OutputFileName'
-    $startupTargetPath = Join-Path $targetDir $startupTargetFileName
-    $targetFileName = GetProperty $project.Properties 'OutputFileName'
+    $targetFileName = GetOutputFileName $project
     $targetPath = Join-Path $targetDir $targetFileName
     $rootNamespace = GetProperty $project.Properties 'RootNamespace'
 
@@ -765,9 +781,7 @@ function EF($project, $startupProject, $params, [switch] $json, [switch] $skipBu
         $efParams += '--no-appdomain'
     }
 
-    $params = $efParams + $params
-
-    $params += '--assembly', $targetPath,
+    $efParams += '--assembly', $targetPath,
         '--startup-assembly', $startupTargetPath,
         '--project-dir', $projectDir,
         '--content-root-path', $startupProjectDir,
@@ -775,18 +789,19 @@ function EF($project, $startupProject, $params, [switch] $json, [switch] $skipBu
 
     if ($rootNamespace)
     {
-        $params += '--root-namespace', $rootNamespace
+        $efParams += '--root-namespace', $rootNamespace
     }
 
+    $allParams = $dotnetParams + $efParams + $params
     if ($json)
     {
-        $params += '--json'
+        $allParams += '--json'
 
-        Invoke-Process -Executable $efPath -Arguments $params -RedirectByPrefix -ErrorAction SilentlyContinue -ErrorVariable invokeErrors -JsonOutput | ConvertFrom-Json
+        Invoke-Process -Executable $exePath -Arguments $allParams -RedirectByPrefix -ErrorAction SilentlyContinue -ErrorVariable invokeErrors -JsonOutput | ConvertFrom-Json
     }
     else
     {
-        Invoke-Process -Executable $efPath -Arguments $params -RedirectByPrefix -ErrorAction SilentlyContinue -ErrorVariable invokeErrors
+        Invoke-Process -Executable $exePath -Arguments $allParams -RedirectByPrefix -ErrorAction SilentlyContinue -ErrorVariable invokeErrors
     }
 
     if ($invokeErrors)
@@ -833,6 +848,146 @@ function IsUWP($project)
     return $types -contains '{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A}'
 }
 
+function GetIntermediatePath($project)
+{
+    # TODO: Remove when dotnet/roslyn-project-system#665 is fixed
+    if (IsCsproj2 $project)
+    {
+        return GetCsproj2Property $project 'IntermediateOutputPath'
+    }
+    if (IsXproj $project)
+    {
+        $browseObjectContext = Get-Interface $project 'Microsoft.VisualStudio.ProjectSystem.Designers.IVsBrowseObjectContext'
+        $unconfiguredProject = $browseObjectContext.UnconfiguredProject
+        $configuredProject = $unconfiguredProject.GetSuggestedConfiguredProjectAsync().Result
+        $properties = $configuredProject.Services.ProjectPropertiesProvider.GetCommonProperties()
+        $baseIntermediatePath = $properties.GetEvaluatedPropertyValueAsync('IntermediateOutputPath').Result
+        $configuration = $project.ConfigurationManager.ActiveConfiguration.ConfigurationName
+        $targetFrameworkMoniker = GetXprojTargetFrameworkMoniker $project
+
+        return Join-Path $baseIntermediatePath "$configuration\$targetFrameworkMoniker\"
+    }
+
+    return GetProperty $project.ConfigurationManager.ActiveConfiguration.Properties 'IntermediatePath'
+}
+
+function GetPlatformTarget($project)
+{
+    # TODO: Remove when dotnet/roslyn-project-system#669 is fixed
+    if (IsCsproj2 $project)
+    {
+        return GetCsproj2Property $project 'PlatformTarget'
+    }
+    if (IsXproj $project)
+    {
+        return 'x64'
+    }
+
+    return GetProperty $project.ConfigurationManager.ActiveConfiguration.Properties 'PlatformTarget'
+}
+
+function GetOutputFileName($project)
+{
+    # TODO: Remove when dotnet/roslyn-project-system#667 is fixed
+    if (IsCsproj2 $project)
+    {
+        return GetCsproj2Property $project 'TargetFileName'
+    }
+    if (IsXproj $project)
+    {
+        $outputFileName = GetProperty $project.Properties 'AssemblyName'
+
+        $targetFramework = GetTargetFramework $project
+        if ($targetFramework -eq '.NETFramework')
+        {
+            $outputFileName += '.exe'
+        }
+        else
+        {
+            $outputFileName += '.dll'
+        }
+
+        return $outputFileName
+    }
+
+    return GetProperty $project.Properties 'OutputFileName'
+}
+
+function GetTargetFramework($project)
+{
+    if (IsXproj $project)
+    {
+        $targetFrameworkMoniker = GetXprojTargetFrameworkMoniker $project
+        if ($targetFrameworkMoniker -like 'net45*' -or $targetFrameworkMoniker -like 'net46*')
+        {
+            return '.NETFramework'
+        }
+        if ($targetFrameworkMoniker -like 'netcoreapp1.*')
+        {
+            return '.NETCoreApp'
+        }
+        if ($targetFrameworkMoniker -like 'netstandard1.*')
+        {
+            return '.NETStandard'
+        }
+
+        return $targetFrameworkMoniker
+    }
+
+    $targetFrameworkMoniker = GetProperty $project.Properties 'TargetFrameworkMoniker'
+    $frameworkName = New-Object 'System.Runtime.Versioning.FrameworkName' $targetFrameworkMoniker
+
+    return $frameworkName.Identifier
+}
+
+function GetXprojTargetFrameworkMoniker($project)
+{
+    $projectDir = GetProperty $project.Properties 'FullPath'
+    $projectFile = Join-Path $projectDir 'project.json'
+    $projectInfo = Get-Content $projectFile -Raw | ConvertFrom-Json
+
+    $frameworks = $projectInfo.frameworks | Get-Member -MemberType NoteProperty | %{ $_.Name }
+    if ($frameworks -is [string])
+    {
+        return $frameworks
+    }
+
+    return $frameworks[0]
+}
+
+function GetOutputPath($project)
+{
+    if (IsXproj $project)
+    {
+        $activeConfiguration = $project.ConfigurationManager.ActiveConfiguration
+        $baseOutputPath = GetProperty $activeConfiguration.Properties 'OutputPath'
+        $configuration = $activeConfiguration.ConfigurationName
+        $targetFrameworkMoniker = GetXprojTargetFrameworkMoniker $project
+
+        $outputPath = Join-Path $baseOutputPath "$configuration\$targetFrameworkMoniker\"
+
+        $targetFramework = GetTargetFramework $project
+        if ($targetFramework -eq '.NETFramework')
+        {
+            $outputPath += 'win7-x64\'
+        }
+
+        return $outputPath
+    }
+
+    return GetProperty $project.ConfigurationManager.ActiveConfiguration.Properties 'OutputPath'
+}
+
+function GetNuGetPackageRoot($project)
+{
+    if (IsXproj $project)
+    {
+        return Join-Path $env:USERPROFILE '.nuget\packages\'
+    }
+
+    return GetCsproj2Property $project 'NuGetPackageRoot'
+}
+
 function GetProjectTypes($project)
 {
     $solution = Get-VSService 'Microsoft.VisualStudio.Shell.Interop.SVsSolution' 'Microsoft.VisualStudio.Shell.Interop.IVsSolution'
@@ -862,6 +1017,16 @@ function GetProperty($properties, $propertyName) {
     {
         return $null
     }
+}
+
+function GetCsproj2Property($project, $propertyName)
+{
+    $browseObjectContext = Get-Interface $project 'Microsoft.VisualStudio.ProjectSystem.Properties.IVsBrowseObjectContext'
+    $unconfiguredProject = $browseObjectContext.UnconfiguredProject
+    $configuredProject = $unconfiguredProject.GetSuggestedConfiguredProjectAsync().Result
+    $properties = $configuredProject.Services.ProjectPropertiesProvider.GetCommonProperties()
+
+    return $properties.GetEvaluatedPropertyValueAsync($propertyName).Result
 }
 
 function GetProjectItem($project, $path) {

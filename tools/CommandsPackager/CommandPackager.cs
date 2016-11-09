@@ -80,7 +80,12 @@ namespace CommandPackager
             Console.WriteLine("command:   ".Bold().Blue() + pInfo.FileName);
             Console.WriteLine("arguments: ".Bold().Blue() + pInfo.Arguments);
 
-            Process.Start(pInfo).WaitForExit();
+            var p = Process.Start(pInfo);
+            p.WaitForExit();
+            if (p.ExitCode != 0)
+            {
+                throw new InvalidOperationException("nuget.exe command returned non-zero exit code: " + p.ExitCode);
+            }
         }
 
         private async Task<string> GetNugetExePath()

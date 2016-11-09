@@ -10,7 +10,7 @@ var AUTHORS='Microsoft Open Technologies, Inc.'
 use-standard-lifecycle
 k-standard-goals
 
-#remove-intermediates
+#remove-intermediates target='compile'
   @{
     Directory.CreateDirectory(BUILD_DIR_LOCAL);
     foreach (var p in Files
@@ -27,7 +27,7 @@ k-standard-goals
     Dotnet("publish src/Microsoft.EntityFrameworkCore.Tools.DotNet/ -c " + E("Configuration"));
   }
 
-#repack-tools .remove-intermediates target='compile' if='Directory.Exists("src") && !IsTravisCi'
+#repack-tools .remove-intermediates target='compile' if='Directory.Exists("src") && !IsLinux'
   @{
         var configurationX86 = E("Configuration") + "_x86";
         DotnetBuild("src/ef", configurationX86, "net451");
