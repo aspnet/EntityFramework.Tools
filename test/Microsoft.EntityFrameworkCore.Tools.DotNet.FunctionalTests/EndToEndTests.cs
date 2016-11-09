@@ -22,7 +22,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet.FunctionalTests
             _fixture = fixture;
         }
 
-        [Fact]
+        [Fact(Skip = "https://github.com/aspnet/EntityFramework/issues/6974")]
         public void ShowsErrorWhenMissingDesignDependency()
         {
             var targetProject = Path.Combine(_fixture.TestProjectRoot, "MissingDesignDependency/project.json");
