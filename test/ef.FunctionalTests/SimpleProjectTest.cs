@@ -189,8 +189,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.FunctionalTests
                     build.TargetDir,
                     build.TargetDir,
                     "SimpleProject",
-                    null,
-                    AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
+                    null);
             }
 
             public string TargetDir => _directory.Path;

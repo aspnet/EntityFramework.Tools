@@ -1,6 +1,6 @@
 {
   "version": "1.1.0-*",
-  "description": "Command-line tools for Entity Framework Core",
+  "description": "Entity Framework Core Command Line Tools",
   "dependencies": {
     "Microsoft.Extensions.CommandLineUtils.Sources": {
       "version": "1.1.0-*",

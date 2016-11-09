@@ -17,7 +17,6 @@ namespace Microsoft.EntityFrameworkCore.Tools.Internal
                 if (!options.NoAppDomain)
                 {
                     return new AppDomainOperationExecutor(
-                        configFile: options.AppConfigFile,
                         assembly: options.Assembly,
                         startupAssembly: options.StartupAssembly,
                         projectDir: options.ProjectDirectory ?? Directory.GetCurrentDirectory(),
