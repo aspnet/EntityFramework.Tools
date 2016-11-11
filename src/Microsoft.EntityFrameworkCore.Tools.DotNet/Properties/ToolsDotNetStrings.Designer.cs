@@ -69,6 +69,24 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet.Properties {
         }
         
         /// <summary>
+        ///    Looks up a localized string similar to Build started....
+        /// </summary>
+        public static string BuildStarted {
+            get {
+                return ResourceManager.GetString("BuildStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Build succeeded.
+        /// </summary>
+        public static string BuildSucceeded {
+            get {
+                return ResourceManager.GetString("BuildSucceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///    Looks up a localized string similar to Could not invoke this command on the startup project &apos;{0}&apos;. This version of Entity Framework tools does not support commands on class library projects in ASP.NET Core and .NET Core applications. See http://go.microsoft.com/fwlink/?LinkId=798221 for details and workarounds..
         /// </summary>
         public static string ClassLibrariesNotSupported {

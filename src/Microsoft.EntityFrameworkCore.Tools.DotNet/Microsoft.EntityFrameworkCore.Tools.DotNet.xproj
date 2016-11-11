@@ -8,7 +8,7 @@
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
     <ProjectGuid>31132653-55a2-4adb-babb-60f386d2a98e</ProjectGuid>
-    <RootNamespace>Microsoft.EntityFrameworkCore.Tools.DotNet</RootNamespace>
+    <RootNamespace>Microsoft.EntityFrameworkCore.Tools</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>

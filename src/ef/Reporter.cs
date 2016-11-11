@@ -2,6 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using Microsoft.EntityFrameworkCore.Tools;
+using Microsoft.EntityFrameworkCore.Tools.Utilities;
+
+using static Microsoft.EntityFrameworkCore.Tools.Utilities.AnsiConstants;
 
 namespace Microsoft.EntityFrameworkCore.Tools
 {
@@ -10,62 +14,63 @@ namespace Microsoft.EntityFrameworkCore.Tools
         public const string JsonPrefix = "//BEGIN";
         public const string JsonSuffix = "//END";
 
-        private static readonly object _lock = new object();
+        private static readonly bool _ansiPassThru;
+
+        static Reporter()
+        {
+            _ansiPassThru = Environment.GetEnvironmentVariable("DOTNET_CLI_CONTEXT_ANSI_PASS_THRU") == bool.TrueString;
+        }
+
         public static bool IsVerbose { get; set; }
-        private static IReporter _reporter = new ColorConsoleReporter();
+        public static bool NoColor { get; set; }
+        public static bool PrefixOutput { get; set; }
 
-        public static bool SupportsColor => _reporter.SupportsColor;
+        public static string Colorize(string value, Func<string, string> colorizeFunc)
+            => NoColor ? value : colorizeFunc(value);
 
-        public static void Use(IReporter value)
-            => _reporter = value;
+        public static void Error(string message)
+            => WriteToError(Prefix("ERROR   : ", Colorize(message, x => Bold + Red + x + Reset)));
 
-        public static string MaybeColor(this string raw, Func<string, string> formatter)
-            => SupportsColor
-                ? formatter(raw)
-                : raw;
+        public static void Warning(string message)
+            => WriteToOut(Prefix("WARNING : ", Colorize(message, x => Bold + Yellow + x + Reset)));
+
+        public static void Output(string message)
+            => WriteToOut(Prefix("OUTPUT  : ", message));
 
         public static void Verbose(string message)
         {
-            if (!IsVerbose)
+            if (IsVerbose)
             {
-                return;
-            }
-
-            lock (_lock)
-            {
-                _reporter.Verbose(message);
+                WriteToOut(Prefix("VERBOSE : ", Colorize(message, x => Bold + Black + x + Reset)));
             }
         }
 
-        public static void Output(string message)
+        private static string Prefix(string prefix, string value)
+            => PrefixOutput
+                ? prefix + value
+                : value;
+
+        private static void WriteToOut(string value)
         {
-            lock (_lock)
+            if (NoColor || _ansiPassThru)
             {
-                _reporter.Output(message);
+                Console.WriteLine(value);
+            }
+            else
+            {
+                AnsiConsole.WriteLine(value);
             }
         }
 
-        public static void Warning(string message)
+        private static void WriteToError(string value)
         {
-            lock (_lock)
+            if (NoColor || _ansiPassThru)
             {
-                _reporter.Warning(message);
+                Console.Error.WriteLine(value);
             }
-        }
-
-        public static void Error(string message)
-        {
-            lock (_lock)
+            else
             {
-                _reporter.Error(message);
-            }
-        }
-
-        public static void Error(string message, bool suppressColor)
-        {
-            lock (_lock)
-            {
-                _reporter.Error(message, suppressColor);
+                AnsiConsole.Error.WriteLine(value);
             }
         }
     }

@@ -120,6 +120,12 @@
   <data name="BuildFailed" xml:space="preserve">
     <value>Build failed on '{0}'.</value>
   </data>
+  <data name="BuildStarted" xml:space="preserve">
+    <value>Build started...</value>
+  </data>
+  <data name="BuildSucceeded" xml:space="preserve">
+    <value>Build succeeded.</value>
+  </data>
   <data name="ClassLibrariesNotSupported" xml:space="preserve">
     <value>Could not invoke this command on the startup project '{0}'. This version of the Entity Framework Core .NET Command Line Tools does not support commands on class library projects in ASP.NET Core and .NET Core applications. See http://go.microsoft.com/fwlink/?LinkId=798221 for details and workarounds.</value>
   </data>

@@ -69,7 +69,9 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet.Internal
                     args.Add("/p:TargetFramework=" + framework.GetShortFolderName());
                 }
 
-                var command = Command.CreateDotNet("msbuild", args);
+                var command = Command.CreateDotNet("msbuild", args)
+                    .CaptureStdOut()
+                    .CaptureStdErr();
                 var result = command.Execute();
                 if (result.ExitCode != 0)
                 {

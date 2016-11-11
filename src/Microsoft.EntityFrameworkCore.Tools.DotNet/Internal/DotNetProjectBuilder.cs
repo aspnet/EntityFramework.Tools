@@ -25,8 +25,8 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet.Internal
             }
 
             var buildExitCode = command
-                .ForwardStdErr()
-                .ForwardStdOut()
+                .CaptureStdOut()
+                .CaptureStdErr()
                 .Execute()
                 .ExitCode;
 

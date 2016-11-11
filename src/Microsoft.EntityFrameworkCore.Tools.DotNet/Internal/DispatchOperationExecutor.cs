@@ -53,7 +53,9 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet.Internal
 
             if (!options.NoBuild)
             {
+                Reporter.Verbose.WriteLine(ToolsDotNetStrings.BuildStarted);
                 _projectBuilder.EnsureBuild(startupProject);
+                Reporter.Verbose.WriteLine(ToolsDotNetStrings.BuildSucceeded);
             }
 
             Reporter.Verbose.WriteLine(string.Format(ToolsDotNetStrings.LogDataDirectory, startupProject.TargetDirectory));

@@ -41,17 +41,11 @@ namespace Microsoft.EntityFrameworkCore.Tools
             var verbose = app.Option("--verbose", "Show verbose output", inherited: true);
             var noColor = app.Option("--no-color", "Do not use color in console output");
             // so "WriteLogo" gets the right option set before parsing the remainder of the args
-            if (args.Any(a => a.Equals("--no-color")))
-            {
-                Reporter.Use(new ConsoleReporter());
-            }
+            Reporter.NoColor = args.Any(a => a.Equals("--no-color"));
 
             var prefixOutput = app.Option("--prefix-output", "(internal flag) prefix output");
             prefixOutput.ShowInHelpText = false;
-            if (args.Any(a => a.Equals("--prefix-output")))
-            {
-                Reporter.Use(new PrefixConsoleReporter());
-            }
+            Reporter.PrefixOutput = args.Any(a => a.Equals("--prefix-output"));
 
             // required
             var assembly = app.Option("--assembly <assembly>",

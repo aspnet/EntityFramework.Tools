@@ -77,8 +77,8 @@ namespace CommandPackager
                 Arguments = ArgumentEscaper.EscapeAndConcatenateArgArrayForProcessStart(args),
                 FileName = await GetNugetExePath()
             };
-            Console.WriteLine("command:   ".Bold().Blue() + pInfo.FileName);
-            Console.WriteLine("arguments: ".Bold().Blue() + pInfo.Arguments);
+            Console.WriteLine("command:   " + pInfo.FileName);
+            Console.WriteLine("arguments: " + pInfo.Arguments);
 
             var p = Process.Start(pInfo);
             p.WaitForExit();
@@ -100,7 +100,7 @@ namespace CommandPackager
             {
                 return nugetPath;
             }
-            Console.WriteLine("log : Downloading nuget.exe 3.5.0-rc1".Bold().Black());
+            Console.WriteLine("log : Downloading nuget.exe 3.5.0-rc1");
             var response = await new HttpClient().GetAsync("https://dist.nuget.org/win-x86-commandline/v3.5.0-rc1/NuGet.exe");
             using (var file = new FileStream(nugetPath, FileMode.CreateNew))
             {

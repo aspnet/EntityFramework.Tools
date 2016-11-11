@@ -100,7 +100,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Internal
 #endif
                 else
                 {
-                    Reporter.Error(resultHandler.ErrorStackTrace, suppressColor: true);
+                    Reporter.Verbose(resultHandler.ErrorStackTrace);
                 }
 
                 throw new OperationErrorException(resultHandler.ErrorMessage);

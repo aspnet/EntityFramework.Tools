@@ -4,6 +4,8 @@
 using System;
 using Microsoft.Extensions.CommandLineUtils;
 
+using static Microsoft.EntityFrameworkCore.Tools.Utilities.AnsiConstants;
+
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
     public static class EfCommand
@@ -23,23 +25,17 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
                 });
         }
 
-        private const string Bold = "\x1b[1m";
-        private const string Normal = "\x1b[22m";
-        private const string Magenta = "\x1b[35m";
-        private const string White = "\x1b[37m";
-        private const string Default = "\x1b[39m";
-
         public static void WriteLogo()
         {
             var lines = new[]
             {
                 string.Empty,
-                @"                     _/\__       ".MaybeColor(s => s.Insert(21, Bold + White)),
-                @"               ---==/    \\      ".MaybeColor(s => s.Insert(20, Bold + White)),
-                @"         ___  ___   |.    \|\    ".MaybeColor(s => s.Insert(26, Bold).Insert(21, Normal).Insert(20, Bold + White).Insert(9, Normal + Magenta)),
-                @"        | __|| __|  |  )   \\\   ".MaybeColor(s => s.Insert(20, Bold + White).Insert(8, Normal + Magenta)),
-                @"        | _| | _|   \_/ |  //|\\ ".MaybeColor(s => s.Insert(20, Bold + White).Insert(8, Normal + Magenta)),
-                @"        |___||_|       /   \\\/\\".MaybeColor(s => s.Insert(33, Normal + Default).Insert(23, Bold + White).Insert(8, Normal + Magenta)),
+                Reporter.Colorize(@"                     _/\__       ", s => s.Insert(21, Bold + Gray)),
+                Reporter.Colorize(@"               ---==/    \\      ", s => s.Insert(20, Bold + Gray)),
+                Reporter.Colorize(@"         ___  ___   |.    \|\    ", s => s.Insert(26, Bold).Insert(21, Dark).Insert(20, Bold + Gray).Insert(9, Dark + Magenta)),
+                Reporter.Colorize(@"        | __|| __|  |  )   \\\   ", s => s.Insert(20, Bold + Gray).Insert(8, Dark + Magenta)),
+                Reporter.Colorize(@"        | _| | _|   \_/ |  //|\\ ", s => s.Insert(20, Bold + Gray).Insert(8, Dark + Magenta)),
+                Reporter.Colorize(@"        |___||_|       /   \\\/\\", s => s.Insert(33, Reset).Insert(23, Bold + Gray).Insert(8, Dark + Magenta)),
                 string.Empty
             };
 

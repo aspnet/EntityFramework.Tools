@@ -78,7 +78,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
                 if (!(ex is OperationErrorException)
                     && !(ex is CommandParsingException))
                 {
-                    Reporter.Error(ex.ToString(), suppressColor: true);
+                    Reporter.Verbose(ex.ToString());
                 }
 
                 Reporter.Error(ex.Message);

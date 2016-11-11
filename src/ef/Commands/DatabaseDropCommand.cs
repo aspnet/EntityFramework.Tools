@@ -8,6 +8,8 @@ using System.Text;
 using Microsoft.EntityFrameworkCore.Tools.Internal;
 using Microsoft.Extensions.CommandLineUtils;
 
+using static Microsoft.EntityFrameworkCore.Tools.Utilities.AnsiConstants;
+
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
     public class DatabaseDropCommand : ICommand
@@ -74,7 +76,8 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
 
             if (!_force)
             {
-                Reporter.Output("Are you sure you want to proceed? (y/N)".MaybeColor(s => s.Bold()));
+                Reporter.Output(
+                    Reporter.Colorize("Are you sure you want to proceed? (y/N)", s => Bold + s + Reset));
                 var readedKey = Console.ReadLine().Trim();
                 var confirmed = (readedKey == "y") || (readedKey == "Y");
                 if (!confirmed)
@@ -95,10 +98,10 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
                 return;
             }
 
-            Reporter.Output("This command will " + "permanently".MaybeColor(s => s.Bold()) + " drop the database:");
+            Reporter.Output("This command will " + Reporter.Colorize("permanently", s => Bold + s + Reset) + " drop the database:");
             Reporter.Output(string.Empty);
-            Reporter.Output($"    {"Database name".MaybeColor(s => s.Bold().Green())} : {result["DatabaseName"]}");
-            Reporter.Output($"    {"Data source  ".MaybeColor(s => s.Bold().Green())} : {result["DataSource"]}");
+            Reporter.Output($"    {Reporter.Colorize("Database name", s => Bold + Green + s + Reset)} : {result["DatabaseName"]}");
+            Reporter.Output($"    {Reporter.Colorize("Data source  ", s => Bold + Green + s + Reset)} : {result["DataSource"]}");
             Reporter.Output(string.Empty);
         }
 
