@@ -8,7 +8,6 @@
       "type": "platform",
       "version": "1.0.0"
     },
-    "Microsoft.DotNet.ProjectModel": "1.0.0-rc3-003121",
     "Microsoft.DotNet.Cli.Utils": "1.0.0-preview2-003121"
   },
 
