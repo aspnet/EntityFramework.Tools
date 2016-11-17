@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "dotnet-test-xunit": "2.2.0-*",
-    "Microsoft.DotNet.Cli.Utils": "1.0.0-*",
+    "Microsoft.DotNet.Cli.Utils": "1.0.0-preview2-1-003177",
     "Microsoft.EntityFrameworkCore.Tools.DotNet": "1.2.0-*",
     "ef": "1.2.0-*",
     "xunit": "2.2.0-*"
