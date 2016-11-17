@@ -9,7 +9,6 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet.Internal
     {
         NuGetFramework TargetFramework { get; }
         bool IsClassLibrary { get; }
-        string Config { get; }
         string DepsJson { get; }
         string RuntimeConfigJson { get; }
         string PackagesDirectory { get; }

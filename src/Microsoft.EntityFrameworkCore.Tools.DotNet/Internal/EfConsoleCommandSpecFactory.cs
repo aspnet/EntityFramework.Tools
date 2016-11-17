@@ -44,11 +44,6 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet.Internal
 
             if (startupProject.TargetFramework.IsDesktop())
             {
-                if (startupProject.Config != null)
-                {
-                    args = args.Concat(new[] { ConfigOptionTemplate, startupProject.Config });
-                }
-
                 args = args.Concat(additionalArguments);
                 return ResolveDesktopCommand(startupProject, args);
             }
@@ -93,7 +88,6 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet.Internal
             return _resolver.Resolve(arguments);
         }
 
-        private const string ConfigOptionTemplate = "--config";
         private const string AssemblyOptionTemplate = "--assembly";
         private const string StartupAssemblyOptionTemplate = "--startup-assembly";
         private const string DataDirectoryOptionTemplate = "--data-dir";
