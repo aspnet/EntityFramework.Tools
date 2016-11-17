@@ -28,14 +28,12 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet.Internal
             PackagesDirectory = metadata["NuGetPackageRoot"];
 
             // TODO get from actual properties according to TFM
-            Config = AssemblyFullPath + ".config";
             RuntimeConfigJson = Path.Combine(TargetDirectory, Path.GetFileNameWithoutExtension(AssemblyFullPath) + ".runtimeconfig.json");
             DepsJson = Path.Combine(TargetDirectory, Path.GetFileNameWithoutExtension(AssemblyFullPath) + ".deps.json");
         }
 
         public NuGetFramework TargetFramework { get; }
         public bool IsClassLibrary { get; }
-        public string Config { get; }
         public string DepsJson { get; }
         public string RuntimeConfigJson { get; }
         public string PackagesDirectory { get; }

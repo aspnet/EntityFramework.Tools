@@ -31,7 +31,6 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet.Internal
         public bool IsClassLibrary => !_isExecutable;
 
         public NuGetFramework TargetFramework => _project.TargetFramework;
-        public string Config => _paths.RuntimeFiles.Config;
         public string DepsJson => _paths.RuntimeFiles.DepsJson;
         public string RuntimeConfigJson => _paths.RuntimeFiles.RuntimeConfigJson;
         public string PackagesDirectory => _project.PackagesDirectory;
