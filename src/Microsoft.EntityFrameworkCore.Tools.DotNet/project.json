@@ -1,5 +1,5 @@
 ﻿{
-  "version": "1.0.0-*",
+  "version": "1.0.0-msbuild2-final",
   "description": "Entity Framework Core .NET Command Line Tools. Includes dotnet-ef.",
   "buildOptions": {
     "emitEntryPoint": true,
