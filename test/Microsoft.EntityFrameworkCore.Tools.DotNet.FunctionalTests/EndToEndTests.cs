@@ -29,6 +29,10 @@ namespace Microsoft.EntityFrameworkCore.Tools.DotNet.FunctionalTests
 
             var result = new AddMigration(targetProject, "Initial", _output)
                .ExecuteWithCapturedOutput();
+
+            _output.WriteLine(result.StdOut);
+            _output.WriteLine(result.StdErr);
+
             AssertCommand.Fail(result);
             Assert.Contains(ToolsStrings.DesignDependencyNotFound, result.StdErr);
         }
