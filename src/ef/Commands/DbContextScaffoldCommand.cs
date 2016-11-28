@@ -8,7 +8,7 @@ using Microsoft.Extensions.CommandLineUtils;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    public class DbContextScaffoldCommand : ICommand
+    internal class DbContextScaffoldCommand : ICommand
     {
         public static void Configure(CommandLineApplication command, CommandLineOptions options)
         {

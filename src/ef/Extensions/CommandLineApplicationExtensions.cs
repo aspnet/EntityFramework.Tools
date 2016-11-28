@@ -5,7 +5,7 @@ using System;
 
 namespace Microsoft.Extensions.CommandLineUtils
 {
-    public static class CommandLineApplicationExtensions
+    internal static class CommandLineApplicationExtensions
     {
         public static void OnExecute(this CommandLineApplication command, Action invoke)
             => command.OnExecute(

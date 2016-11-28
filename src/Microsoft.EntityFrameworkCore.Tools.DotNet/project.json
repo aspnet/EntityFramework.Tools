@@ -12,8 +12,14 @@
         "../ef/External/CommandLineApplication.cs",
         "../ef/External/CommandOption.cs",
         "../ef/External/CommandOptionType.cs",
-        "../ef/External/CommandParsingException.cs"
+        "../ef/External/CommandParsingException.cs",
+        "../ef/Utilities/AnsiConsole.cs",
+        "../ef/Utilities/AnsiConstants.cs",
+        "../ef/Utilities/AnsiTextWriter.cs"
       ]
+    },
+    "embed": {
+      "includeFiles": "Resources/EntityFrameworkCore.targets"
     }
   },
   "packOptions": {
@@ -26,15 +32,11 @@
     ],
     "packageType": "DotnetCliTool"
   },
-  "dependencies": {
-    "Microsoft.DotNet.Cli.Utils": "1.0.0-preview*",
-    "Microsoft.DotNet.ProjectModel": "1.0.0-rc3-003121"
-  },
   "frameworks": {
     "netcoreapp1.0": {
       "dependencies": {
         "Microsoft.NETCore.App": {
-          "version": "1.0.1",
+          "version": "1.0.3",
           "type": "platform"
         }
       }

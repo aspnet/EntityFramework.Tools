@@ -5,7 +5,7 @@ using Microsoft.Extensions.CommandLineUtils;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    public class DbContextCommand
+    internal class DbContextCommand
     {
         public static void Configure(CommandLineApplication command, CommandLineOptions options)
         {

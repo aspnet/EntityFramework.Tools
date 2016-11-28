@@ -8,7 +8,7 @@ using static Microsoft.EntityFrameworkCore.Tools.Utilities.AnsiConstants;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    public static class EfCommand
+    internal static class EfCommand
     {
         public static void Configure(CommandLineApplication app, CommandLineOptions options)
         {

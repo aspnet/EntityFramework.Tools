@@ -10,7 +10,7 @@ using Microsoft.Extensions.CommandLineUtils;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    public class DbContextListCommand : ICommand
+    internal class DbContextListCommand : ICommand
     {
         public static void Configure(CommandLineApplication command, CommandLineOptions options)
         {

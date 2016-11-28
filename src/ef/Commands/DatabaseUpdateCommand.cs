@@ -6,7 +6,7 @@ using Microsoft.Extensions.CommandLineUtils;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    public class DatabaseUpdateCommand : ICommand
+    internal class DatabaseUpdateCommand : ICommand
     {
         public static void Configure(CommandLineApplication command, CommandLineOptions commonOptions)
         {

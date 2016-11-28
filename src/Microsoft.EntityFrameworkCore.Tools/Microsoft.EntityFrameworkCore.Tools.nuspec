@@ -22,8 +22,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="build/**/*" target="" />
-    <file src="buildCrossTargeting/**/*" target="" />
     <file src="lib/**/*" target="" />
     <file src="bin/$configuration$/net451/Microsoft.EntityFrameworkCore.Tools.dll" target="tools/" />
     <file src="tools/**/*" target=""/>

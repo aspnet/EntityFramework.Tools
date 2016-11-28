@@ -12,7 +12,7 @@ using static Microsoft.EntityFrameworkCore.Tools.Utilities.AnsiConstants;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    public class DatabaseDropCommand : ICommand
+    internal class DatabaseDropCommand : ICommand
     {
         public static void Configure(CommandLineApplication command, CommandLineOptions commonOptions)
         {

@@ -8,7 +8,7 @@ using Microsoft.Extensions.CommandLineUtils;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    public class MigrationsRemoveCommand : ICommand
+    internal class MigrationsRemoveCommand : ICommand
     {
         public static void Configure(CommandLineApplication command, CommandLineOptions options)
         {

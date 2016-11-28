@@ -39,7 +39,6 @@ namespace CommandPackager
             var version = project.ProjectFile.Version.ToNormalizedString();
             await Nuget("pack",
                 Path.Combine(_baseDir, "src", "Microsoft.EntityFrameworkCore.Tools", "Microsoft.EntityFrameworkCore.Tools.nuspec"),
-                "-Verbosity", "detailed",
                 "-OutputDirectory", Path.Combine(_baseDir, "artifacts/build"),
                 "-Version", version,
                 "-Properties", props,
@@ -50,13 +49,11 @@ namespace CommandPackager
         {
             var project = ProjectContext.Create(Path.Combine(_baseDir, "src", "Microsoft.EntityFrameworkCore.Tools.DotNet"), FrameworkConstants.CommonFrameworks.NetCoreApp10);
             var props = "configuration=" + _config;
-            props += ";dotnetcliutils=" + GetLockFileVersion(project, "Microsoft.DotNet.Cli.Utils");
             props += ";netcoreapp=" + GetLockFileVersion(project, "Microsoft.NETCore.App");
 
             var version = project.ProjectFile.Version.ToNormalizedString();
             await Nuget("pack",
                 Path.Combine(project.ProjectDirectory, "Microsoft.EntityFrameworkCore.Tools.DotNet.nuspec"),
-                "-Verbosity", "detailed",
                 "-OutputDirectory", Path.Combine(_baseDir, "artifacts/build"),
                 "-Version", version,
                 "-Properties", props,

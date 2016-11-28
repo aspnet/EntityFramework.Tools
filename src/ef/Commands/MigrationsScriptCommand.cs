@@ -9,7 +9,7 @@ using Microsoft.Extensions.CommandLineUtils;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    public class MigrationsScriptCommand : ICommand
+    internal class MigrationsScriptCommand : ICommand
     {
         public static void Configure(CommandLineApplication command, CommandLineOptions options)
         {
