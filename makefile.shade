@@ -33,3 +33,12 @@ k-standard-goals
         DotnetBuild("src/ef", configurationX86, "net451");
         Dotnet("run -p tools/CommandsPackager " + E("Configuration"));
    }
+
+#push-packages target="verify"
+    @{
+        if (IsTeamCity)
+        {
+            Environment.SetEnvironmentVariable("NUGET_PUBLISH_FEED", "https://dotnet.myget.org/F/aspnetcore-feature-work/api/v2/package");
+            CallTarget("nuget-install");
+        }
+    }
