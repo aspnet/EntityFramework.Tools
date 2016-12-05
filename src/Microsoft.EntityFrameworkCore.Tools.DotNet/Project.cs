@@ -138,6 +138,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
                 args.Add(_file);
             }
 
+            // TODO: Only build for the first framework when unspecified
             if (_framework != null)
             {
                 args.Add("--framework");

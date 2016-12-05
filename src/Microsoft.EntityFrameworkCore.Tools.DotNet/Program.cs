@@ -44,7 +44,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
                 "The configuration to use.");
             _msbuildprojectextensionspath = app.Option(
                 "--msbuildprojectextensionspath <PATH>",
-                "The MSBuild project extensions path. Defaults to 'obj\'.");
+                "The MSBuild project extensions path. Defaults to 'obj'.");
             _verbose = app.Option(
                 "-v|--verbose",
                 "Show verbose output.");
@@ -131,7 +131,9 @@ namespace Microsoft.EntityFrameworkCore.Tools
             var toolsPath = Path.GetFullPath(
                 Path.Combine(
                     Path.GetDirectoryName(typeof(Program).GetTypeInfo().Assembly.Location),
-                    @"..\..\tools\"));
+                    "..",
+                    "..",
+                    "tools"));
 
             var targetDir = Path.Combine(startupProject.ProjectDir, startupProject.OutputPath);
             var targetPath = Path.Combine(targetDir, project.OutputPath);
@@ -148,9 +150,10 @@ namespace Microsoft.EntityFrameworkCore.Tools
             {
                 executable = Path.Combine(
                     toolsPath,
+                    "net451",
                     startupProject.PlatformTarget == "x86"
-                        ? @"net451\ef.x86.exe"
-                        : @"net451\ef.exe");
+                        ? "ef.x86.exe"
+                        : "ef.exe");
             }
             else if (targetFramework.Identifier == ".NETCoreApp"
                 || targetFramework.Identifier == ".NETStandard")
@@ -174,7 +177,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
                     args.Add(runtimeConfig);
                 }
 
-                args.Add(Path.Combine(toolsPath, @"netcoreapp1.0\ef.dll"));
+                args.Add(Path.Combine(toolsPath, "netcoreapp1.0", "ef.dll"));
             }
             else
             {
