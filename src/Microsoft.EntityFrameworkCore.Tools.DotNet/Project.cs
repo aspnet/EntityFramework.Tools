@@ -31,11 +31,11 @@ namespace Microsoft.EntityFrameworkCore.Tools
 
         public string AssemblyName { get; set; }
         public string NuGetPackageRoot { get; set; }
-        public string OutputFileName { get; set; }
         public string OutputPath { get; set; }
         public string PlatformTarget { get; set; }
         public string ProjectDir { get; set; }
         public string RootNamespace { get; set; }
+        public string TargetFileName { get; set; }
         public string TargetFrameworkMoniker { get; set; }
 
         public static Project FromFile(
@@ -118,11 +118,11 @@ namespace Microsoft.EntityFrameworkCore.Tools
             {
                 AssemblyName = metadata["AssemblyName"],
                 NuGetPackageRoot = metadata["NuGetPackageRoot"],
-                OutputFileName = metadata["OutputFileName"],
                 OutputPath = metadata["OutputPath"],
                 PlatformTarget = platformTarget,
                 ProjectDir = metadata["ProjectDir"],
                 RootNamespace = metadata["RootNamespace"],
+                TargetFileName = metadata["TargetFileName"],
                 TargetFrameworkMoniker = metadata["TargetFrameworkMoniker"]
             };
         }
