@@ -390,10 +390,15 @@ function Script-Migration
     $dteProject = GetProject $Project
     $dteStartupProject = GetStartupProject $StartupProject $dteProject
 
-    $projectDir = GetProperty $dteProject.Properties 'FullPath'
     $intermediatePath = GetIntermediatePath $dteProject
+    if (!(Split-Path $intermediatePath -IsAbsolute))
+    {
+        $projectDir = GetProperty $dteProject.Properties 'FullPath'
+        $intermediatePath = Join-Path $projectDir $intermediatePath
+    }
+
     $scriptFileName = [IO.Path]::ChangeExtension([IO.Path]::GetRandomFileName(), '.sql')
-    $scriptPath = Join-Path (Join-Path $projectDir $intermediatePath) $scriptFileName
+    $scriptPath = Join-Path $intermediatePath $scriptFileName
 
     $params = 'migrations', 'script', '--output', $scriptPath
 
