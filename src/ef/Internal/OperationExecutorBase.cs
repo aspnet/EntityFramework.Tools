@@ -47,7 +47,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Internal
             AppBasePath = Path.GetDirectoryName(assembly);
             if (!Path.IsPathRooted(AppBasePath))
             {
-                AppBasePath = Path.Combine(Directory.GetCurrentDirectory(), AppBasePath);
+                AppBasePath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), AppBasePath));
             }
 
             Reporter.Verbose("Setting app base path " + AppBasePath);

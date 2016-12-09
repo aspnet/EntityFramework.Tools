@@ -394,7 +394,7 @@ function Script-Migration
     if (!(Split-Path $intermediatePath -IsAbsolute))
     {
         $projectDir = GetProperty $dteProject.Properties 'FullPath'
-        $intermediatePath = Join-Path $projectDir $intermediatePath
+        $intermediatePath = Join-Path $projectDir $intermediatePath -Resolve
     }
 
     $scriptFileName = [IO.Path]::ChangeExtension([IO.Path]::GetRandomFileName(), '.sql')
@@ -724,7 +724,7 @@ function EF($project, $startupProject, $params, [switch] $json, [switch] $skipBu
 
     $startupProjectDir = GetProperty $startupProject.Properties 'FullPath'
     $outputPath = GetProperty $startupProject.ConfigurationManager.ActiveConfiguration.Properties 'OutputPath'
-    $targetDir = Join-Path $startupProjectDir $outputPath
+    $targetDir = Join-Path $startupProjectDir $outputPath -Resolve
     $startupTargetFileName = GetOutputFileName $startupProject
     $startupTargetPath = Join-Path $targetDir $startupTargetFileName
     $targetFrameworkMoniker = GetProperty $startupProject.Properties 'TargetFrameworkMoniker'

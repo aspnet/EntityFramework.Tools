@@ -137,7 +137,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
                     "..",
                     "tools"));
 
-            var targetDir = Path.Combine(startupProject.ProjectDir, startupProject.OutputPath);
+            var targetDir = Path.GetFullPath(Path.Combine(startupProject.ProjectDir, startupProject.OutputPath));
             var targetPath = Path.Combine(targetDir, project.TargetFileName);
             var startupTargetPath = Path.Combine(targetDir, startupProject.TargetFileName);
             var depsFile = Path.Combine(
