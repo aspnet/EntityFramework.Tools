@@ -21,7 +21,9 @@ namespace Microsoft.Extensions.CommandLineUtils
                 template,
                 description,
                 template.IndexOf('<') != -1
-                    ? CommandOptionType.SingleValue
+                    ? template.EndsWith(">...")
+                        ? CommandOptionType.MultipleValue
+                        : CommandOptionType.SingleValue
                     : CommandOptionType.NoValue,
                 inherited);
 

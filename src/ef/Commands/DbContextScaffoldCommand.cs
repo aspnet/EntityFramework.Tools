@@ -24,26 +24,22 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
 
             var dataAnnotations = command.Option(
                 "-a|--data-annotations",
-                "Use DataAnnotation attributes to configure the model where possible. If omitted, the output code will use only the fluent API.",
-                CommandOptionType.NoValue);
+                "Use DataAnnotation attributes to configure the model where possible. If omitted, the output code will use only the fluent API.");
             var context = command.Option(
                 "-c|--context <name>",
                 "Name of the generated DbContext class.");
             var force = command.Option(
                 "-f|--force",
-                "Force scaffolding to overwrite existing files. Otherwise, the code will only proceed if no output files would be overwritten.",
-                CommandOptionType.NoValue);
+                "Force scaffolding to overwrite existing files. Otherwise, the code will only proceed if no output files would be overwritten.");
             var outputDir = command.Option(
                 "-o|--output-dir <path>",
                 "Directory of the project where the classes should be output. If omitted, the top-level project directory is used.");
             var schemas = command.Option(
-                "--schema <schema>",
-                "Selects a schema for which to generate classes.",
-                CommandOptionType.MultipleValue);
+                "--schema <schema>...",
+                "Selects a schema for which to generate classes.");
             var tables = command.Option(
-                "-t|--table <schema.table>",
-                "Selects a table for which to generate classes.",
-                CommandOptionType.MultipleValue);
+                "-t|--table <schema.table>...",
+                "Selects a table for which to generate classes.");
             var json = command.JsonOption();
 
             command.OnExecute(() =>

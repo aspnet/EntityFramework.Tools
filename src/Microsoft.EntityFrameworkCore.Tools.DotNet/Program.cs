@@ -27,7 +27,8 @@ namespace Microsoft.EntityFrameworkCore.Tools
             var app = new CommandLineApplication(throwOnUnexpectedArg: false)
             {
                 Name = "dotnet ef",
-                FullName = "Entity Framework Core .NET Command Line Tools"
+                FullName = "Entity Framework Core .NET Command Line Tools",
+                AllowArgumentSeparator = true
             };
 
             _project = app.Option(
@@ -50,6 +51,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
                 "Show verbose output.");
 
             _args = app.RemainingArguments;
+            app.ArgumentSeparatorHelpText = "Any extra options that should be passed to ef.";
 
             app.OnExecute(() => Execute());
 

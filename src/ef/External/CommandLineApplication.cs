@@ -45,7 +45,9 @@ namespace Microsoft.Extensions.CommandLineUtils
         public Func<string> LongVersionGetter { get; set; }
         public Func<string> ShortVersionGetter { get; set; }
         public readonly List<CommandLineApplication> Commands;
+        public bool HandleResponseFiles { get; set; }
         public bool AllowArgumentSeparator { get; set; }
+        public string ArgumentSeparatorHelpText { get; set; }
         public TextWriter Out { get; set; } = Console.Out;
         public TextWriter Error { get; set; } = Console.Error;
 
@@ -122,11 +124,17 @@ namespace Microsoft.Extensions.CommandLineUtils
         {
             Invoke = () => invoke().Result;
         }
+
         public int Execute(params string[] args)
         {
             CommandLineApplication command = this;
             CommandOption option = null;
             IEnumerator<CommandArgument> arguments = null;
+
+            if (HandleResponseFiles)
+            {
+                args = ExpandResponseFiles(args).ToArray();
+            }
 
             for (var index = 0; index < args.Length; index++)
             {
@@ -153,7 +161,7 @@ namespace Microsoft.Extensions.CommandLineUtils
 
                         if (option == null)
                         {
-                            if (string.IsNullOrEmpty(longOptionName) && !command._throwOnUnexpectedArg  && AllowArgumentSeparator)
+                            if (string.IsNullOrEmpty(longOptionName) && !command._throwOnUnexpectedArg && AllowArgumentSeparator)
                             {
                                 // skip over the '--' argument separator
                                 index++;
@@ -184,7 +192,7 @@ namespace Microsoft.Extensions.CommandLineUtils
                             }
                             option = null;
                         }
-                        else if (option.OptionType == CommandOptionType.NoValue)
+                        else if (option.OptionType == CommandOptionType.NoValue || option.OptionType == CommandOptionType.BoolValue)
                         {
                             // No value is needed for this option
                             option.TryParse(null);
@@ -229,7 +237,7 @@ namespace Microsoft.Extensions.CommandLineUtils
                             }
                             option = null;
                         }
-                        else if (option.OptionType == CommandOptionType.NoValue)
+                        else if (option.OptionType == CommandOptionType.NoValue || option.OptionType == CommandOptionType.BoolValue)
                         {
                             // No value is needed for this option
                             option.TryParse(null);
@@ -307,8 +315,8 @@ namespace Microsoft.Extensions.CommandLineUtils
         }
 
         public CommandOption VersionOption(string template,
-            string shortFormVersion,
-            string longFormVersion = null)
+                                           string shortFormVersion,
+                                           string longFormVersion = null)
         {
             if (longFormVersion == null)
             {
@@ -322,8 +330,8 @@ namespace Microsoft.Extensions.CommandLineUtils
 
         // Helper method that adds a version option
         public CommandOption VersionOption(string template,
-            Func<string> shortFormVersionGetter,
-            Func<string> longFormVersionGetter = null)
+                                           Func<string> shortFormVersionGetter,
+                                           Func<string> longFormVersionGetter = null)
         {
             // Version option is special because we stop parsing once we see it
             // So we store it separately for further use
@@ -387,6 +395,7 @@ namespace Microsoft.Extensions.CommandLineUtils
             var optionsBuilder = new StringBuilder();
             var commandsBuilder = new StringBuilder();
             var argumentsBuilder = new StringBuilder();
+            var argumentSeparatorBuilder = new StringBuilder();
 
             var arguments = target.Arguments.Where(a => a.ShowInHelpText).ToList();
             if (arguments.Any())
@@ -446,6 +455,13 @@ namespace Microsoft.Extensions.CommandLineUtils
             if (target.AllowArgumentSeparator)
             {
                 headerBuilder.Append(" [[--] <arg>...]");
+                if (!string.IsNullOrEmpty(target.ArgumentSeparatorHelpText))
+                {
+                    argumentSeparatorBuilder.AppendLine();
+                    argumentSeparatorBuilder.AppendLine("Args:");
+                    argumentSeparatorBuilder.AppendLine($"  {target.ArgumentSeparatorHelpText}");
+                    argumentSeparatorBuilder.AppendLine();
+                }
             }
 
             headerBuilder.AppendLine();
@@ -459,6 +475,7 @@ namespace Microsoft.Extensions.CommandLineUtils
                 + argumentsBuilder.ToString()
                 + optionsBuilder.ToString()
                 + commandsBuilder.ToString()
+                + argumentSeparatorBuilder.ToString()
                 + target.ExtendedHelpText;
         }
 
@@ -502,6 +519,50 @@ namespace Microsoft.Extensions.CommandLineUtils
                 // All remaining arguments are stored for further use
                 command.RemainingArguments.AddRange(new ArraySegment<string>(args, index, args.Length - index));
             }
+        }
+
+        private IEnumerable<string> ExpandResponseFiles(IEnumerable<string> args)
+        {
+            foreach (var arg in args)
+            {
+                if (!arg.StartsWith("@", StringComparison.Ordinal))
+                {
+                    yield return arg;
+                }
+                else
+                {
+                    var fileName = arg.Substring(1);
+
+                    var responseFileArguments = ParseResponseFile(fileName);
+
+                    // ParseResponseFile can suppress expanding this response file by
+                    // returning null. In that case, we'll treat the response
+                    // file token as a regular argument.
+
+                    if (responseFileArguments == null)
+                    {
+                        yield return arg;
+                    }
+                    else
+                    {
+                        foreach (var responseFileArgument in responseFileArguments)
+                            yield return responseFileArgument.Trim();
+                    }
+                }
+            }
+        }
+
+        private IEnumerable<string> ParseResponseFile(string fileName)
+        {
+            if (!HandleResponseFiles)
+                return null;
+
+            if (!File.Exists(fileName))
+            {
+                throw new InvalidOperationException($"Response file '{fileName}' doesn't exist.");
+            }
+
+            return File.ReadLines(fileName);
         }
 
         private class CommandArgumentEnumerator : IEnumerator<CommandArgument>
