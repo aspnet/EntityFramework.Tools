@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "Microsoft.EntityFrameworkCore.Design": {
-      "version": "1.0.1",
+      "version": "1.0.2",
       "type": "build"
     },
     "Microsoft.PowerShell.3.ReferenceAssemblies": {
