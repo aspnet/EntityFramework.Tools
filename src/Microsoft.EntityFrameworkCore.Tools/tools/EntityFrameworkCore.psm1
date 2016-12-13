@@ -765,7 +765,12 @@ function EF($project, $startupProject, $params, [switch] $json, [switch] $skipBu
         $runtimeConfig = Join-Path $targetDir ($startupTargetName + '.runtimeconfig.json')
         $efPath = Join-Path $PSScriptRoot 'netcoreapp1.0\ef.dll'
 
-        $dotnetParams = 'exec', '--depsfile', $depsFile, '--additionalprobingpath', $nugetPackageRoot
+        $dotnetParams = 'exec', '--depsfile', $depsFile
+
+        if ($nugetPackageRoot)
+        {
+            $dotnetParams += '--additionalprobingpath', $nugetPackageRoot
+        }
 
         if (Test-Path $runtimeConfig)
         {

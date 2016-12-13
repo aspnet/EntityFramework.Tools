@@ -65,6 +65,8 @@ namespace Microsoft.EntityFrameworkCore.Tools.VisualStudio.Internal
                     FileName = Executable,
                     Arguments = ArgumentEscaper.Escape(Arguments),
                     UseShellExecute = false,
+                    StandardOutputEncoding = Encoding.UTF8,
+                    StandardErrorEncoding = Encoding.UTF8,
                     CreateNoWindow = true
                 };
 
