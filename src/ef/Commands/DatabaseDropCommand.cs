@@ -1,108 +1,73 @@
-// Copyright (c) .NET Foundation. All rights reserved.
+﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.EntityFrameworkCore.Tools.Internal;
-using Microsoft.Extensions.CommandLineUtils;
-
-using static Microsoft.EntityFrameworkCore.Tools.Utilities.AnsiConstants;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    internal class DatabaseDropCommand : ICommand
+    partial class DatabaseDropCommand : ContextCommandBase
     {
-        public static void Configure(CommandLineApplication command, CommandLineOptions commonOptions)
+        protected override int Execute()
         {
-            command.Description = "Drop the database for specific environment";
-            command.HelpOption();
+            var executor = CreateExecutor();
 
-            var context = command.Option(
-                "-c|--context <context>",
-                "The DbContext to use. If omitted, the default DbContext is used");
-            var force = command.Option(
-                "-f|--force",
-                "Drop without confirmation");
-            var dryRun = command.Option(
-                "--dry-run",
-                "Do not actually drop the database");
-            var json = command.JsonOption();
-
-            command.OnExecute(() =>
-                {
-                    commonOptions.Command = new DatabaseDropCommand(
-                        context.Value(),
-                        force.HasValue(),
-                        dryRun.HasValue(),
-                        json.HasValue());
-                });
-        }
-
-        private readonly bool _force;
-        private readonly string _context;
-        private readonly bool _dryRun;
-        private readonly bool _json;
-
-        public DatabaseDropCommand(string context, bool force, bool dryRun, bool json)
-        {
-            _context = context;
-            _force = force;
-            _dryRun = dryRun;
-            _json = json;
-        }
-
-        public void Run(IOperationExecutor executor)
-        {
-            if (!_force)
+            if (!_force.HasValue())
             {
-                var result = executor.GetContextInfo(_context);
-                var reporter = _json
-                    ? (Action<IDictionary>)ReportJsonDatabaseDiscovered
-                    : ReportDatabaseDiscovered;
+                var result = executor.GetContextInfo(Context.Value());
 
-                reporter.Invoke(result);
+                if (_json.HasValue())
+                {
+                    ReportJsonDatabaseDiscovered(result);
+                }
+                else
+                {
+                    ReportDatabaseDiscovered(result);
+                }
+
                 if (result == null)
                 {
-                    return;
+                    return 0;
                 }
             }
 
-            if (_dryRun)
+            if (_dryRun.HasValue())
             {
-                return;
+                return 0;
             }
 
-            if (!_force)
+            if (!_force.HasValue())
             {
-                Reporter.Output(
-                    Reporter.Colorize("Are you sure you want to proceed? (y/N)", s => Bold + s + Reset));
+                Reporter.WriteInformation("Are you sure you want to proceed? (y/N)");
                 var readedKey = Console.ReadLine().Trim();
                 var confirmed = (readedKey == "y") || (readedKey == "Y");
                 if (!confirmed)
                 {
-                    Reporter.Output("Cancelled");
-                    return;
+                    Reporter.WriteInformation("Cancelled");
+                    return 0;
                 }
             }
 
-            executor.DropDatabase(_context);
+            executor.DropDatabase(Context.Value());
+
+            return base.Execute();
         }
 
         private static void ReportDatabaseDiscovered(IDictionary result)
         {
             if (result == null)
             {
-                Reporter.Output("Could not find database to drop");
+                Reporter.WriteInformation("Could not find database to drop");
                 return;
             }
 
-            Reporter.Output("This command will " + Reporter.Colorize("permanently", s => Bold + s + Reset) + " drop the database:");
-            Reporter.Output(string.Empty);
-            Reporter.Output($"    {Reporter.Colorize("Database name", s => Bold + Green + s + Reset)} : {result["DatabaseName"]}");
-            Reporter.Output($"    {Reporter.Colorize("Data source  ", s => Bold + Green + s + Reset)} : {result["DataSource"]}");
-            Reporter.Output(string.Empty);
+            Reporter.WriteInformation("This command will permanently drop the database:");
+            Reporter.WriteInformation(string.Empty);
+            Reporter.WriteInformation($"    Database name : {result["DatabaseName"]}");
+            Reporter.WriteInformation($"    Data source   : {result["DataSource"]}");
+            Reporter.WriteInformation(string.Empty);
         }
 
         private static void ReportJsonDatabaseDiscovered(IDictionary result)
@@ -125,10 +90,10 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
 
             sb.AppendLine(Reporter.JsonSuffix);
 
-            Reporter.Output(sb.ToString());
+            Reporter.WriteInformation(sb.ToString());
         }
 
-        private static readonly IDictionary<char, string> _replaces
+        private static readonly IReadOnlyDictionary<char, string> _replaces
             = new Dictionary<char, string>
             {
                 { '\n', @"\n" },
@@ -140,13 +105,11 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
                 { '\\', @"\\" }
             };
 
-        private const string NullString = "null";
-
         private static string SerializeString(string raw)
         {
             if (raw == null)
             {
-                return NullString;
+                return "null";
             }
 
             var sb = new StringBuilder(raw.Length + 2);
@@ -164,6 +127,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             }
 
             sb.Append('"');
+
             return sb.ToString();
         }
     }

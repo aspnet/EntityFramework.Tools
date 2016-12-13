@@ -2,24 +2,15 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using Microsoft.EntityFrameworkCore.Tools;
-using Microsoft.EntityFrameworkCore.Tools.Utilities;
-
-using static Microsoft.EntityFrameworkCore.Tools.Utilities.AnsiConstants;
+using System.Linq;
+using static Microsoft.EntityFrameworkCore.Tools.AnsiConstants;
 
 namespace Microsoft.EntityFrameworkCore.Tools
 {
-    public static class Reporter
+    internal static class Reporter
     {
         public const string JsonPrefix = "//BEGIN";
         public const string JsonSuffix = "//END";
-
-        private static readonly bool _ansiPassThru;
-
-        static Reporter()
-        {
-            _ansiPassThru = Environment.GetEnvironmentVariable("DOTNET_CLI_CONTEXT_ANSI_PASS_THRU") == bool.TrueString;
-        }
 
         public static bool IsVerbose { get; set; }
         public static bool NoColor { get; set; }
@@ -28,16 +19,16 @@ namespace Microsoft.EntityFrameworkCore.Tools
         public static string Colorize(string value, Func<string, string> colorizeFunc)
             => NoColor ? value : colorizeFunc(value);
 
-        public static void Error(string message)
+        public static void WriteError(string message)
             => WriteToError(Prefix("ERROR   : ", Colorize(message, x => Bold + Red + x + Reset)));
 
-        public static void Warning(string message)
+        public static void WriteWarning(string message)
             => WriteToOut(Prefix("WARNING : ", Colorize(message, x => Bold + Yellow + x + Reset)));
 
-        public static void Output(string message)
+        public static void WriteInformation(string message)
             => WriteToOut(Prefix("OUTPUT  : ", message));
 
-        public static void Verbose(string message)
+        public static void WriteVerbose(string message)
         {
             if (IsVerbose)
             {
@@ -47,12 +38,14 @@ namespace Microsoft.EntityFrameworkCore.Tools
 
         private static string Prefix(string prefix, string value)
             => PrefixOutput
-                ? prefix + value
+                ? string.Join(
+                    Environment.NewLine,
+                    value.Split(new[] { Environment.NewLine }, StringSplitOptions.None).Select(l => prefix + l))
                 : value;
 
         private static void WriteToOut(string value)
         {
-            if (NoColor || _ansiPassThru)
+            if (NoColor)
             {
                 Console.WriteLine(value);
             }
@@ -64,7 +57,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
 
         private static void WriteToError(string value)
         {
-            if (NoColor || _ansiPassThru)
+            if (NoColor)
             {
                 Console.Error.WriteLine(value);
             }

@@ -5,35 +5,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.EntityFrameworkCore.Tools.Internal;
-using Microsoft.Extensions.CommandLineUtils;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    internal class DbContextListCommand : ICommand
+    partial class DbContextListCommand : ProjectCommandBase
     {
-        public static void Configure(CommandLineApplication command, CommandLineOptions options)
+        protected override int Execute()
         {
-            command.Description = "List your DbContext types";
-            command.HelpOption();
+            var types = CreateExecutor().GetContextTypes();
 
-            var json = command.JsonOption();
-
-            command.OnExecute(() => { options.Command = new DbContextListCommand(json.HasValue()); });
-        }
-
-        private readonly bool _json;
-
-        public DbContextListCommand(bool json)
-        {
-            _json = json;
-        }
-
-        public void Run(IOperationExecutor executor)
-        {
-            var types = executor.GetContextTypes();
-
-            if (_json)
+            if (_json.HasValue())
             {
                 ReportJsonResults(types);
             }
@@ -41,6 +22,8 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             {
                 ReportResults(types);
             }
+
+            return base.Execute();
         }
 
         private static void ReportJsonResults(IEnumerable<IDictionary> contextTypes)
@@ -84,7 +67,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             output.AppendLine("]");
             output.AppendLine(Reporter.JsonSuffix);
 
-            Reporter.Output(output.ToString());
+            Reporter.WriteInformation(output.ToString());
         }
 
         private static void ReportResults(IEnumerable<IDictionary> contextTypes)
@@ -92,13 +75,13 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             var any = false;
             foreach (var contextType in contextTypes)
             {
-                Reporter.Output(contextType["FullName"] as string);
+                Reporter.WriteInformation(contextType["FullName"] as string);
                 any = true;
             }
 
             if (!any)
             {
-                Reporter.Output("No DbContext was found");
+                Reporter.WriteInformation("No DbContext was found");
             }
         }
     }

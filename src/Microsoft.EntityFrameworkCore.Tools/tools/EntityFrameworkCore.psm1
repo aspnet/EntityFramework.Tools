@@ -778,6 +778,8 @@ function EF($project, $startupProject, $params, [switch] $json, [switch] $skipBu
         }
 
         $dotnetParams += $efPath
+
+        $params = $dotnetParams + $params
     }
     else
     {
@@ -799,34 +801,34 @@ function EF($project, $startupProject, $params, [switch] $json, [switch] $skipBu
         $dataDir = $targetDir
     }
 
-    $efParams = '--verbose', '--no-color', '--prefix-output'
+    $params += '--verbose',
+        '--no-color',
+        '--prefix-output',
+        '--assembly', $targetPath,
+        '--startup-assembly', $startupTargetPath,
+        '--project-dir', $projectDir,
+        '--content-root', $startupProjectDir,
+        '--data-dir', $dataDir
 
     if (IsUWP $startupProject)
     {
-        $efParams += '--no-appdomain'
+        $params += '--no-appdomain'
     }
-
-    $efParams += '--assembly', $targetPath,
-        '--startup-assembly', $startupTargetPath,
-        '--project-dir', $projectDir,
-        '--content-root-path', $startupProjectDir,
-        '--data-dir', $dataDir
 
     if ($rootNamespace)
     {
-        $efParams += '--root-namespace', $rootNamespace
+        $params += '--root-namespace', $rootNamespace
     }
 
-    $allParams = $dotnetParams + $efParams + $params
     if ($json)
     {
-        $allParams += '--json'
+        $params += '--json'
 
-        Invoke-Process -Executable $exePath -Arguments $allParams -RedirectByPrefix -ErrorAction SilentlyContinue -ErrorVariable invokeErrors -JsonOutput | ConvertFrom-Json
+        Invoke-Process -Executable $exePath -Arguments $params -RedirectByPrefix -ErrorAction SilentlyContinue -ErrorVariable invokeErrors -JsonOutput | ConvertFrom-Json
     }
     else
     {
-        Invoke-Process -Executable $exePath -Arguments $allParams -RedirectByPrefix -ErrorAction SilentlyContinue -ErrorVariable invokeErrors
+        Invoke-Process -Executable $exePath -Arguments $params -RedirectByPrefix -ErrorAction SilentlyContinue -ErrorVariable invokeErrors
     }
 
     if ($invokeErrors)

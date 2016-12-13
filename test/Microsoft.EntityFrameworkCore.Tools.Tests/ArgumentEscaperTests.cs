@@ -3,7 +3,7 @@
 
 using Xunit;
 
-namespace Microsoft.EntityFrameworkCore.Tools.VisualStudio.Internal
+namespace Microsoft.EntityFrameworkCore.Tools.Internal
 {
     public class ArgumentEscaperTests
     {

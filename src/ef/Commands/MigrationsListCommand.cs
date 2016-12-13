@@ -5,40 +5,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.EntityFrameworkCore.Tools.Internal;
-using Microsoft.Extensions.CommandLineUtils;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    internal class MigrationsListCommand : ICommand
+    partial class MigrationsListCommand : ContextCommandBase
     {
-        public static void Configure(CommandLineApplication command, CommandLineOptions options)
+        protected override int Execute()
         {
-            command.Description = "List the migrations";
-            command.HelpOption();
+            var migrations = CreateExecutor().GetMigrations(Context.Value());
 
-            var context = command.Option(
-                "-c|--context <context>",
-                "The DbContext to use. If omitted, the default DbContext is used");
-            var json = command.JsonOption();
-
-            command.OnExecute(() => { options.Command = new MigrationsListCommand(context.Value(), json.HasValue()); });
-        }
-
-        private readonly string _context;
-        private readonly bool _json;
-
-        public MigrationsListCommand(string context, bool json)
-        {
-            _context = context;
-            _json = json;
-        }
-
-        public void Run(IOperationExecutor executor)
-        {
-            var migrations = executor.GetMigrations(_context);
-
-            if (_json)
+            if (_json.HasValue())
             {
                 ReportJsonResults(migrations);
             }
@@ -46,6 +22,8 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             {
                 ReportResults(migrations);
             }
+
+            return base.Execute();
         }
 
         private static void ReportJsonResults(IEnumerable<IDictionary> migrations)
@@ -84,7 +62,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             output.AppendLine("]");
             output.AppendLine(Reporter.JsonSuffix);
 
-            Reporter.Output(output.ToString());
+            Reporter.WriteInformation(output.ToString());
         }
 
         private static void ReportResults(IEnumerable<IDictionary> migrations)
@@ -92,13 +70,13 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             var any = false;
             foreach (var migration in migrations)
             {
-                Reporter.Output(migration["Id"] as string);
+                Reporter.WriteInformation(migration["Id"] as string);
                 any = true;
             }
 
             if (!any)
             {
-                Reporter.Output("No migrations were found");
+                Reporter.WriteInformation("No migrations were found");
             }
         }
     }

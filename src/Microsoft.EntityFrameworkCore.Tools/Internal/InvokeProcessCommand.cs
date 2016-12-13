@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.EntityFrameworkCore.Tools.VisualStudio.Internal
+namespace Microsoft.EntityFrameworkCore.Tools.Internal
 {
     /// <summary>
     ///     <para>
@@ -154,7 +154,6 @@ namespace Microsoft.EntityFrameworkCore.Tools.VisualStudio.Internal
         }
 
         private const string VerbosePrefix = "VERBOSE : ";
-        private const string DebugPrefix = "DEBUG   : ";
         private const string WarningPrefix = "WARNING : ";
         private const string ErrorPrefix = "ERROR   : ";
         private const string OutputPrefix = "OUTPUT  : ";
@@ -170,12 +169,6 @@ namespace Microsoft.EntityFrameworkCore.Tools.VisualStudio.Internal
             if (line.StartsWith(VerbosePrefix, StringComparison.OrdinalIgnoreCase))
             {
                 WriteVerbose(line.Substring(VerbosePrefix.Length));
-                return;
-            }
-
-            if (line.StartsWith(DebugPrefix, StringComparison.OrdinalIgnoreCase))
-            {
-                WriteDebug(line.Substring(DebugPrefix.Length));
                 return;
             }
 

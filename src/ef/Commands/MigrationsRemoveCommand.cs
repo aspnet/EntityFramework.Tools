@@ -3,47 +3,20 @@
 
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.EntityFrameworkCore.Tools.Internal;
-using Microsoft.Extensions.CommandLineUtils;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    internal class MigrationsRemoveCommand : ICommand
+    partial class MigrationsRemoveCommand : ContextCommandBase
     {
-        public static void Configure(CommandLineApplication command, CommandLineOptions options)
+        protected override int Execute()
         {
-            command.Description = "Remove the last migration";
-            command.HelpOption();
-
-            var context = command.Option(
-                "-c|--context <context>",
-                "The DbContext to use. If omitted, the default DbContext is used");
-            var force = command.Option(
-                "-f|--force",
-                "Removes the last migration without checking the database. If the last migration has been applied to the database, you will need to manually reverse the changes it made.");
-            var json = command.JsonOption();
-
-            command.OnExecute(() => { options.Command = new MigrationsRemoveCommand(context.Value(), force.HasValue(), json.HasValue()); });
-        }
-
-        private readonly string _context;
-        private readonly bool _force;
-        private readonly bool _json;
-
-        public MigrationsRemoveCommand(string context, bool force, bool json)
-        {
-            _context = context;
-            _force = force;
-            _json = json;
-        }
-
-        public void Run(IOperationExecutor executor)
-        {
-            var deletedFiles = executor.RemoveMigration(_context, _force);
-            if (_json)
+            var deletedFiles = CreateExecutor().RemoveMigration(Context.Value(), _force.HasValue());
+            if (_json.HasValue())
             {
                 ReportJsonResults(deletedFiles);
             }
+
+            return base.Execute();
         }
 
         private void ReportJsonResults(IEnumerable<string> files)
@@ -71,7 +44,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             output.AppendLine("  ]");
             output.AppendLine("}");
             output.AppendLine(Reporter.JsonSuffix);
-            Reporter.Output(output.ToString());
+            Reporter.WriteInformation(output.ToString());
         }
 
         private static string SerializePath(string path)

@@ -7,15 +7,29 @@
     "keyFile": "../../tools/Key.snk",
     "compile": {
       "includeFiles": [
-        "../ef/Extensions/CommandLineApplicationExtensions.cs",
-        "../ef/External/CommandArgument.cs",
-        "../ef/External/CommandLineApplication.cs",
-        "../ef/External/CommandOption.cs",
-        "../ef/External/CommandOptionType.cs",
-        "../ef/External/CommandParsingException.cs",
-        "../ef/Utilities/AnsiConsole.cs",
-        "../ef/Utilities/AnsiConstants.cs",
-        "../ef/Utilities/AnsiTextWriter.cs"
+        "../ef/CommandLineUtils/CommandArgument.cs",
+        "../ef/CommandLineUtils/CommandLineApplication.cs",
+        "../ef/CommandLineUtils/CommandLineApplicationExtensions.cs",
+        "../ef/CommandLineUtils/CommandOption.cs",
+        "../ef/CommandLineUtils/CommandOptionType.cs",
+        "../ef/CommandLineUtils/CommandParsingException.cs",
+        "../ef/Commands/CommandBase.cs",
+        "../ef/Commands/ContextCommandBase.cs",
+        "../ef/Commands/DatabaseCommand.cs",
+        "../ef/Commands/DbContextCommand.cs",
+        "../ef/Commands/EFCommandBase.cs",
+        "../ef/Commands/EnvironmentCommandBase.cs",
+        "../ef/Commands/HelpCommandBase.cs",
+        "../ef/Commands/MigrationsCommand.cs",
+        "../ef/Commands/RootCommand.cs",
+        "../ef/AnsiConsole.cs",
+        "../ef/AnsiConstants.cs",
+        "../ef/AnsiTextWriter.cs",
+        "../ef/CommandException.cs",
+        "../ef/Reporter.cs"
+      ],
+      "include": [
+        "../ef/Commands/**/*.Configure.cs"
       ]
     },
     "embed": {
