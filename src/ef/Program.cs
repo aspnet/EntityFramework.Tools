@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Reflection;
 using Microsoft.DotNet.Cli.CommandLine;
 using Microsoft.EntityFrameworkCore.Tools.Commands;
 
@@ -25,14 +24,17 @@ namespace Microsoft.EntityFrameworkCore.Tools
             }
             catch (Exception ex)
             {
-                if (ex is TargetInvocationException)
-                {
-                    ex = ex.InnerException;
-                }
-
-                if (!(ex is CommandException || ex is CommandParsingException))
+                var wrappedException = ex as WrappedException;
+                if (ex is CommandException
+                    || ex is CommandParsingException
+                    || (wrappedException != null
+                        && wrappedException.Type == "Microsoft.EntityFrameworkCore.Design.OperationException"))
                 {
                     Reporter.WriteVerbose(ex.ToString());
+                }
+                else
+                {
+                    Reporter.WriteInformation(ex.ToString());
                 }
 
                 Reporter.WriteError(ex.Message);

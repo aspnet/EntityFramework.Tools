@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Collections;
-using System.Text;
 using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
@@ -37,18 +36,11 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
 
         private static void ReportJson(IDictionary files)
         {
-            var output = new StringBuilder();
-            output.AppendLine(Reporter.JsonPrefix);
-            output.AppendLine("{");
-            output.AppendLine("  \"MigrationFile\": \"" + SerializePath(files["MigrationFile"] as string) + "\",");
-            output.AppendLine("  \"MetadataFile\": \"" + SerializePath(files["MetadataFile"] as string) + "\",");
-            output.AppendLine("  \"SnapshotFile\": \"" + SerializePath(files["SnapshotFile"] as string) + "\"");
-            output.AppendLine("}");
-            output.AppendLine(Reporter.JsonSuffix);
-            Reporter.WriteInformation(output.ToString());
+            Reporter.WriteData("{");
+            Reporter.WriteData("  \"migrationFile\": \"" + Json.Escape(files["MigrationFile"] as string) + "\",");
+            Reporter.WriteData("  \"metadataFile\": \"" + Json.Escape(files["MetadataFile"] as string) + "\",");
+            Reporter.WriteData("  \"snapshotFile\": \"" + Json.Escape(files["SnapshotFile"] as string) + "\"");
+            Reporter.WriteData("}");
         }
-
-        private static string SerializePath(string path)
-            => path?.Replace("\\", "\\\\");
     }
 }

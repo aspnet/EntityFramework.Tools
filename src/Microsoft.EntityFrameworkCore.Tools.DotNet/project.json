@@ -26,6 +26,7 @@
         "../ef/AnsiConstants.cs",
         "../ef/AnsiTextWriter.cs",
         "../ef/CommandException.cs",
+        "../ef/Json.cs",
         "../ef/Reporter.cs"
       ],
       "include": [

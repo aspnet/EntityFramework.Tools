@@ -18,16 +18,6 @@ namespace Microsoft.EntityFrameworkCore.Tools.TestUtilities
         public string Path { get; }
 
         public void Dispose()
-        {
-            try
-            {
-                Directory.Delete(Path, recursive: true);
-            }
-            catch
-            {
-                Console.Error.WriteLine("Failed to delete " + Path);
-                throw;
-            }
-        }
+            => Directory.Delete(Path, recursive: true);
     }
 }

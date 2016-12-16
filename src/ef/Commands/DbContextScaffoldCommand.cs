@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
@@ -26,14 +26,15 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
         protected override int Execute()
         {
             var filesCreated = CreateExecutor().ScaffoldContext(
-                _provider.Value,
-                _connection.Value,
-                _outputDir.Value(),
-                _context.Value(),
-                _schemas.Values,
-                _tables.Values,
-                _dataAnnotations.HasValue(),
-                _force.HasValue());
+                    _provider.Value,
+                    _connection.Value,
+                    _outputDir.Value(),
+                    _context.Value(),
+                    _schemas.Values,
+                    _tables.Values,
+                    _dataAnnotations.HasValue(),
+                    _force.HasValue())
+                .ToList();
             if (_json.HasValue())
             {
                 ReportJsonResults(filesCreated);
@@ -42,35 +43,22 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             return base.Execute();
         }
 
-        private void ReportJsonResults(IEnumerable<string> files)
+        private void ReportJsonResults(IReadOnlyList<string> files)
         {
-            var output = new StringBuilder();
-            output.AppendLine(Reporter.JsonPrefix);
-            output.AppendLine("{");
-            output.AppendLine("  \"files\": [");
-            var first = true;
-            foreach (var file in files)
+            Reporter.WriteData("[");
+
+            for (var i = 0; i < files.Count; i++)
             {
-                if (first)
+                var line = "  \"" + Json.Escape(files[i]) + "\"";
+                if (i != files.Count - 1)
                 {
-                    first = false;
-                }
-                else
-                {
-                    output.AppendLine(",");
+                    line += ",";
                 }
 
-                output.Append("    \"" + SerializePath(file) + "\"");
+                Reporter.WriteData(line);
             }
 
-            output.AppendLine();
-            output.AppendLine("  ]");
-            output.AppendLine("}");
-            output.AppendLine(Reporter.JsonSuffix);
-            Reporter.WriteInformation(output.ToString());
+            Reporter.WriteData("]");
         }
-
-        private static string SerializePath(string path)
-            => path?.Replace("\\", "\\\\");
     }
 }

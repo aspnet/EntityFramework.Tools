@@ -4,7 +4,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
@@ -12,7 +11,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
     {
         protected override int Execute()
         {
-            var types = CreateExecutor().GetContextTypes();
+            var types = CreateExecutor().GetContextTypes().ToList();
 
             if (_json.HasValue())
             {
@@ -26,48 +25,37 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             return base.Execute();
         }
 
-        private static void ReportJsonResults(IEnumerable<IDictionary> contextTypes)
+        private static void ReportJsonResults(IReadOnlyList<IDictionary> contextTypes)
         {
             var nameGroups = contextTypes.GroupBy(t => t["Name"]).ToList();
             var fullNameGroups = contextTypes.GroupBy(t => t["FullName"]).ToList();
 
-            var output = new StringBuilder();
+            Reporter.WriteData("[");
 
-            output.AppendLine(Reporter.JsonPrefix);
-            output.Append("[");
-
-            var first = true;
-            foreach (var contextType in contextTypes)
+            for (var i = 0; i < contextTypes.Count; i++)
             {
-                if (first)
+                var safeName = nameGroups.Count(g => g.Key == contextTypes[i]["Name"]) == 1
+                    ? contextTypes[i]["Name"]
+                    : fullNameGroups.Count(g => g.Key == contextTypes[i]["FullName"]) == 1
+                        ? contextTypes[i]["FullName"]
+                        : contextTypes[i]["AssemblyQualifiedName"];
+
+                Reporter.WriteData("  {");
+                Reporter.WriteData("     \"fullName\": \"" + contextTypes[i]["FullName"] + "\",");
+                Reporter.WriteData("     \"safeName\": \"" + safeName + "\",");
+                Reporter.WriteData("     \"name\": \"" + contextTypes[i]["Name"] + "\",");
+                Reporter.WriteData("     \"assemblyQualifiedName\": \"" + contextTypes[i]["AssemblyQualifiedName"] + "\"");
+
+                var line = "  }";
+                if (i != contextTypes.Count - 1)
                 {
-                    first = false;
-                }
-                else
-                {
-                    output.Append(",");
+                    line += ",";
                 }
 
-                var safeName = nameGroups.Count(g => g.Key == contextType["Name"]) == 1
-                    ? contextType["Name"]
-                    : fullNameGroups.Count(g => g.Key == contextType["FullName"]) == 1
-                        ? contextType["FullName"]
-                        : contextType["AssemblyQualifiedName"];
-
-                output.AppendLine();
-                output.AppendLine("  {");
-                output.AppendLine("     \"fullName\": \"" + contextType["FullName"] + "\",");
-                output.AppendLine("     \"safeName\": \"" + safeName + "\",");
-                output.AppendLine("     \"name\": \"" + contextType["Name"] + "\",");
-                output.AppendLine("     \"assemblyQualifiedName\": \"" + contextType["AssemblyQualifiedName"] + "\"");
-                output.Append("  }");
+                Reporter.WriteData(line);
             }
 
-            output.AppendLine();
-            output.AppendLine("]");
-            output.AppendLine(Reporter.JsonSuffix);
-
-            Reporter.WriteInformation(output.ToString());
+            Reporter.WriteData("]");
         }
 
         private static void ReportResults(IEnumerable<IDictionary> contextTypes)
@@ -75,7 +63,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             var any = false;
             foreach (var contextType in contextTypes)
             {
-                Reporter.WriteInformation(contextType["FullName"] as string);
+                Reporter.WriteData(contextType["FullName"] as string);
                 any = true;
             }
 

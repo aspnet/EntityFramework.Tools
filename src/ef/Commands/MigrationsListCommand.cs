@@ -4,7 +4,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
@@ -12,7 +11,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
     {
         protected override int Execute()
         {
-            var migrations = CreateExecutor().GetMigrations(Context.Value());
+            var migrations = CreateExecutor().GetMigrations(Context.Value()).ToList();
 
             if (_json.HasValue())
             {
@@ -26,43 +25,33 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             return base.Execute();
         }
 
-        private static void ReportJsonResults(IEnumerable<IDictionary> migrations)
+        private static void ReportJsonResults(IReadOnlyList<IDictionary> migrations)
         {
             var nameGroups = migrations.GroupBy(m => m["Name"]).ToList();
-            var output = new StringBuilder();
-            output.AppendLine(Reporter.JsonPrefix);
 
-            output.Append("[");
+            Reporter.WriteData("[");
 
-            var first = true;
-            foreach (var m in migrations)
+            for (var i = 0; i < migrations.Count; i++)
             {
-                if (first)
+                var safeName = nameGroups.Count(g => g.Key == migrations[i]["Name"]) == 1
+                    ? migrations[i]["Name"]
+                    : migrations[i]["Id"];
+
+                Reporter.WriteData("  {");
+                Reporter.WriteData("    \"id\": \"" + migrations[i]["Id"] + "\",");
+                Reporter.WriteData("    \"name\": \"" + migrations[i]["Name"] + "\",");
+                Reporter.WriteData("    \"safeName\": \"" + safeName + "\"");
+
+                var line = "  }";
+                if (i != migrations.Count - 1)
                 {
-                    first = false;
-                }
-                else
-                {
-                    output.Append(",");
+                    line += ",";
                 }
 
-                var safeName = nameGroups.Count(g => g.Key == m["Name"]) == 1
-                    ? m["Name"]
-                    : m["Id"];
-
-                output.AppendLine();
-                output.AppendLine("  {");
-                output.AppendLine("    \"id\": \"" + m["Id"] + "\",");
-                output.AppendLine("    \"name\": \"" + m["Name"] + "\",");
-                output.AppendLine("    \"safeName\": \"" + safeName + "\"");
-                output.Append("  }");
+                Reporter.WriteData(line);
             }
 
-            output.AppendLine();
-            output.AppendLine("]");
-            output.AppendLine(Reporter.JsonSuffix);
-
-            Reporter.WriteInformation(output.ToString());
+            Reporter.WriteData("]");
         }
 
         private static void ReportResults(IEnumerable<IDictionary> migrations)
@@ -70,7 +59,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             var any = false;
             foreach (var migration in migrations)
             {
-                Reporter.WriteInformation(migration["Id"] as string);
+                Reporter.WriteData(migration["Id"] as string);
                 any = true;
             }
 

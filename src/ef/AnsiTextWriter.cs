@@ -41,7 +41,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
                 start = match.Index + match.Length;
             }
 
-            if (start != value.Length - 1)
+            if (start != value.Length)
             {
                 _writer.Write(value.Substring(start));
             }

@@ -58,7 +58,7 @@ function Add-Migration
     $dteProject = GetProject $Project
     $dteStartupProject = GetStartupProject $StartupProject $dteProject
 
-    $params = 'migrations', 'add', $Name
+    $params = 'migrations', 'add', $Name, '--json'
 
     if ($OutputDir)
     {
@@ -67,16 +67,16 @@ function Add-Migration
 
     $params += GetParams $Context $Environment
 
-    $result = EF $dteProject $dteStartupProject $params -json
+    $result = EF $dteProject $dteStartupProject $params | ConvertFrom-Json
     Write-Output 'To undo this action, use Remove-Migration.'
 
-    $dteProject.ProjectItems.AddFromFile($result.MigrationFile) | Out-Null
-    $DTE.ItemOperations.OpenFile($result.MigrationFile) | Out-Null
+    $dteProject.ProjectItems.AddFromFile($result.migrationFile) | Out-Null
+    $DTE.ItemOperations.OpenFile($result.migrationFile) | Out-Null
     ShowConsole
 
-    $dteProject.ProjectItems.AddFromFile($result.MetadataFile) | Out-Null
+    $dteProject.ProjectItems.AddFromFile($result.metadataFile) | Out-Null
 
-    $dteProject.ProjectItems.AddFromFile($result.SnapshotFile) | Out-Null
+    $dteProject.ProjectItems.AddFromFile($result.snapshotFile) | Out-Null
 }
 
 #
@@ -126,10 +126,10 @@ function Drop-Database
             'DbContext.Database.EnsureDeleted() at runtime.'
     }
 
-    $params = 'database', 'drop', '--dry-run'
+    $params = 'database', 'drop', '--dry-run', '--json'
     $params += GetParams $Context $Environment
 
-    $info = EF $dteProject $dteStartupProject $params -json
+    $info = EF $dteProject $dteStartupProject $params | ConvertFrom-Json
 
     if ($PSCmdlet.ShouldProcess("database '$($info.databaseName)' on server '$($info.dataSource)'"))
     {
@@ -199,7 +199,7 @@ function Remove-Migration
         $Force = [switch]::Present
     }
 
-    $params = 'migrations', 'remove'
+    $params = 'migrations', 'remove', '--json'
 
     if ($Force)
     {
@@ -208,9 +208,9 @@ function Remove-Migration
 
     $params += GetParams $Context $Environment
 
-    $result = EF $dteProject $dteStartupProject $params -json
+    $result = EF $dteProject $dteStartupProject $params | ConvertFrom-Json
 
-    $result.files | %{
+    $result | %{
         $projectItem = GetProjectItem $dteProject $_
         if ($projectItem)
         {
@@ -294,7 +294,7 @@ function Scaffold-DbContext
     $dteProject = GetProject $Project
     $dteStartupProject = GetStartupProject $StartupProject $dteProject
 
-    $params = 'dbcontext', 'scaffold', $Connection, $Provider
+    $params = 'dbcontext', 'scaffold', $Connection, $Provider, '--json'
 
     if ($OutputDir)
     {
@@ -321,10 +321,10 @@ function Scaffold-DbContext
 
     $params += GetParams -Environment $Environment
 
-    $result = EF $dteProject $dteStartupProject $params -json
+    $result = EF $dteProject $dteStartupProject $params | ConvertFrom-Json
 
-    $result.files | %{ $dteProject.ProjectItems.AddFromFile($_) | Out-Null }
-    $DTE.ItemOperations.OpenFile($result.files[0]) | Out-Null
+    $result | %{ $dteProject.ProjectItems.AddFromFile($_) | Out-Null }
+    $DTE.ItemOperations.OpenFile($result[0]) | Out-Null
     ShowConsole
 }
 
@@ -520,10 +520,10 @@ function GetContextTypes($environment, $projectName, $startupProjectName)
     $project = GetProject $projectName
     $startupProject = GetStartupProject $startupProjectName $project
 
-    $params = 'dbcontext', 'list'
+    $params = 'dbcontext', 'list', '--json'
     $params += GetParams -Environment $environment
 
-    $result = EF $project $startupProject $params -json -skipBuild
+    $result = EF $project $startupProject $params -skipBuild | ConvertFrom-Json
 
     return $result | %{ $_.safeName }
 }
@@ -533,10 +533,10 @@ function GetMigrations($context, $environment, $projectName, $startupProjectName
     $project = GetProject $projectName
     $startupProject = GetStartupProject $startupProjectName $project
 
-    $params = 'migrations', 'list'
+    $params = 'migrations', 'list', '--json'
     $params += GetParams $context $environment
 
-    $result = EF $project $startupProject $params -json -skipBuild
+    $result = EF $project $startupProject $params -skipBuild | ConvertFrom-Json
 
     return $result | %{ $_.safeName }
 }
@@ -623,7 +623,7 @@ function GetSolutionProjects()
         $projects.Push($_)
     }
 
-    while ($projects.Count -ne 0)
+    while ($projects.Count)
     {
         $project = $projects.Pop();
 
@@ -662,7 +662,7 @@ function ShowConsole
     $powerConsoleWindow.Show()
 }
 
-function EF($project, $startupProject, $params, [switch] $json, [switch] $skipBuild)
+function EF($project, $startupProject, $params, [switch] $skipBuild)
 {
     if (IsUWP $project)
     {
@@ -820,35 +820,43 @@ function EF($project, $startupProject, $params, [switch] $json, [switch] $skipBu
         $params += '--root-namespace', $rootNamespace
     }
 
-    if ($json)
-    {
-        $params += '--json'
-
-        Invoke-Process -Executable $exePath -Arguments $params -RedirectByPrefix -ErrorAction SilentlyContinue -ErrorVariable invokeErrors -JsonOutput | ConvertFrom-Json
+    $arguments = ToArguments $params
+    $startInfo = New-Object 'System.Diagnostics.ProcessStartInfo' -Property @{
+        FileName = $exePath;
+        Arguments = $arguments;
+        UseShellExecute = $false;
+        CreateNoWindow = $true;
+        RedirectStandardOutput = $true;
+        StandardOutputEncoding = [Text.Encoding]::UTF8;
     }
-    else
-    {
-        Invoke-Process -Executable $exePath -Arguments $params -RedirectByPrefix -ErrorAction SilentlyContinue -ErrorVariable invokeErrors
-    }
 
-    if ($invokeErrors)
+    Write-Verbose "$exePath $arguments"
+
+    $process = [Diagnostics.Process]::Start($startInfo)
+
+    while ($line = $process.StandardOutput.ReadLine())
     {
-        $combined = ($invokeErrors |
-            ?{ $_.Exception.Message -notLike '*non-zero exit code' } |
-            %{ $_.Exception.Message }) -join "`n"
-        if (!$combined)
+        $level = $null
+        $text = $line
+
+        $parts = $line.Split(':', 2)
+        if ($parts.Length -eq 2)
         {
-            $lastError = $invokeErrors | select -Last 1
-            if (!$lastError.Exception.Message)
-            {
-                throw 'Operation failed with unspecified error'
-            }
-
-            throw $lastError.Exception.Message
+            $level = $parts[0]
+            $text = $parts[1].Substring(8 - $level.Length)
         }
 
-        throw $combined
+        switch ($level)
+        {
+            'error' { throw $text }
+            'warn' { Write-Warning $text }
+            'data' { Write-Output $text }
+            'verbose' { Write-Verbose $text }
+            default { Write-Host $text }
+        }
     }
+
+    $process.WaitForExit()
 }
 
 function IsXproj($project)
@@ -934,7 +942,8 @@ function GetProjectTypes($project)
     return $projectTypeGuidsString.Split(';')
 }
 
-function GetProperty($properties, $propertyName) {
+function GetProperty($properties, $propertyName)
+{
     try
     {
         return $properties.Item($propertyName).Value
@@ -955,7 +964,8 @@ function GetCsproj2Property($project, $propertyName)
     return $properties.GetEvaluatedPropertyValueAsync($propertyName).Result
 }
 
-function GetProjectItem($project, $path) {
+function GetProjectItem($project, $path)
+{
     $fullPath = GetProperty $project.Properties 'FullPath'
 
     if (Split-Path $path -IsAbsolute)
@@ -993,4 +1003,75 @@ function GetProjectItem($project, $path) {
     }
 
     return $null
+}
+
+function ToArguments($params)
+{
+    $arguments = ''
+    for ($i = 0; $i -lt $params.Length; $i++)
+    {
+        if ($i)
+        {
+            $arguments += " "
+        }
+
+        if (!$params[$i].Contains(' '))
+        {
+            $arguments += $params[$i]
+
+            continue
+        }
+
+        $arguments += '"'
+
+        $pendingBackslashs = 0
+        for ($j = 0; $j -lt $params[$i].Length; $j++)
+        {
+            switch ($params[$i][$j])
+            {
+                '"'
+                {
+                    if ($pendingBackslashs)
+                    {
+                        $arguments += '\' * $pendingBackslashs * 2
+                        $pendingBackslashs = 0
+                    }
+                    $arguments += '\"'
+                }
+
+                '\'
+                {
+                    $pendingBackslashs++
+                }
+
+                default
+                {
+                    if ($pendingBackslashs)
+                    {
+                        if ($pendingBackslashs -eq 1)
+                        {
+                            $arguments += '\'
+                        }
+                        else
+                        {
+                            $arguments += '\' * $pendingBackslashs * 2
+                        }
+
+                        $pendingBackslashs = 0
+                    }
+
+                    $arguments += $params[$i][$j]
+                }
+            }
+        }
+
+        if ($pendingBackslashs)
+        {
+            $arguments += '\' * $pendingBackslashs * 2
+        }
+
+        $arguments += '"'
+    }
+
+    return $arguments
 }

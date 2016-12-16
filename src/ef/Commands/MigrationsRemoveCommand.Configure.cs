@@ -17,7 +17,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             _force = command.Option(
                 "-f|--force",
                 "Don't check to see if the migration has been applied to the database.");
-            _json = command.JsonOption();
+            _json = Json.ConfigureOption(command);
 
             base.Configure(command);
         }

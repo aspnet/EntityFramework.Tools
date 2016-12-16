@@ -37,7 +37,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
                     builder.Append(" ");
                 }
 
-                if ((args[i][0] == '"' && args[i][args[i].Length - 1] == '"') || args[i].IndexOf(' ') == -1)
+                if (args[i].IndexOf(' ') == -1)
                 {
                     builder.Append(args[i]);
 
@@ -69,7 +69,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
                             {
                                 if (pendingBackslashs == 1)
                                 {
-                                    builder.Append('\\');
+                                    builder.Append("\\");
                                 }
                                 else
                                 {
@@ -78,6 +78,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
 
                                 pendingBackslashs = 0;
                             }
+
                             builder.Append(args[i][j]);
                             break;
                     }

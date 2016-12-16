@@ -9,9 +9,6 @@ namespace Microsoft.EntityFrameworkCore.Tools
 {
     internal static class Reporter
     {
-        public const string JsonPrefix = "//BEGIN";
-        public const string JsonSuffix = "//END";
-
         public static bool IsVerbose { get; set; }
         public static bool NoColor { get; set; }
         public static bool PrefixOutput { get; set; }
@@ -20,19 +17,22 @@ namespace Microsoft.EntityFrameworkCore.Tools
             => NoColor ? value : colorizeFunc(value);
 
         public static void WriteError(string message)
-            => WriteToError(Prefix("ERROR   : ", Colorize(message, x => Bold + Red + x + Reset)));
+            => WriteLine(Prefix("error:   ", Colorize(message, x => Bold + Red + x + Reset)));
 
         public static void WriteWarning(string message)
-            => WriteToOut(Prefix("WARNING : ", Colorize(message, x => Bold + Yellow + x + Reset)));
+            => WriteLine(Prefix("warn:    ", Colorize(message, x => Bold + Yellow + x + Reset)));
 
         public static void WriteInformation(string message)
-            => WriteToOut(Prefix("OUTPUT  : ", message));
+            => WriteLine(Prefix("info:    ", message));
+
+        public static void WriteData(string message)
+            => WriteLine(Prefix("data:    ", message));
 
         public static void WriteVerbose(string message)
         {
             if (IsVerbose)
             {
-                WriteToOut(Prefix("VERBOSE : ", Colorize(message, x => Bold + Black + x + Reset)));
+                WriteLine(Prefix("verbose: ", Colorize(message, x => Bold + Black + x + Reset)));
             }
         }
 
@@ -43,7 +43,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
                     value.Split(new[] { Environment.NewLine }, StringSplitOptions.None).Select(l => prefix + l))
                 : value;
 
-        private static void WriteToOut(string value)
+        private static void WriteLine(string value)
         {
             if (NoColor)
             {
@@ -52,18 +52,6 @@ namespace Microsoft.EntityFrameworkCore.Tools
             else
             {
                 AnsiConsole.WriteLine(value);
-            }
-        }
-
-        private static void WriteToError(string value)
-        {
-            if (NoColor)
-            {
-                Console.Error.WriteLine(value);
-            }
-            else
-            {
-                AnsiConsole.Error.WriteLine(value);
             }
         }
     }

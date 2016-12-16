@@ -7,10 +7,6 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.EntityFrameworkCore.Tools.Properties;
 
-#if NET451
-using System.Runtime.Remoting;
-#endif
-
 namespace Microsoft.EntityFrameworkCore.Tools
 {
     internal abstract class OperationExecutorBase : IOperationExecutor
@@ -18,7 +14,6 @@ namespace Microsoft.EntityFrameworkCore.Tools
         private const string DataDirEnvName = "ADONET_DATA_DIR";
         public const string DesignAssemblyName = "Microsoft.EntityFrameworkCore.Design";
         protected const string ExecutorTypeName = "Microsoft.EntityFrameworkCore.Design.OperationExecutor";
-        private const string OperationExceptionTypeName = "Microsoft.EntityFrameworkCore.Design.OperationException";
 
         private static readonly IDictionary EmptyArguments = new Dictionary<string, object>(0);
         public string AppBasePath { get; }
@@ -40,24 +35,24 @@ namespace Microsoft.EntityFrameworkCore.Tools
             string environment)
         {
             AssemblyFileName = Path.GetFileNameWithoutExtension(assembly);
-            StartupAssemblyFileName = string.IsNullOrWhiteSpace(startupAssembly)
+            StartupAssemblyFileName = startupAssembly == null
                 ? AssemblyFileName
                 : Path.GetFileNameWithoutExtension(startupAssembly);
 
-            AppBasePath = Path.GetDirectoryName(assembly);
+            AppBasePath = Path.GetDirectoryName(startupAssembly ?? assembly);
             if (!Path.IsPathRooted(AppBasePath))
             {
-                AppBasePath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), AppBasePath));
+                AppBasePath = Path.GetFullPath(AppBasePath);
             }
 
             Reporter.WriteVerbose("Setting app base path " + AppBasePath);
 
             ContentRootPath = contentRootPath ?? AppBasePath;
             RootNamespace = rootNamespace ?? AssemblyFileName;
-            ProjectDirectory = projectDir;
+            ProjectDirectory = projectDir ?? Directory.GetCurrentDirectory();
             EnvironmentName = environment;
 
-            if (!string.IsNullOrEmpty(dataDirectory))
+            if (dataDirectory != null)
             {
                 Environment.SetEnvironmentVariable(DataDirEnvName, dataDirectory);
             }
@@ -67,7 +62,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
         {
         }
 
-        protected abstract object CreateResultHandler();
+        protected abstract dynamic CreateResultHandler();
         protected abstract void Execute(string operationName, object resultHandler, IDictionary arguments);
 
         private TResult InvokeOperation<TResult>(string operation)
@@ -77,11 +72,11 @@ namespace Microsoft.EntityFrameworkCore.Tools
             => (TResult)InvokeOperationImpl(operation, arguments);
 
         private void InvokeOperation(string operation, IDictionary arguments)
-            => InvokeOperationImpl(operation, arguments, true);
+            => InvokeOperationImpl(operation, arguments);
 
-        private object InvokeOperationImpl(string operationName, IDictionary arguments, bool isVoid = false)
+        private object InvokeOperationImpl(string operationName, IDictionary arguments)
         {
-            var resultHandler = (dynamic)CreateResultHandler();
+            var resultHandler = CreateResultHandler();
 
             var currentDirectory = Directory.GetCurrentDirectory();
             Directory.SetCurrentDirectory(AppBasePath);
@@ -96,29 +91,10 @@ namespace Microsoft.EntityFrameworkCore.Tools
 
             if (resultHandler.ErrorType != null)
             {
-                if (resultHandler.ErrorType == OperationExceptionTypeName)
-                {
-                    Reporter.WriteVerbose(resultHandler.ErrorStackTrace);
-                }
-#if NET451
-                else if (resultHandler.ErrorType == typeof(RemotingException).FullName)
-                {
-                    Reporter.WriteVerbose(resultHandler.ErrorStackTrace);
-                    throw new CommandException(Resources.DesignDependencyIncompatible);
-                }
-#endif
-                else
-                {
-                    Reporter.WriteVerbose(resultHandler.ErrorStackTrace);
-                }
-
-                throw new CommandException(resultHandler.ErrorMessage);
-            }
-
-            if (!isVoid
-                && !resultHandler.HasResult)
-            {
-                throw new InvalidOperationException(string.Format(Resources.NoResult, operationName));
+                throw new WrappedException(
+                    resultHandler.ErrorType,
+                    resultHandler.ErrorMessage,
+                    resultHandler.ErrorStackTrace);
             }
 
             return resultHandler.Result;

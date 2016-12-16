@@ -12,6 +12,7 @@ using Xunit;
 
 namespace Microsoft.EntityFrameworkCore.Tools
 {
+    [Collection("OperationExecutorTests")]
     public class SimpleProjectTest : IClassFixture<SimpleProjectTest.SimpleProject>
     {
         private readonly SimpleProject _project;

@@ -23,9 +23,13 @@ namespace Microsoft.EntityFrameworkCore.Tools
             }
             catch (Exception ex)
             {
-                if (!(ex is CommandException || ex is CommandParsingException))
+                if (ex is CommandException || ex is CommandParsingException)
                 {
                     Reporter.WriteVerbose(ex.ToString());
+                }
+                else
+                {
+                    Reporter.WriteInformation(ex.ToString());
                 }
 
                 Reporter.WriteError(ex.Message);

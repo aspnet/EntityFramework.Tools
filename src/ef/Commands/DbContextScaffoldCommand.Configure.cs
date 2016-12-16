@@ -46,7 +46,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             _tables = command.Option(
                 "-t|--table <TABLE_NAME>...",
                 "The tables to generate entity types for.");
-            _json = command.JsonOption();
+            _json = Json.ConfigureOption(command);
 
             base.Configure(command);
         }

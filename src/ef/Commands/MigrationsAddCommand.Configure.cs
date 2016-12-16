@@ -20,7 +20,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             _outputDir = command.Option(
                 "-o|--output-dir <PATH>",
                 "The directory (and sub-namespace) to use. Paths are relative to the project directory. Defaults to \"Migrations\".");
-            _json = command.JsonOption();
+            _json = Json.ConfigureOption(command);
 
             base.Configure(command);
         }

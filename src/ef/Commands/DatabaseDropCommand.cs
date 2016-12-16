@@ -3,8 +3,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
@@ -25,11 +23,6 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
                 else
                 {
                     ReportDatabaseDiscovered(result);
-                }
-
-                if (result == null)
-                {
-                    return 0;
                 }
             }
 
@@ -57,78 +50,19 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
 
         private static void ReportDatabaseDiscovered(IDictionary result)
         {
-            if (result == null)
-            {
-                Reporter.WriteInformation("Could not find database to drop");
-                return;
-            }
-
             Reporter.WriteInformation("This command will permanently drop the database:");
             Reporter.WriteInformation(string.Empty);
-            Reporter.WriteInformation($"    Database name : {result["DatabaseName"]}");
-            Reporter.WriteInformation($"    Data source   : {result["DataSource"]}");
+            Reporter.WriteInformation("    Database name : " + result["DatabaseName"]);
+            Reporter.WriteInformation("    Data source   : " + result["DataSource"]);
             Reporter.WriteInformation(string.Empty);
         }
 
         private static void ReportJsonDatabaseDiscovered(IDictionary result)
         {
-            var sb = new StringBuilder();
-            sb.AppendLine(Reporter.JsonPrefix);
-
-            if (result == null)
-            {
-                sb.AppendLine("{ }");
-            }
-            else
-            {
-                sb
-                    .AppendLine("{")
-                    .AppendLine("    \"databaseName\": " + SerializeString(result["DatabaseName"] as string) + ",")
-                    .AppendLine("    \"dataSource\": " + SerializeString(result["DataSource"] as string))
-                    .AppendLine("}");
-            }
-
-            sb.AppendLine(Reporter.JsonSuffix);
-
-            Reporter.WriteInformation(sb.ToString());
-        }
-
-        private static readonly IReadOnlyDictionary<char, string> _replaces
-            = new Dictionary<char, string>
-            {
-                { '\n', @"\n" },
-                { '\t', @"\t" },
-                { '\r', @"\r" },
-                { '\f', @"\f" },
-                { '\b', @"\b" },
-                { '"', @"\""" },
-                { '\\', @"\\" }
-            };
-
-        private static string SerializeString(string raw)
-        {
-            if (raw == null)
-            {
-                return "null";
-            }
-
-            var sb = new StringBuilder(raw.Length + 2);
-            sb.Append('"');
-            foreach (var c in raw)
-            {
-                if (_replaces.ContainsKey(c))
-                {
-                    sb.Append(_replaces[c]);
-                }
-                else
-                {
-                    sb.Append(c);
-                }
-            }
-
-            sb.Append('"');
-
-            return sb.ToString();
+            Reporter.WriteData("{");
+            Reporter.WriteData("  \"databaseName\": \"" + Json.Escape(result["DatabaseName"] as string) + "\",");
+            Reporter.WriteData("  \"dataSource\": \"" + Json.Escape(result["DataSource"] as string) + "\"");
+            Reporter.WriteData("}");
         }
     }
 }

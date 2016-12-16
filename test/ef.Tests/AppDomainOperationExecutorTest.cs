@@ -13,6 +13,7 @@ using Xunit;
 
 namespace Microsoft.EntityFrameworkCore.Tools
 {
+    [Collection("OperationExecutorTests")]
     public class AppDomainOperationExecutorTest
     {
         private IOperationExecutor CreateExecutorFromBuildResult(BuildFileResult build, string rootNamespace = null)
@@ -30,7 +31,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
             var targetDir = AppDomain.CurrentDomain.BaseDirectory;
             using (var executor = new AppDomainOperationExecutor(Assembly.GetExecutingAssembly().Location, Path.Combine(targetDir, "Unknown.dll"), targetDir, null, null, null, null))
             {
-                Assert.Throws<CommandException>(() => executor.GetContextTypes());
+                Assert.Throws<WrappedException>(() => executor.GetContextTypes());
             }
         }
 
@@ -347,7 +348,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
                 var build = source.Build();
                 using (var executor = CreateExecutorFromBuildResult(build, "MyProject"))
                 {
-                    var ex = Assert.Throws<CommandException>(
+                    var ex = Assert.Throws<WrappedException>(
                         () => executor.GetMigrations("MyContext"));
 
                     Assert.Equal(
@@ -422,7 +423,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
                 var build = source.Build();
                 using (var executor = CreateExecutorFromBuildResult(build, "MyProject"))
                 {
-                    var ex = Assert.Throws<CommandException>(
+                    var ex = Assert.Throws<WrappedException>(
                         () => executor.GetMigrations("MyContext"));
 
                     Assert.Equal(

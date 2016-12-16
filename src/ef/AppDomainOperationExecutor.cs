@@ -37,7 +37,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
 
             _domain = AppDomain.CreateDomain("EntityFrameworkCore.DesignDomain", null, info);
 
-            if (!string.IsNullOrEmpty(dataDirectory))
+            if (dataDirectory != null)
             {
                 _domain.SetData("DataDirectory", dataDirectory);
             }
@@ -83,8 +83,6 @@ namespace Microsoft.EntityFrameworkCore.Tools
 
         public override void Dispose()
         {
-            base.Dispose();
-
             if (!_disposed)
             {
                 _disposed = true;

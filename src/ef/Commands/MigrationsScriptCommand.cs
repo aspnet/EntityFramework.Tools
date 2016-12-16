@@ -18,7 +18,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
 
             if (!_output.HasValue())
             {
-                Reporter.WriteInformation(sql);
+                Reporter.WriteData(sql);
             }
             else
             {

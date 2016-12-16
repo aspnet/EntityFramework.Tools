@@ -60,15 +60,6 @@ namespace Microsoft.EntityFrameworkCore.Tools.Properties {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Cannot execute this command because the version of Microsoft.EntityFrameworkCore.Design installed is not compatible with this tool..
-        /// </summary>
-        public static string DesignDependencyIncompatible {
-            get {
-                return ResourceManager.GetString("DesignDependencyIncompatible", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///    Looks up a localized string similar to Missing required argument &apos;{0}&apos;..
         /// </summary>
         public static string MissingArgument {
@@ -83,15 +74,6 @@ namespace Microsoft.EntityFrameworkCore.Tools.Properties {
         public static string MissingOption {
             get {
                 return ResourceManager.GetString("MissingOption", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///    Looks up a localized string similar to A value was not returned for operation &apos;{0}&apos;..
-        /// </summary>
-        public static string NoResult {
-            get {
-                return ResourceManager.GetString("NoResult", resourceCulture);
             }
         }
     }

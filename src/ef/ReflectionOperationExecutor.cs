@@ -94,11 +94,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
         }
 
         public override void Dispose()
-        {
-            base.Dispose();
-
-            AppDomain.CurrentDomain.AssemblyResolve -= ResolveAssembly;
-        }
+            => AppDomain.CurrentDomain.AssemblyResolve -= ResolveAssembly;
 #endif
     }
 }

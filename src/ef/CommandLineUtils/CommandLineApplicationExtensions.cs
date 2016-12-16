@@ -14,8 +14,5 @@ namespace Microsoft.DotNet.Cli.CommandLine
                         ? CommandOptionType.MultipleValue
                         : CommandOptionType.SingleValue
                     : CommandOptionType.NoValue);
-
-        public static CommandOption JsonOption(this CommandLineApplication command)
-            => command.Option("--json", "Show JSON output.");
     }
 }

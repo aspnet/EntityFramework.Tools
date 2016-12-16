@@ -21,7 +21,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             _dryRun = command.Option(
                 "--dry-run",
                 "Show which database would be dropped, but don't dorp it.");
-            _json = command.JsonOption();
+            _json = Json.ConfigureOption(command);
 
             base.Configure(command);
         }

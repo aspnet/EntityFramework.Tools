@@ -13,7 +13,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
         {
             command.Description = "Lists available migrations";
 
-            _json = command.JsonOption();
+            _json = Json.ConfigureOption(command);
 
             base.Configure(command);
         }
