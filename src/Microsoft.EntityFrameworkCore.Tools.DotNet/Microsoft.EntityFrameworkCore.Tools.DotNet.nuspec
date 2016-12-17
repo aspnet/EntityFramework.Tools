@@ -14,7 +14,7 @@
     </packageTypes>
     <dependencies>
       <group targetFramework=".NETCoreApp1.0">
-        <dependency id="Microsoft.NETCore.App" version="$netcoreapp$" />
+        <dependency id="Microsoft.NETCore.App" version="1.0.0" />
       </group>
     </dependencies>
   </metadata>
@@ -23,7 +23,7 @@
     <file src="bin/$configuration$/netcoreapp1.0/publish/dotnet-ef.deps.json" target="lib/netcoreapp1.0/" />
     <file src="bin/$configuration$/netcoreapp1.0/publish/dotnet-ef.runtimeconfig.json" target="lib/netcoreapp1.0/" />
     <file src="../ef/bin/$configuration$/net451/ef.exe" target="tools/net451/" />
-    <file src="../ef/bin/$configuration$_x86/net451/ef.x86.exe" target="tools/net451/" />
+    <file src="../ef/bin/x86/$configuration$/net451/ef.x86.exe" target="tools/net451/" />
     <file src="../ef/bin/$configuration$/netcoreapp1.0/ef.dll" target="tools/netcoreapp1.0/" />
     <file src="../ef/bin/$configuration$/netcoreapp1.0/ef.runtimeconfig.json" target="tools/netcoreapp1.0/" />
     <file src="prefercliruntime" target="prefercliruntime" />
