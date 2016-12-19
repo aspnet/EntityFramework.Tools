@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp1.0;net451</TargetFrameworks>
+    <TargetFramework>net451</TargetFramework>
     <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win7-x64</RuntimeIdentifier>
   </PropertyGroup>
 
