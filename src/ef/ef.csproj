@@ -5,12 +5,10 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.0;net451</TargetFrameworks>
     <Description>Entity Framework Core Command Line Tools</Description>
-    <!-- required to make restore and VS happy. See https://github.com/dotnet/sdk/issues/396 -->
-    <RuntimeIdentifier Condition="'$(TargetFramework)'!='netcoreapp1.0'">win7-x64</RuntimeIdentifier>
-    <Platform Condition="'$(TargetFramework)'=='net451' AND '$(Platform)'==''">AnyCPU</Platform>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win7-x64</RuntimeIdentifier>
     <OutputType>exe</OutputType>
     <AssemblyName>ef</AssemblyName>
-    <AssemblyName Condition="'$(Platform)'=='x86'">ef.x86</AssemblyName>
+    <AssemblyName Condition="'$(Platform)' == 'x86'">ef.x86</AssemblyName>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
