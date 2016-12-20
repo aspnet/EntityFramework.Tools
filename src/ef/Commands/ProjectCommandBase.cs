@@ -63,8 +63,8 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
                     _assembly.Value(),
                     _startupAssembly.Value(),
                     _projectDir.Value(),
-                    _dataDir.Value(),
                     _contentRoot.Value(),
+                    _dataDir.Value(),
                     _rootNamespace.Value(),
                     Environment.Value());
             }
@@ -73,8 +73,8 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
                 _assembly.Value(),
                 _startupAssembly.Value(),
                 _projectDir.Value(),
-                _dataDir.Value(),
                 _contentRoot.Value(),
+                _dataDir.Value(),
                 _rootNamespace.Value(),
                 Environment.Value());
         }
