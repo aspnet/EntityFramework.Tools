@@ -9,7 +9,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
     {
         public static readonly AnsiTextWriter _out = new AnsiTextWriter(Console.Out);
 
-        public static void WriteLine(string format, params object[] args)
-            => _out.WriteLine(format, args);
+        public static void WriteLine(string text)
+            => _out.WriteLine(text);
     }
 }
