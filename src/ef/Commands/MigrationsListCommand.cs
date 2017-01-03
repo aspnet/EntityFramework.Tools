@@ -4,10 +4,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    partial class MigrationsListCommand : ContextCommandBase
+    partial class MigrationsListCommand
     {
         protected override int Execute()
         {
@@ -65,7 +66,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
 
             if (!any)
             {
-                Reporter.WriteInformation("No migrations were found");
+                Reporter.WriteInformation(Resources.NoMigrations);
             }
         }
     }

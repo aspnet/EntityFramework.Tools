@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using Microsoft.DotNet.Cli.CommandLine;
+using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
@@ -13,13 +14,11 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
 
         public override void Configure(CommandLineApplication command)
         {
-            command.Description = "Add a new migration.";
+            command.Description = Resources.MigrationsAddDescription;
 
-            _name = command.Argument("<NAME>", "The name of the migration.");
+            _name = command.Argument("<NAME>", Resources.MigrationNameDescription);
 
-            _outputDir = command.Option(
-                "-o|--output-dir <PATH>",
-                "The directory (and sub-namespace) to use. Paths are relative to the project directory. Defaults to \"Migrations\".");
+            _outputDir = command.Option("-o|--output-dir <PATH>", Resources.MigrationsOutputDirDescription);
             _json = Json.ConfigureOption(command);
 
             base.Configure(command);

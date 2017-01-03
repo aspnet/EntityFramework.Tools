@@ -18,27 +18,13 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
 
         public override void Configure(CommandLineApplication command)
         {
-            _assembly = command.Option(
-                "-a|--assembly <PATH>",
-                "The assembly to use.");
-            _noAppDomain = command.Option(
-                "--no-appdomain",
-                "Don't use app domains. Always implied on .NET Core.");
-            _startupAssembly = command.Option(
-                "-s|--startup-assembly <PATH>",
-                "The startup assembly to use. Defaults to the target assembly.");
-            _dataDir = command.Option(
-                "--data-dir <PATH>",
-                "The data directory. Defaults to the startup assembly directory.");
-            _projectDir = command.Option(
-                "--project-dir <PATH>",
-                "The project directory. Defaults to the current directory.");
-            _contentRoot = command.Option(
-                "--content-root <PATH>",
-                "The content root path. Defaults to the startup assembly directory.");
-            _rootNamespace = command.Option(
-                "--root-namespace <NAMESPACE>",
-                "The root namespace. Defaults to the target assembly name.");
+            _assembly = command.Option("-a|--assembly <PATH>", Resources.AssemblyDescription);
+            _noAppDomain = command.Option("--no-appdomain", Resources.NoAppDomainDescription);
+            _startupAssembly = command.Option("-s|--startup-assembly <PATH>", Resources.StartupAssemblyDescription);
+            _dataDir = command.Option("--data-dir <PATH>", Resources.DataDirDescription);
+            _projectDir = command.Option("--project-dir <PATH>", Resources.ProjectDirDescription);
+            _contentRoot = command.Option("--content-root <PATH>", Resources.ContentRootDescription);
+            _rootNamespace = command.Option("--root-namespace <NAMESPACE>", Resources.RootNamespaceDescription);
 
             base.Configure(command);
         }

@@ -3,7 +3,7 @@
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    partial class DatabaseUpdateCommand : ContextCommandBase
+    partial class DatabaseUpdateCommand
     {
         protected override int Execute()
         {

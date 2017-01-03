@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using Microsoft.DotNet.Cli.CommandLine;
+using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
@@ -11,11 +12,9 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
 
         public override void Configure(CommandLineApplication command)
         {
-            command.Description = "Updates the database to a specified migration.";
+            command.Description = Resources.DatabaseUpdateDescription;
 
-            _migration = command.Argument(
-                "<MIGRATION>",
-                "The target migration. If '0', all migrations will be reverted. Defaults to the last migration.");
+            _migration = command.Argument("<MIGRATION>", Resources.MigrationDescription);
 
             base.Configure(command);
         }

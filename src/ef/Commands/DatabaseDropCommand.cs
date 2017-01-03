@@ -2,67 +2,40 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections;
+using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    partial class DatabaseDropCommand : ContextCommandBase
+    partial class DatabaseDropCommand
     {
         protected override int Execute()
         {
             var executor = CreateExecutor();
 
-            if (!_force.HasValue())
-            {
-                var result = executor.GetContextInfo(Context.Value());
-
-                if (_json.HasValue())
-                {
-                    ReportJsonDatabaseDiscovered(result);
-                }
-                else
-                {
-                    ReportDatabaseDiscovered(result);
-                }
-            }
+            var result = executor.GetContextInfo(Context.Value());
+            var databaseName = result["DatabaseName"] as string;
+            var dataSource = result["DataSource"] as string;
 
             if (_dryRun.HasValue())
             {
+                Reporter.WriteInformation(string.Format(Resources.DatabaseDropDryRun, databaseName, dataSource));
+
                 return 0;
             }
 
             if (!_force.HasValue())
             {
-                Reporter.WriteInformation("Are you sure you want to proceed? (y/N)");
-                var readedKey = Console.ReadLine().Trim();
-                var confirmed = (readedKey == "y") || (readedKey == "Y");
-                if (!confirmed)
+                Reporter.WriteInformation(string.Format(Resources.DatabaseDropPrompt, databaseName, dataSource));
+                var response = Console.ReadLine().Trim().ToUpperInvariant();
+                if (response != "Y")
                 {
-                    Reporter.WriteInformation("Cancelled");
-                    return 0;
+                    return 1;
                 }
             }
 
             executor.DropDatabase(Context.Value());
 
             return base.Execute();
-        }
-
-        private static void ReportDatabaseDiscovered(IDictionary result)
-        {
-            Reporter.WriteInformation("This command will permanently drop the database:");
-            Reporter.WriteInformation(string.Empty);
-            Reporter.WriteInformation("    Database name : " + result["DatabaseName"]);
-            Reporter.WriteInformation("    Data source   : " + result["DataSource"]);
-            Reporter.WriteInformation(string.Empty);
-        }
-
-        private static void ReportJsonDatabaseDiscovered(IDictionary result)
-        {
-            Reporter.WriteData("{");
-            Reporter.WriteData("  \"databaseName\": \"" + Json.Escape(result["DatabaseName"] as string) + "\",");
-            Reporter.WriteData("  \"dataSource\": \"" + Json.Escape(result["DataSource"] as string) + "\"");
-            Reporter.WriteData("}");
         }
     }
 }

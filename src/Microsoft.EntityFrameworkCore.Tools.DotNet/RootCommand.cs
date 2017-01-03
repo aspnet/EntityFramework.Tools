@@ -30,7 +30,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
 
         public override void Configure(CommandLineApplication command)
         {
-            command.FullName = "Entity Framework Core .NET Command Line Tools";
+            command.FullName = Resources.DotnetEfFullName;
 
             var options = new ProjectOptions();
             options.Configure(command);
@@ -59,54 +59,24 @@ namespace Microsoft.EntityFrameworkCore.Tools
                 return ShowHelp(_help.HasValue(), commands);
             }
 
-            var projectFiles = FindProjects(_project.Value());
-            if (projectFiles.Count == 0)
-            {
-                throw new CommandException(
-                    _project.HasValue()
-                        ? string.Format(Resources.NoProjectInDirectory, _project.Value())
-                        : Resources.NoProject);
-            }
-            if (projectFiles.Count != 1)
-            {
-                throw new CommandException(
-                    _project.HasValue()
-                        ? string.Format(Resources.MultipleProjectsInDirectory, _project.Value())
-                        : Resources.MultipleProjects);
-            }
-            var projectFile = projectFiles[0];
+            var projectFile = FindProjects(
+                _project.Value(),
+                Resources.NoProject,
+                Resources.MultipleProjects);
+            Reporter.WriteVerbose(string.Format(Resources.UsingProject, projectFile));
 
-            Project project;
-            Project startupProject;
-            if (_startupProject.HasValue())
-            {
-                var starupProjectFiles = FindProjects(_startupProject.Value());
-                if (starupProjectFiles.Count == 0)
-                {
-                    throw new CommandException(
-                        string.Format(Resources.NoStartupProject, _startupProject.Value()));
-                }
-                if (starupProjectFiles.Count != 1)
-                {
-                    throw new CommandException(string.Format(Resources.MultipleStartupProjects, _project.Value()));
-                }
+            var starupProjectFile = FindProjects(
+                _startupProject.Value(),
+                Resources.NoStartupProject,
+                Resources.MultipleStartupProjects);
+            Reporter.WriteVerbose(string.Format(Resources.UsingStartupProject, starupProjectFile));
 
-                project = Project.FromFile(projectFile, _msbuildprojectextensionspath.Value());
-                startupProject = Project.FromFile(
-                    starupProjectFiles[0],
-                    _msbuildprojectextensionspath.Value(),
-                    _framework.Value(),
-                    _configuration.Value());
-            }
-            else
-            {
-                project = Project.FromFile(
-                    projectFile,
-                    _msbuildprojectextensionspath.Value(),
-                    _framework.Value(),
-                    _configuration.Value());
-                startupProject = project;
-            }
+            var project = Project.FromFile(projectFile, _msbuildprojectextensionspath.Value());
+            var startupProject = Project.FromFile(
+                starupProjectFile,
+                _msbuildprojectextensionspath.Value(),
+                _framework.Value(),
+                _configuration.Value());
 
             startupProject.Build();
 
@@ -223,21 +193,41 @@ namespace Microsoft.EntityFrameworkCore.Tools
             return Exe.Run(executable, args);
         }
 
-        private static IReadOnlyList<string> FindProjects(string path)
+        private static string FindProjects(
+            string path,
+            string errorWhenNoProject,
+            string errorWhenMultipleProjects)
         {
+            var specified = true;
             if (path == null)
             {
+                specified = false;
                 path = Directory.GetCurrentDirectory();
             }
-
-            if (Directory.Exists(path))
+            else if (!Directory.Exists(path)) // It's not a directory
             {
-                return Directory.EnumerateFiles(path, "*.*proj", SearchOption.TopDirectoryOnly)
-                    .Where(f => !string.Equals(Path.GetExtension(f), ".xproj", StringComparison.OrdinalIgnoreCase))
-                    .Take(2).ToList();
+                return path;
             }
 
-            return new[] { path };
+            var projectFiles = Directory.EnumerateFiles(path, "*.*proj", SearchOption.TopDirectoryOnly)
+                    .Where(f => !string.Equals(Path.GetExtension(f), ".xproj", StringComparison.OrdinalIgnoreCase))
+                    .Take(2).ToList();
+            if (projectFiles.Count == 0)
+            {
+                throw new CommandException(
+                    specified
+                        ? string.Format(Resources.NoProjectInDirectory, path)
+                        : errorWhenNoProject);
+            }
+            if (projectFiles.Count != 1)
+            {
+                throw new CommandException(
+                    specified
+                        ? string.Format(Resources.MultipleProjectsInDirectory, path)
+                        : errorWhenMultipleProjects);
+            }
+
+            return projectFiles[0];
         }
 
         private static string GetVersion()
