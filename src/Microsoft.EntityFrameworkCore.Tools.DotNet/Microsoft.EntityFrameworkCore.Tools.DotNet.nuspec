@@ -15,6 +15,7 @@
     <dependencies>
       <group targetFramework=".NETCoreApp1.0">
         <dependency id="Microsoft.NETCore.App" version="1.0.0" />
+        <dependency id="Newtonsoft.Json" version="9.0.1" />
       </group>
     </dependencies>
   </metadata>

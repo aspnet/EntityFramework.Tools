@@ -10,6 +10,8 @@ using System.Runtime.Versioning;
 using Microsoft.DotNet.Cli.CommandLine;
 using Microsoft.EntityFrameworkCore.Tools.Properties;
 using Microsoft.EntityFrameworkCore.Tools.Commands;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 using EFCommand = Microsoft.EntityFrameworkCore.Tools.Commands.RootCommand;
 
@@ -127,7 +129,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
             var runtimeConfig = Path.Combine(
                 targetDir,
                 startupProject.AssemblyName + ".runtimeconfig.json");
-            var nugetPackageRoot = startupProject.NuGetPackageRoot.TrimEnd(Path.DirectorySeparatorChar);
+            var projectAssetsFile = startupProject.ProjectAssetsFile;
 
             var targetFramework = new FrameworkName(startupProject.TargetFrameworkMoniker);
             if (targetFramework.Identifier == ".NETFramework")
@@ -153,10 +155,19 @@ namespace Microsoft.EntityFrameworkCore.Tools
                 args.Add("--depsfile");
                 args.Add(depsFile);
 
-                if (!string.IsNullOrEmpty(nugetPackageRoot))
+                if (!string.IsNullOrEmpty(projectAssetsFile))
                 {
-                    args.Add("--additionalprobingpath");
-                    args.Add(nugetPackageRoot);
+                    using (var reader = new JsonTextReader(File.OpenText(projectAssetsFile)))
+                    {
+                        var projectAssets = JObject.ReadFrom(reader);
+                        var packageFolders = projectAssets["packageFolders"].Children<JProperty>().Select(p => p.Name);
+
+                        foreach (var packageFolder in packageFolders)
+                        {
+                            args.Add("--additionalprobingpath");
+                            args.Add(packageFolder.TrimEnd(Path.DirectorySeparatorChar));
+                        }
+                    }
                 }
 
                 if (File.Exists(runtimeConfig))

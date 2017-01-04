@@ -1,30 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\build\common.props" />
-
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.0;net451</TargetFrameworks>
     <Description>Entity Framework Core Command Line Tools</Description>
-    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win7-x64</RuntimeIdentifier>
-    <OutputType>exe</OutputType>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' AND '$(TargetFramework)' != 'netcoreapp1.0'">win7-x64</RuntimeIdentifier>
+    <OutputType>Exe</OutputType>
     <AssemblyName>ef</AssemblyName>
     <AssemblyName Condition="'$(Platform)' == 'x86'">ef.x86</AssemblyName>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Include="**\*.cs" />
-    <EmbeddedResource Include="**\*.cs" />
-
+    <EmbeddedResource Include="**\*.resx" />
   </ItemGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
     <PackageReference Include="Microsoft.NETCore.App" Version="1.0.0" />
   </ItemGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
-
 </Project>

@@ -761,15 +761,18 @@ function EF($project, $startupProject, $params, [switch] $skipBuild)
 
         $startupTargetName = GetProperty $startupProject.Properties 'AssemblyName'
         $depsFile = Join-Path $targetDir ($startupTargetName + '.deps.json')
-        $nugetPackageRoot = (GetCsproj2Property $startupProject 'NuGetPackageRoot').TrimEnd('\')
+        $projectAssetsFile = GetCsproj2Property $startupProject 'ProjectAssetsFile'
         $runtimeConfig = Join-Path $targetDir ($startupTargetName + '.runtimeconfig.json')
         $efPath = Join-Path $PSScriptRoot 'netcoreapp1.0\ef.dll'
 
         $dotnetParams = 'exec', '--depsfile', $depsFile
 
-        if ($nugetPackageRoot)
+        if ($projectAssetsFile)
         {
-            $dotnetParams += '--additionalprobingpath', $nugetPackageRoot
+            $projectAssets = Get-Content $projectAssetsFile | ConvertFrom-Json
+            $projectAssets.packageFolders.psobject.Properties.Name | %{
+                $dotnetParams += '--additionalprobingpath', $_.TrimEnd('\')
+            }
         }
 
         if (Test-Path $runtimeConfig)

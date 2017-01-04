@@ -7,10 +7,10 @@
              Properties="TargetFramework=$(TargetFrameworks.Split(';')[0]);EFProjectMetadataFile=$(EFProjectMetadataFile)" />
     <ItemGroup Condition=" '$(TargetFramework)' != '' ">
       <EFProjectMetadata Include="AssemblyName: $(AssemblyName)" />
-      <EFProjectMetadata Include="NuGetPackageRoot: $(NuGetPackageRoot)" />
       <EFProjectMetadata Include="OutputPath: $(OutputPath)" />
       <EFProjectMetadata Include="Platform: $(Platform)" />
       <EFProjectMetadata Include="PlatformTarget: $(PlatformTarget)" />
+      <EFProjectMetadata Include="ProjectAssetsFile: $(ProjectAssetsFile)" />
       <EFProjectMetadata Include="ProjectDir: $(ProjectDir)" />
       <EFProjectMetadata Include="RootNamespace: $(RootNamespace)" />
       <EFProjectMetadata Include="TargetFileName: $(TargetFileName)" />
