@@ -30,9 +30,9 @@ namespace Microsoft.EntityFrameworkCore.Tools
         public string ProjectName { get; }
 
         public string AssemblyName { get; set; }
-        public string NuGetPackageRoot { get; set; }
         public string OutputPath { get; set; }
         public string PlatformTarget { get; set; }
+        public string ProjectAssetsFile { get; set; }
         public string ProjectDir { get; set; }
         public string RootNamespace { get; set; }
         public string TargetFileName { get; set; }
@@ -117,9 +117,9 @@ namespace Microsoft.EntityFrameworkCore.Tools
             return new Project(file, framework, configuration)
             {
                 AssemblyName = metadata["AssemblyName"],
-                NuGetPackageRoot = metadata["NuGetPackageRoot"],
                 OutputPath = metadata["OutputPath"],
                 PlatformTarget = platformTarget,
+                ProjectAssetsFile = metadata["ProjectAssetsFile"],
                 ProjectDir = metadata["ProjectDir"],
                 RootNamespace = metadata["RootNamespace"],
                 TargetFileName = metadata["TargetFileName"],
