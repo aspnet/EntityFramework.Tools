@@ -4,7 +4,7 @@
 using System;
 using System.Reflection;
 using Microsoft.DotNet.Cli.CommandLine;
-
+using Microsoft.EntityFrameworkCore.Tools.Properties;
 using static Microsoft.EntityFrameworkCore.Tools.AnsiConstants;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
@@ -13,7 +13,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
     {
         public override void Configure(CommandLineApplication command)
         {
-            command.FullName = "Entity Framework Core Command Line Tools";
+            command.FullName = Resources.EFFullName;
 
             // NB: Update ShouldHelp in dotnet-ef when adding new command groups
             command.Command("database", new DatabaseCommand().Configure);

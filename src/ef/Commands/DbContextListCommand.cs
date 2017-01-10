@@ -4,10 +4,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    partial class DbContextListCommand : ProjectCommandBase
+    partial class DbContextListCommand
     {
         protected override int Execute()
         {
@@ -69,7 +70,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
 
             if (!any)
             {
-                Reporter.WriteInformation("No DbContext was found");
+                Reporter.WriteInformation(Resources.NoDbContext);
             }
         }
     }

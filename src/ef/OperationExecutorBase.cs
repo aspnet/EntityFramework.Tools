@@ -45,15 +45,21 @@ namespace Microsoft.EntityFrameworkCore.Tools
                 AppBasePath = Path.GetFullPath(AppBasePath);
             }
 
-            Reporter.WriteVerbose("Setting app base path " + AppBasePath);
-
             ContentRootPath = contentRootPath ?? AppBasePath;
             RootNamespace = rootNamespace ?? AssemblyFileName;
             ProjectDirectory = projectDir ?? Directory.GetCurrentDirectory();
             EnvironmentName = environment;
 
+            Reporter.WriteVerbose(string.Format(Resources.UsingAssembly, AssemblyFileName));
+            Reporter.WriteVerbose(string.Format(Resources.UsingStartupAssembly, StartupAssemblyFileName));
+            Reporter.WriteVerbose(string.Format(Resources.UsingApplicationBase, AppBasePath));
+            Reporter.WriteVerbose(string.Format(Resources.UsingContentRoot, ContentRootPath));
+            Reporter.WriteVerbose(string.Format(Resources.UsingRootNamespace, RootNamespace));
+            Reporter.WriteVerbose(string.Format(Resources.UsingProjectDir, ProjectDirectory));
+
             if (dataDirectory != null)
             {
+                Reporter.WriteVerbose(string.Format(Resources.UsingDataDir, dataDirectory));
                 Environment.SetEnvironmentVariable(DataDirEnvName, dataDirectory);
             }
         }

@@ -3,10 +3,11 @@
 
 using System.IO;
 using System.Text;
+using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    partial class MigrationsScriptCommand : ContextCommandBase
+    partial class MigrationsScriptCommand
     {
         protected override int Execute()
         {
@@ -28,10 +29,8 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
                     Directory.CreateDirectory(directory);
                 }
 
-                Reporter.WriteVerbose("Writing SQL script to '" + _output.Value() + "'");
+                Reporter.WriteVerbose(string.Format(Resources.WritingFile, _output.Value()));
                 File.WriteAllText(_output.Value(), sql, Encoding.UTF8);
-
-                Reporter.WriteInformation("Done");
             }
 
             return base.Execute();

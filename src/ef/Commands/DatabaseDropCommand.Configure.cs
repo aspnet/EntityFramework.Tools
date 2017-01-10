@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using Microsoft.DotNet.Cli.CommandLine;
+using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
@@ -9,19 +10,13 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
     {
         private CommandOption _force;
         private CommandOption _dryRun;
-        private CommandOption _json;
 
         public override void Configure(CommandLineApplication command)
         {
-            command.Description = "Drops the database";
+            command.Description = Resources.DatabaseDropDescription;
 
-            _force = command.Option(
-                "-f|--force",
-                "Don't confirm.");
-            _dryRun = command.Option(
-                "--dry-run",
-                "Show which database would be dropped, but don't dorp it.");
-            _json = Json.ConfigureOption(command);
+            _force = command.Option("-f|--force", Resources.DatabaseDropForceDescription);
+            _dryRun = command.Option("--dry-run", Resources.DatabaseDropDryRunDescription);
 
             base.Configure(command);
         }

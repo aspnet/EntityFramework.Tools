@@ -126,7 +126,7 @@ function Drop-Database
             'DbContext.Database.EnsureDeleted() at runtime.'
     }
 
-    $params = 'database', 'drop', '--dry-run', '--json'
+    $params = 'dbcontext', 'info', '--json'
     $params += GetParams $Context $Environment
 
     $info = EF $dteProject $dteStartupProject $params | ConvertFrom-Json
@@ -706,6 +706,9 @@ function EF($project, $startupProject, $params, [switch] $skipBuild)
             }
         }
     }
+
+    Write-Verbose "Using project '$($project.ProjectName)'."
+    Write-Verbose "Using startup project '$($startupProject.ProjectName)'."
 
     if (!$skipBuild)
     {

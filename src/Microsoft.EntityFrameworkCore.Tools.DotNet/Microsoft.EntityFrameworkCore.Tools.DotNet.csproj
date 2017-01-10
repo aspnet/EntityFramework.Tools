@@ -6,6 +6,7 @@
     <AssemblyName>dotnet-ef</AssemblyName>
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
+    <RootNamespace>Microsoft.EntityFrameworkCore.Tools</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="**\*.cs" />

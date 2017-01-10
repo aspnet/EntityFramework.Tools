@@ -59,7 +59,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
                 Reporter.WriteVerbose(string.Format(Resources.WritingFile, efTargetsPath));
 
                 using (var input = typeof(Resources).GetTypeInfo().Assembly.GetManifestResourceStream(
-                    "Microsoft.EntityFrameworkCore.Tools.DotNet.Resources.EntityFrameworkCore.targets"))
+                    "Microsoft.EntityFrameworkCore.Tools.Resources.EntityFrameworkCore.targets"))
                 using (var output = File.OpenWrite(efTargetsPath))
                 {
                     input.CopyTo(output);
