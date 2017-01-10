@@ -11,7 +11,7 @@ This project is part of ASP.NET Core. You can find samples, documentation and ge
 
 
   [1]: https://ci.appveyor.com/api/projects/status/8ccv5d730u6fd4fu/branch/dev?svg=true
-  [2]: https://ci.appveyor.com/project/aspnetci/EntityFramework.Tools/branch/dev
+  [2]: https://ci.appveyor.com/project/aspnetci/entityframework-tools/branch/dev
   [3]: https://travis-ci.org/aspnet/EntityFramework.Tools.svg?branch=dev
   [4]: https://travis-ci.org/aspnet/EntityFramework.Tools
   [5]: https://github.com/aspnet/EntityFramework/issues

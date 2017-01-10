@@ -4,41 +4,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.EntityFrameworkCore.Tools.Internal;
-using Microsoft.Extensions.CommandLineUtils;
+using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    public class MigrationsListCommand : ICommand
+    partial class MigrationsListCommand
     {
-        public static void Configure(CommandLineApplication command, CommandLineOptions options)
+        protected override int Execute()
         {
-            command.Description = "List the migrations";
-            command.HelpOption();
+            var migrations = CreateExecutor().GetMigrations(Context.Value()).ToList();
 
-            var context = command.Option(
-                "-c|--context <context>",
-                "The DbContext to use. If omitted, the default DbContext is used");
-            var json = command.JsonOption();
-
-            command.OnExecute(() => { options.Command = new MigrationsListCommand(context.Value(), json.HasValue()); });
-        }
-
-        private readonly string _context;
-        private readonly bool _json;
-
-        public MigrationsListCommand(string context, bool json)
-        {
-            _context = context;
-            _json = json;
-        }
-
-        public void Run(IOperationExecutor executor)
-        {
-            var migrations = executor.GetMigrations(_context);
-
-            if (_json)
+            if (_json.HasValue())
             {
                 ReportJsonResults(migrations);
             }
@@ -46,45 +22,37 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             {
                 ReportResults(migrations);
             }
+
+            return base.Execute();
         }
 
-        private static void ReportJsonResults(IEnumerable<IDictionary> migrations)
+        private static void ReportJsonResults(IReadOnlyList<IDictionary> migrations)
         {
             var nameGroups = migrations.GroupBy(m => m["Name"]).ToList();
-            var output = new StringBuilder();
-            output.AppendLine(Reporter.JsonPrefix);
 
-            output.Append("[");
+            Reporter.WriteData("[");
 
-            var first = true;
-            foreach (var m in migrations)
+            for (var i = 0; i < migrations.Count; i++)
             {
-                if (first)
+                var safeName = nameGroups.Count(g => g.Key == migrations[i]["Name"]) == 1
+                    ? migrations[i]["Name"]
+                    : migrations[i]["Id"];
+
+                Reporter.WriteData("  {");
+                Reporter.WriteData("    \"id\": \"" + migrations[i]["Id"] + "\",");
+                Reporter.WriteData("    \"name\": \"" + migrations[i]["Name"] + "\",");
+                Reporter.WriteData("    \"safeName\": \"" + safeName + "\"");
+
+                var line = "  }";
+                if (i != migrations.Count - 1)
                 {
-                    first = false;
-                }
-                else
-                {
-                    output.Append(",");
+                    line += ",";
                 }
 
-                var safeName = nameGroups.Count(g => g.Key == m["Name"]) == 1
-                    ? m["Name"]
-                    : m["Id"];
-
-                output.AppendLine();
-                output.AppendLine("  {");
-                output.AppendLine("    \"id\": \"" + m["Id"] + "\",");
-                output.AppendLine("    \"name\": \"" + m["Name"] + "\",");
-                output.AppendLine("    \"safeName\": \"" + safeName + "\"");
-                output.Append("  }");
+                Reporter.WriteData(line);
             }
 
-            output.AppendLine();
-            output.AppendLine("]");
-            output.AppendLine(Reporter.JsonSuffix);
-
-            Reporter.Output(output.ToString());
+            Reporter.WriteData("]");
         }
 
         private static void ReportResults(IEnumerable<IDictionary> migrations)
@@ -92,13 +60,13 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             var any = false;
             foreach (var migration in migrations)
             {
-                Reporter.Output(migration["Id"] as string);
+                Reporter.WriteData(migration["Id"] as string);
                 any = true;
             }
 
             if (!any)
             {
-                Reporter.Output("No migrations were found");
+                Reporter.WriteInformation(Resources.NoMigrations);
             }
         }
     }

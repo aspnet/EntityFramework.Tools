@@ -2,147 +2,63 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.EntityFrameworkCore.Tools.Internal;
-using Microsoft.Extensions.CommandLineUtils;
+using System.Linq;
+using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    public class DbContextScaffoldCommand : ICommand
+    partial class DbContextScaffoldCommand
     {
-        public static void Configure(CommandLineApplication command, CommandLineOptions options)
+        protected override void Validate()
         {
-            command.Description = "Scaffolds a DbContext and entity type classes for a specified database";
-            command.HelpOption();
+            base.Validate();
 
-            var connection = command.Argument(
-                "[connection]",
-                "The connection string of the database");
-            var provider = command.Argument(
-                "[provider]",
-                "The provider to use. For example, Microsoft.EntityFrameworkCore.SqlServer");
-
-            var dataAnnotations = command.Option(
-                "-a|--data-annotations",
-                "Use DataAnnotation attributes to configure the model where possible. If omitted, the output code will use only the fluent API.",
-                CommandOptionType.NoValue);
-            var context = command.Option(
-                "-c|--context <name>",
-                "Name of the generated DbContext class.");
-            var force = command.Option(
-                "-f|--force",
-                "Force scaffolding to overwrite existing files. Otherwise, the code will only proceed if no output files would be overwritten.",
-                CommandOptionType.NoValue);
-            var outputDir = command.Option(
-                "-o|--output-dir <path>",
-                "Directory of the project where the classes should be output. If omitted, the top-level project directory is used.");
-            var schemas = command.Option(
-                "--schema <schema>",
-                "Selects a schema for which to generate classes.",
-                CommandOptionType.MultipleValue);
-            var tables = command.Option(
-                "-t|--table <schema.table>",
-                "Selects a table for which to generate classes.",
-                CommandOptionType.MultipleValue);
-            var json = command.JsonOption();
-
-            command.OnExecute(() =>
-                {
-                    if (string.IsNullOrEmpty(connection.Value))
-                    {
-                        Reporter.Error("Missing required argument '" + connection.Name + "'");
-                        return 1;
-                    }
-                    if (string.IsNullOrEmpty(provider.Value))
-                    {
-                        Reporter.Error("Missing required argument '" + provider.Name + "'");
-                        return 1;
-                    }
-
-                    options.Command = new DbContextScaffoldCommand(
-                        provider.Value,
-                        connection.Value,
-                        outputDir.Value(),
-                        context.Value(),
-                        schemas.Values,
-                        tables.Values,
-                        dataAnnotations.HasValue(),
-                        force.HasValue(),
-                        json.HasValue());
-
-                    return 0;
-                });
+            if (string.IsNullOrEmpty(_connection.Value))
+            {
+                throw new CommandException(string.Format(Resources.MissingArgument, _connection.Name));
+            }
+            if (string.IsNullOrEmpty(_provider.Value))
+            {
+                throw new CommandException(string.Format(Resources.MissingArgument, _provider.Name));
+            }
         }
 
-        private readonly string _provider;
-        private readonly string _connection;
-        private readonly string _outputDir;
-        private readonly string _context;
-        private readonly IEnumerable<string> _schemas;
-        private readonly IEnumerable<string> _tables;
-        private readonly bool _dataAnnotations;
-        private readonly bool _force;
-        private readonly bool _json;
-
-        public DbContextScaffoldCommand(string provider,
-            string connection,
-            string outputDir,
-            string context,
-            IEnumerable<string> schemas,
-            IEnumerable<string> tables,
-            bool dataAnnotations,
-            bool force,
-            bool json)
+        protected override int Execute()
         {
-            _provider = provider;
-            _connection = connection;
-            _outputDir = outputDir;
-            _context = context;
-            _schemas = schemas;
-            _tables = tables;
-            _dataAnnotations = dataAnnotations;
-            _force = force;
-            _json = json;
-        }
-
-        public void Run(IOperationExecutor executor)
-        {
-            var filesCreated = executor.ScaffoldContext(_provider, _connection, _outputDir, _context, _schemas, _tables, _dataAnnotations, _force);
-            if (_json)
+            var filesCreated = CreateExecutor().ScaffoldContext(
+                    _provider.Value,
+                    _connection.Value,
+                    _outputDir.Value(),
+                    _context.Value(),
+                    _schemas.Values,
+                    _tables.Values,
+                    _dataAnnotations.HasValue(),
+                    _force.HasValue())
+                .ToList();
+            if (_json.HasValue())
             {
                 ReportJsonResults(filesCreated);
             }
+
+            return base.Execute();
         }
 
-        private void ReportJsonResults(IEnumerable<string> files)
+        private void ReportJsonResults(IReadOnlyList<string> files)
         {
-            var output = new StringBuilder();
-            output.AppendLine(Reporter.JsonPrefix);
-            output.AppendLine("{");
-            output.AppendLine("  \"files\": [");
-            var first = true;
-            foreach (var file in files)
+            Reporter.WriteData("[");
+
+            for (var i = 0; i < files.Count; i++)
             {
-                if (first)
+                var line = "  \"" + Json.Escape(files[i]) + "\"";
+                if (i != files.Count - 1)
                 {
-                    first = false;
-                }
-                else
-                {
-                    output.AppendLine(",");
+                    line += ",";
                 }
 
-                output.Append("    \"" + SerializePath(file) + "\"");
+                Reporter.WriteData(line);
             }
 
-            output.AppendLine();
-            output.AppendLine("  ]");
-            output.AppendLine("}");
-            output.AppendLine(Reporter.JsonSuffix);
-            Reporter.Output(output.ToString());
+            Reporter.WriteData("]");
         }
-
-        private static string SerializePath(string path)
-            => path?.Replace("\\", "\\\\");
     }
 }

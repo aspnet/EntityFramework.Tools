@@ -2,87 +2,45 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Collections;
-using System.Text;
-using Microsoft.EntityFrameworkCore.Tools.Internal;
-using Microsoft.Extensions.CommandLineUtils;
+using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    public class MigrationsAddCommand : ICommand
+    partial class MigrationsAddCommand
     {
-        public static void Configure(CommandLineApplication command, CommandLineOptions options)
+        protected override void Validate()
         {
-            command.Description = "Add a new migration";
-            command.HelpOption();
+            base.Validate();
 
-            var name = command.Argument("[name]", "The name of the migration");
-
-            var outputDir = command.Option(
-                "-o|--output-dir <path>",
-                "The directory (and sub-namespace) to use. If omitted, \"Migrations\" is used. Relative paths are relative the directory in which the command is executed.");
-            var context = command.Option(
-                "-c|--context <context>",
-                "The DbContext to use. If omitted, the default DbContext is used");
-            var json = command.JsonOption();
-
-            command.OnExecute(() =>
-                {
-                    if (string.IsNullOrEmpty(name.Value))
-                    {
-                        Reporter.Error("Missing required argument '" + name.Name + "'");
-                        return 1;
-                    }
-
-                    options.Command = new MigrationsAddCommand(name.Value,
-                        outputDir.Value(),
-                        context.Value(),
-                        json.HasValue());
-
-                    return 0;
-                });
+            if (string.IsNullOrEmpty(_name.Value))
+            {
+                throw new CommandException(string.Format(Resources.MissingArgument, _name.Name));
+            }
         }
 
-        private readonly string _name;
-        private readonly string _outputDir;
-        private readonly string _context;
-        private readonly bool _json;
-
-        public MigrationsAddCommand(string name, string outputDir, string context, bool json)
+        protected override int Execute()
         {
-            _name = name;
-            _outputDir = outputDir;
-            _context = context;
-            _json = json;
-        }
+            var files = CreateExecutor().AddMigration(_name.Value, _outputDir.Value(), Context.Value());
 
-        public void Run(IOperationExecutor executor)
-        {
-            var files = executor.AddMigration(_name, _outputDir, _context);
-
-            if (_json)
+            if (_json.HasValue())
             {
                 ReportJson(files);
             }
             else
             {
-                Reporter.Output("Done. To undo this action, use 'dotnet ef migrations remove'");
+                Reporter.WriteInformation(Resources.MigrationsAddCompleted);
             }
+
+            return base.Execute();
         }
 
         private static void ReportJson(IDictionary files)
         {
-            var output = new StringBuilder();
-            output.AppendLine(Reporter.JsonPrefix);
-            output.AppendLine("{");
-            output.AppendLine("  \"MigrationFile\": \"" + SerializePath(files["MigrationFile"] as string) + "\",");
-            output.AppendLine("  \"MetadataFile\": \"" + SerializePath(files["MetadataFile"] as string) + "\",");
-            output.AppendLine("  \"SnapshotFile\": \"" + SerializePath(files["SnapshotFile"] as string) + "\"");
-            output.AppendLine("}");
-            output.AppendLine(Reporter.JsonSuffix);
-            Reporter.Output(output.ToString());
+            Reporter.WriteData("{");
+            Reporter.WriteData("  \"migrationFile\": \"" + Json.Escape(files["MigrationFile"] as string) + "\",");
+            Reporter.WriteData("  \"metadataFile\": \"" + Json.Escape(files["MetadataFile"] as string) + "\",");
+            Reporter.WriteData("  \"snapshotFile\": \"" + Json.Escape(files["SnapshotFile"] as string) + "\"");
+            Reporter.WriteData("}");
         }
-
-        private static string SerializePath(string path)
-            => path?.Replace("\\", "\\\\");
     }
 }

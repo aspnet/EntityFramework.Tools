@@ -1,0 +1,40 @@
+<Project ToolsVersion="15.0">
+
+    <Import Project="..\build\common.props" />
+
+    <Target Name="Pack">
+        <MSBuild Projects="$(MSBuildThisFileDirectory)..\src\ef\ef.csproj"
+                 Properties="TargetFramework=net451;Platform=x86;Configuration=$(Configuration)"
+                 Targets="Build"
+            />
+
+        <MSBuild Projects="$(MSBuildThisFileDirectory)..\src\Microsoft.EntityFrameworkCore.Tools.DotNet\Microsoft.EntityFrameworkCore.Tools.DotNet.csproj"
+                 Properties="Configuration=$(Configuration)"
+                 Targets="Publish"
+            />
+
+        <MakeDir Directories="$(OutputPath)" />
+
+        <PropertyGroup>
+            <OutputPath>$(MSBuildThisFileDirectory)..\artifacts\build</OutputPath>
+            <Version>$(VersionPrefix)</Version>
+            <Version Condition="'$(VersionSuffix)'!=''">$(Version)-$(VersionSuffix)</Version>
+        </PropertyGroup>
+
+        <!-- todo use PackNuGetTask when it is implemented -->
+
+        <Exec Command="dotnet nuget pack
+            &quot;$(MSBuildThisFileDirectory)..\src\Microsoft.EntityFrameworkCore.Tools\Microsoft.EntityFrameworkCore.Tools.nuspec&quot;
+            --base-path &quot;$(MSBuildThisFileDirectory)..\src\Microsoft.EntityFrameworkCore.Tools&quot;
+            --version $(Version)
+            --output-directory &quot;$(OutputPath)&quot;
+            --properties configuration=$(Configuration)"/>
+
+        <Exec Command="dotnet nuget pack
+            &quot;$(MSBuildThisFileDirectory)..\src\Microsoft.EntityFrameworkCore.Tools.DotNet\Microsoft.EntityFrameworkCore.Tools.DotNet.nuspec&quot;
+            --base-path &quot;$(MSBuildThisFileDirectory)..\src\Microsoft.EntityFrameworkCore.Tools.DotNet&quot;
+            --version $(Version)
+            --output-directory &quot;$(OutputPath)&quot;
+            --properties configuration=$(Configuration)" />
+    </Target>
+</Project>

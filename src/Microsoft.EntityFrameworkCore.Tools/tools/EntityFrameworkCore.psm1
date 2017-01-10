@@ -58,7 +58,7 @@ function Add-Migration
     $dteProject = GetProject $Project
     $dteStartupProject = GetStartupProject $StartupProject $dteProject
 
-    $params = 'migrations', 'add', $Name
+    $params = 'migrations', 'add', $Name, '--json'
 
     if ($OutputDir)
     {
@@ -67,16 +67,16 @@ function Add-Migration
 
     $params += GetParams $Context $Environment
 
-    $result = EF $dteProject $dteStartupProject $params -json
+    $result = EF $dteProject $dteStartupProject $params | ConvertFrom-Json
     Write-Output 'To undo this action, use Remove-Migration.'
 
-    $dteProject.ProjectItems.AddFromFile($result.MigrationFile) | Out-Null
-    $DTE.ItemOperations.OpenFile($result.MigrationFile) | Out-Null
+    $dteProject.ProjectItems.AddFromFile($result.migrationFile) | Out-Null
+    $DTE.ItemOperations.OpenFile($result.migrationFile) | Out-Null
     ShowConsole
 
-    $dteProject.ProjectItems.AddFromFile($result.MetadataFile) | Out-Null
+    $dteProject.ProjectItems.AddFromFile($result.metadataFile) | Out-Null
 
-    $dteProject.ProjectItems.AddFromFile($result.SnapshotFile) | Out-Null
+    $dteProject.ProjectItems.AddFromFile($result.snapshotFile) | Out-Null
 }
 
 #
@@ -126,10 +126,10 @@ function Drop-Database
             'DbContext.Database.EnsureDeleted() at runtime.'
     }
 
-    $params = 'database', 'drop', '--dry-run'
+    $params = 'dbcontext', 'info', '--json'
     $params += GetParams $Context $Environment
 
-    $info = EF $dteProject $dteStartupProject $params -json
+    $info = EF $dteProject $dteStartupProject $params | ConvertFrom-Json
 
     if ($PSCmdlet.ShouldProcess("database '$($info.databaseName)' on server '$($info.dataSource)'"))
     {
@@ -199,7 +199,7 @@ function Remove-Migration
         $Force = [switch]::Present
     }
 
-    $params = 'migrations', 'remove'
+    $params = 'migrations', 'remove', '--json'
 
     if ($Force)
     {
@@ -208,9 +208,9 @@ function Remove-Migration
 
     $params += GetParams $Context $Environment
 
-    $result = EF $dteProject $dteStartupProject $params -json
+    $result = EF $dteProject $dteStartupProject $params | ConvertFrom-Json
 
-    $result.files | %{
+    $result | %{
         $projectItem = GetProjectItem $dteProject $_
         if ($projectItem)
         {
@@ -294,7 +294,7 @@ function Scaffold-DbContext
     $dteProject = GetProject $Project
     $dteStartupProject = GetStartupProject $StartupProject $dteProject
 
-    $params = 'dbcontext', 'scaffold', $Connection, $Provider
+    $params = 'dbcontext', 'scaffold', $Connection, $Provider, '--json'
 
     if ($OutputDir)
     {
@@ -321,10 +321,10 @@ function Scaffold-DbContext
 
     $params += GetParams -Environment $Environment
 
-    $result = EF $dteProject $dteStartupProject $params -json
+    $result = EF $dteProject $dteStartupProject $params | ConvertFrom-Json
 
-    $result.files | %{ $dteProject.ProjectItems.AddFromFile($_) | Out-Null }
-    $DTE.ItemOperations.OpenFile($result.files[0]) | Out-Null
+    $result | %{ $dteProject.ProjectItems.AddFromFile($_) | Out-Null }
+    $DTE.ItemOperations.OpenFile($result[0]) | Out-Null
     ShowConsole
 }
 
@@ -390,10 +390,15 @@ function Script-Migration
     $dteProject = GetProject $Project
     $dteStartupProject = GetStartupProject $StartupProject $dteProject
 
-    $projectDir = GetProperty $dteProject.Properties 'FullPath'
     $intermediatePath = GetIntermediatePath $dteProject
+    if (!(Split-Path $intermediatePath -IsAbsolute))
+    {
+        $projectDir = GetProperty $dteProject.Properties 'FullPath'
+        $intermediatePath = Join-Path $projectDir $intermediatePath -Resolve
+    }
+
     $scriptFileName = [IO.Path]::ChangeExtension([IO.Path]::GetRandomFileName(), '.sql')
-    $scriptPath = Join-Path (Join-Path $projectDir $intermediatePath) $scriptFileName
+    $scriptPath = Join-Path $intermediatePath $scriptFileName
 
     $params = 'migrations', 'script', '--output', $scriptPath
 
@@ -515,10 +520,10 @@ function GetContextTypes($environment, $projectName, $startupProjectName)
     $project = GetProject $projectName
     $startupProject = GetStartupProject $startupProjectName $project
 
-    $params = 'dbcontext', 'list'
+    $params = 'dbcontext', 'list', '--json'
     $params += GetParams -Environment $environment
 
-    $result = EF $project $startupProject $params -json -skipBuild
+    $result = EF $project $startupProject $params -skipBuild | ConvertFrom-Json
 
     return $result | %{ $_.safeName }
 }
@@ -528,10 +533,10 @@ function GetMigrations($context, $environment, $projectName, $startupProjectName
     $project = GetProject $projectName
     $startupProject = GetStartupProject $startupProjectName $project
 
-    $params = 'migrations', 'list'
+    $params = 'migrations', 'list', '--json'
     $params += GetParams $context $environment
 
-    $result = EF $project $startupProject $params -json -skipBuild
+    $result = EF $project $startupProject $params -skipBuild | ConvertFrom-Json
 
     return $result | %{ $_.safeName }
 }
@@ -618,7 +623,7 @@ function GetSolutionProjects()
         $projects.Push($_)
     }
 
-    while ($projects.Count -ne 0)
+    while ($projects.Count)
     {
         $project = $projects.Pop();
 
@@ -657,7 +662,7 @@ function ShowConsole
     $powerConsoleWindow.Show()
 }
 
-function EF($project, $startupProject, $params, [switch] $json, [switch] $skipBuild)
+function EF($project, $startupProject, $params, [switch] $skipBuild)
 {
     if (IsUWP $project)
     {
@@ -670,6 +675,12 @@ function EF($project, $startupProject, $params, [switch] $json, [switch] $skipBu
         }
     }
 
+    if (IsXproj $startupProject)
+    {
+        throw "Startup project '$($startupProject.ProjectName)' is an ASP.NET Core or .NET Core project for Visual " +
+            'Studio 2015. This version of the Entity Framework Core Package Manager Console Tools doesn''t support ' +
+            'these types of projects.'
+    }
     if (IsUWP $startupProject)
     {
         $useDotNetNative = GetProperty $startupProject.ConfigurationManager.ActiveConfiguration.Properties 'ProjectN.UseDotNetNativeToolchain'
@@ -696,6 +707,9 @@ function EF($project, $startupProject, $params, [switch] $json, [switch] $skipBu
         }
     }
 
+    Write-Verbose "Using project '$($project.ProjectName)'."
+    Write-Verbose "Using startup project '$($startupProject.ProjectName)'."
+
     if (!$skipBuild)
     {
         Write-Verbose 'Build started...'
@@ -712,11 +726,13 @@ function EF($project, $startupProject, $params, [switch] $json, [switch] $skipBu
     }
 
     $startupProjectDir = GetProperty $startupProject.Properties 'FullPath'
-    $outputPath = GetOutputPath $startupProject
-    $targetDir = Join-Path $startupProjectDir $outputPath
+    $outputPath = GetProperty $startupProject.ConfigurationManager.ActiveConfiguration.Properties 'OutputPath'
+    $targetDir = Join-Path $startupProjectDir $outputPath -Resolve
     $startupTargetFileName = GetOutputFileName $startupProject
     $startupTargetPath = Join-Path $targetDir $startupTargetFileName
-    $targetFramework = GetTargetFramework $startupProject
+    $targetFrameworkMoniker = GetProperty $startupProject.Properties 'TargetFrameworkMoniker'
+    $frameworkName = New-Object 'System.Runtime.Versioning.FrameworkName' $targetFrameworkMoniker
+    $targetFramework = $frameworkName.Identifier
 
     if ($targetFramework -in '.NETFramework', '.NETCore')
     {
@@ -737,22 +753,39 @@ function EF($project, $startupProject, $params, [switch] $json, [switch] $skipBu
     }
     elseif ($targetFramework -in '.NETCoreApp', '.NETStandard')
     {
+        if ($targetFramework -eq '.NETStandard')
+        {
+            Write-Warning ("Startup project '$($startupProject.ProjectName)' targets framework '.NETStandard'. This " +
+                "framework is not intended for execution and may fail to resolve runtime dependencies. If so, select " +
+                "a different startup project and try again.")
+        }
+
         $exePath = (Get-Command 'dotnet').Path
 
         $startupTargetName = GetProperty $startupProject.Properties 'AssemblyName'
-        $depsfile = Join-Path $targetDir ($startupTargetName + '.deps.json')
-        $nugetPackageRoot = (GetNuGetPackageRoot $startupProject).TrimEnd('\')
-        $runtimeconfig = Join-Path $targetDir ($startupTargetName + '.runtimeconfig.json')
+        $depsFile = Join-Path $targetDir ($startupTargetName + '.deps.json')
+        $projectAssetsFile = GetCsproj2Property $startupProject 'ProjectAssetsFile'
+        $runtimeConfig = Join-Path $targetDir ($startupTargetName + '.runtimeconfig.json')
         $efPath = Join-Path $PSScriptRoot 'netcoreapp1.0\ef.dll'
 
-        $dotnetParams = 'exec', '--depsfile', $depsfile, '--additionalprobingpath', $nugetPackageRoot
+        $dotnetParams = 'exec', '--depsfile', $depsFile
 
-        if (Test-Path $runtimeconfig)
+        if ($projectAssetsFile)
         {
-            $dotnetParams += '--runtimeconfig', $runtimeconfig
+            $projectAssets = Get-Content $projectAssetsFile | ConvertFrom-Json
+            $projectAssets.packageFolders.psobject.Properties.Name | %{
+                $dotnetParams += '--additionalprobingpath', $_.TrimEnd('\')
+            }
+        }
+
+        if (Test-Path $runtimeConfig)
+        {
+            $dotnetParams += '--runtimeconfig', $runtimeConfig
         }
 
         $dotnetParams += $efPath
+
+        $params = $dotnetParams + $params
     }
     else
     {
@@ -774,54 +807,62 @@ function EF($project, $startupProject, $params, [switch] $json, [switch] $skipBu
         $dataDir = $targetDir
     }
 
-    $efParams = '--verbose', '--no-color', '--prefix-output'
+    $params += '--verbose',
+        '--no-color',
+        '--prefix-output',
+        '--assembly', $targetPath,
+        '--startup-assembly', $startupTargetPath,
+        '--project-dir', $projectDir,
+        '--content-root', $startupProjectDir,
+        '--data-dir', $dataDir
 
     if (IsUWP $startupProject)
     {
-        $efParams += '--no-appdomain'
+        $params += '--no-appdomain'
     }
-
-    $efParams += '--assembly', $targetPath,
-        '--startup-assembly', $startupTargetPath,
-        '--project-dir', $projectDir,
-        '--content-root-path', $startupProjectDir,
-        '--data-dir', $dataDir
 
     if ($rootNamespace)
     {
-        $efParams += '--root-namespace', $rootNamespace
+        $params += '--root-namespace', $rootNamespace
     }
 
-    $allParams = $dotnetParams + $efParams + $params
-    if ($json)
-    {
-        $allParams += '--json'
-
-        Invoke-Process -Executable $exePath -Arguments $allParams -RedirectByPrefix -ErrorAction SilentlyContinue -ErrorVariable invokeErrors -JsonOutput | ConvertFrom-Json
-    }
-    else
-    {
-        Invoke-Process -Executable $exePath -Arguments $allParams -RedirectByPrefix -ErrorAction SilentlyContinue -ErrorVariable invokeErrors
+    $arguments = ToArguments $params
+    $startInfo = New-Object 'System.Diagnostics.ProcessStartInfo' -Property @{
+        FileName = $exePath;
+        Arguments = $arguments;
+        UseShellExecute = $false;
+        CreateNoWindow = $true;
+        RedirectStandardOutput = $true;
+        StandardOutputEncoding = [Text.Encoding]::UTF8;
     }
 
-    if ($invokeErrors)
+    Write-Verbose "$exePath $arguments"
+
+    $process = [Diagnostics.Process]::Start($startInfo)
+
+    while ($line = $process.StandardOutput.ReadLine())
     {
-        $combined = ($invokeErrors |
-            ?{ $_.Exception.Message -notLike '*non-zero exit code' } |
-            %{ $_.Exception.Message }) -join "`n"
-        if (!$combined)
+        $level = $null
+        $text = $line
+
+        $parts = $line.Split(':', 2)
+        if ($parts.Length -eq 2)
         {
-            $lastError = $invokeErrors | select -Last 1
-            if (!$lastError.Exception.Message)
-            {
-                throw 'Operation failed with unspecified error'
-            }
-
-            throw $lastError.Exception.Message
+            $level = $parts[0]
+            $text = $parts[1].Substring(8 - $level.Length)
         }
 
-        throw $combined
+        switch ($level)
+        {
+            'error' { throw $text }
+            'warn' { Write-Warning $text }
+            'data' { Write-Output $text }
+            'verbose' { Write-Verbose $text }
+            default { Write-Host $text }
+        }
     }
+
+    $process.WaitForExit()
 }
 
 function IsXproj($project)
@@ -855,18 +896,6 @@ function GetIntermediatePath($project)
     {
         return GetCsproj2Property $project 'IntermediateOutputPath'
     }
-    if (IsXproj $project)
-    {
-        $browseObjectContext = Get-Interface $project 'Microsoft.VisualStudio.ProjectSystem.Designers.IVsBrowseObjectContext'
-        $unconfiguredProject = $browseObjectContext.UnconfiguredProject
-        $configuredProject = $unconfiguredProject.GetSuggestedConfiguredProjectAsync().Result
-        $properties = $configuredProject.Services.ProjectPropertiesProvider.GetCommonProperties()
-        $baseIntermediatePath = $properties.GetEvaluatedPropertyValueAsync('IntermediateOutputPath').Result
-        $configuration = $project.ConfigurationManager.ActiveConfiguration.ConfigurationName
-        $targetFrameworkMoniker = GetXprojTargetFrameworkMoniker $project
-
-        return Join-Path $baseIntermediatePath "$configuration\$targetFrameworkMoniker\"
-    }
 
     return GetProperty $project.ConfigurationManager.ActiveConfiguration.Properties 'IntermediatePath'
 }
@@ -876,11 +905,13 @@ function GetPlatformTarget($project)
     # TODO: Remove when dotnet/roslyn-project-system#669 is fixed
     if (IsCsproj2 $project)
     {
-        return GetCsproj2Property $project 'PlatformTarget'
-    }
-    if (IsXproj $project)
-    {
-        return 'x64'
+        $platformTarget = GetCsproj2Property $project 'PlatformTarget'
+        if ($platformTarget)
+        {
+            return $platformTarget
+        }
+
+        return GetCsproj2Property $project 'Platform'
     }
 
     return GetProperty $project.ConfigurationManager.ActiveConfiguration.Properties 'PlatformTarget'
@@ -893,99 +924,8 @@ function GetOutputFileName($project)
     {
         return GetCsproj2Property $project 'TargetFileName'
     }
-    if (IsXproj $project)
-    {
-        $outputFileName = GetProperty $project.Properties 'AssemblyName'
-
-        $targetFramework = GetTargetFramework $project
-        if ($targetFramework -eq '.NETFramework')
-        {
-            $outputFileName += '.exe'
-        }
-        else
-        {
-            $outputFileName += '.dll'
-        }
-
-        return $outputFileName
-    }
 
     return GetProperty $project.Properties 'OutputFileName'
-}
-
-function GetTargetFramework($project)
-{
-    if (IsXproj $project)
-    {
-        $targetFrameworkMoniker = GetXprojTargetFrameworkMoniker $project
-        if ($targetFrameworkMoniker -like 'net45*' -or $targetFrameworkMoniker -like 'net46*')
-        {
-            return '.NETFramework'
-        }
-        if ($targetFrameworkMoniker -like 'netcoreapp1.*')
-        {
-            return '.NETCoreApp'
-        }
-        if ($targetFrameworkMoniker -like 'netstandard1.*')
-        {
-            return '.NETStandard'
-        }
-
-        return $targetFrameworkMoniker
-    }
-
-    $targetFrameworkMoniker = GetProperty $project.Properties 'TargetFrameworkMoniker'
-    $frameworkName = New-Object 'System.Runtime.Versioning.FrameworkName' $targetFrameworkMoniker
-
-    return $frameworkName.Identifier
-}
-
-function GetXprojTargetFrameworkMoniker($project)
-{
-    $projectDir = GetProperty $project.Properties 'FullPath'
-    $projectFile = Join-Path $projectDir 'project.json'
-    $projectInfo = Get-Content $projectFile -Raw | ConvertFrom-Json
-
-    $frameworks = $projectInfo.frameworks | Get-Member -MemberType NoteProperty | %{ $_.Name }
-    if ($frameworks -is [string])
-    {
-        return $frameworks
-    }
-
-    return $frameworks[0]
-}
-
-function GetOutputPath($project)
-{
-    if (IsXproj $project)
-    {
-        $activeConfiguration = $project.ConfigurationManager.ActiveConfiguration
-        $baseOutputPath = GetProperty $activeConfiguration.Properties 'OutputPath'
-        $configuration = $activeConfiguration.ConfigurationName
-        $targetFrameworkMoniker = GetXprojTargetFrameworkMoniker $project
-
-        $outputPath = Join-Path $baseOutputPath "$configuration\$targetFrameworkMoniker\"
-
-        $targetFramework = GetTargetFramework $project
-        if ($targetFramework -eq '.NETFramework')
-        {
-            $outputPath += 'win7-x64\'
-        }
-
-        return $outputPath
-    }
-
-    return GetProperty $project.ConfigurationManager.ActiveConfiguration.Properties 'OutputPath'
-}
-
-function GetNuGetPackageRoot($project)
-{
-    if (IsXproj $project)
-    {
-        return Join-Path $env:USERPROFILE '.nuget\packages\'
-    }
-
-    return GetCsproj2Property $project 'NuGetPackageRoot'
 }
 
 function GetProjectTypes($project)
@@ -1008,7 +948,8 @@ function GetProjectTypes($project)
     return $projectTypeGuidsString.Split(';')
 }
 
-function GetProperty($properties, $propertyName) {
+function GetProperty($properties, $propertyName)
+{
     try
     {
         return $properties.Item($propertyName).Value
@@ -1029,7 +970,8 @@ function GetCsproj2Property($project, $propertyName)
     return $properties.GetEvaluatedPropertyValueAsync($propertyName).Result
 }
 
-function GetProjectItem($project, $path) {
+function GetProjectItem($project, $path)
+{
     $fullPath = GetProperty $project.Properties 'FullPath'
 
     if (Split-Path $path -IsAbsolute)
@@ -1067,4 +1009,75 @@ function GetProjectItem($project, $path) {
     }
 
     return $null
+}
+
+function ToArguments($params)
+{
+    $arguments = ''
+    for ($i = 0; $i -lt $params.Length; $i++)
+    {
+        if ($i)
+        {
+            $arguments += " "
+        }
+
+        if (!$params[$i].Contains(' '))
+        {
+            $arguments += $params[$i]
+
+            continue
+        }
+
+        $arguments += '"'
+
+        $pendingBackslashs = 0
+        for ($j = 0; $j -lt $params[$i].Length; $j++)
+        {
+            switch ($params[$i][$j])
+            {
+                '"'
+                {
+                    if ($pendingBackslashs)
+                    {
+                        $arguments += '\' * $pendingBackslashs * 2
+                        $pendingBackslashs = 0
+                    }
+                    $arguments += '\"'
+                }
+
+                '\'
+                {
+                    $pendingBackslashs++
+                }
+
+                default
+                {
+                    if ($pendingBackslashs)
+                    {
+                        if ($pendingBackslashs -eq 1)
+                        {
+                            $arguments += '\'
+                        }
+                        else
+                        {
+                            $arguments += '\' * $pendingBackslashs * 2
+                        }
+
+                        $pendingBackslashs = 0
+                    }
+
+                    $arguments += $params[$i][$j]
+                }
+            }
+        }
+
+        if ($pendingBackslashs)
+        {
+            $arguments += '\' * $pendingBackslashs * 2
+        }
+
+        $arguments += '"'
+    }
+
+    return $arguments
 }

@@ -1,96 +1,39 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System.Diagnostics;
 using System.IO;
 using System.Text;
-using Microsoft.EntityFrameworkCore.Tools.Internal;
-using Microsoft.Extensions.CommandLineUtils;
+using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    public class MigrationsScriptCommand : ICommand
+    partial class MigrationsScriptCommand
     {
-        public static void Configure(CommandLineApplication command, CommandLineOptions options)
+        protected override int Execute()
         {
-            command.Description = "Generate a SQL script from migrations";
-            command.HelpOption();
+            var sql = CreateExecutor().ScriptMigration(
+                _from.Value,
+                _to.Value,
+                _idempotent.HasValue(),
+                Context.Value());
 
-            var from = command.Argument(
-                "[from]",
-                "The starting migration. If omitted, '0' (the initial database) is used");
-            var to = command.Argument(
-                "[to]",
-                "The ending migration. If omitted, the last migration is used");
-
-            var output = command.Option(
-                "-o|--output <file>",
-                "The file to write the script to instead of stdout");
-            var idempotent = command.Option(
-                "-i|--idempotent",
-                "Generates an idempotent script that can used on a database at any migration");
-            var context = command.Option(
-                "-c|--context <context>",
-                "The DbContext to use. If omitted, the default DbContext is used");
-
-            command.OnExecute(() =>
-                {
-                    options.Command = new MigrationsScriptCommand(from.Value,
-                        to.Value,
-                        context.Value(),
-                        idempotent.HasValue(),
-                        output.Value());
-                });
-        }
-
-        private readonly string _from;
-        private readonly string _to;
-        private readonly bool _idempotent;
-        private readonly string _context;
-        private readonly string _outputFile;
-
-        public MigrationsScriptCommand(
-            string from,
-            string to,
-            string context,
-            bool idempotent,
-            string outputFile)
-        {
-            _from = from;
-            _to = to;
-            _idempotent = idempotent;
-            _outputFile = outputFile;
-            _context = context;
-        }
-
-        public void Run(IOperationExecutor executor)
-        {
-            var generated = executor.ScriptMigration(_from, _to, _idempotent, _context);
-
-            ReportResult(generated);
-        }
-
-        private void ReportResult(string sql)
-        {
-            Debug.Assert(sql != null, "sql is null.");
-
-            if (string.IsNullOrEmpty(_outputFile))
+            if (!_output.HasValue())
             {
-                Reporter.Output(sql);
+                Reporter.WriteData(sql);
             }
             else
             {
-                var directory = Path.GetDirectoryName(_outputFile);
-                if (!string.IsNullOrWhiteSpace(directory))
+                var directory = Path.GetDirectoryName(_output.Value());
+                if (!string.IsNullOrEmpty(directory))
                 {
                     Directory.CreateDirectory(directory);
                 }
 
-                Reporter.Verbose("Writing SQL script to '" + _outputFile + "'");
-                File.WriteAllText(_outputFile, sql, Encoding.UTF8);
-
-                Reporter.Output("Done");
+                Reporter.WriteVerbose(string.Format(Resources.WritingFile, _output.Value()));
+                File.WriteAllText(_output.Value(), sql, Encoding.UTF8);
             }
+
+            return base.Execute();
         }
     }
 }

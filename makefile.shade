@@ -1,30 +1,18 @@
 
-default BASE_DIR_LOCAL='${Directory.GetCurrentDirectory()}'
-default BUILD_DIR_LOCAL='${Path.Combine(BASE_DIR_LOCAL, "artifacts", "build")}'
-
 var VERSION='0.1'
 var FULL_VERSION='0.1'
-var AUTHORS='Microsoft Open Technologies, Inc.'
--BuildQuality = "preview4";
 
 use-standard-lifecycle
 k-standard-goals
 
-#remove-intermediates target='compile'
-  @{
-    Directory.CreateDirectory(BUILD_DIR_LOCAL);
-    foreach (var p in Files
-      .Include(Path.Combine(BUILD_DIR_LOCAL, "ef.*.nupkg"))
-      )
-    {
-      Log.Info("Deleting " + p);
-      File.Delete(p);
-    }
-  }
+#build-pack target='compile'
+   dotnet command='msbuild packaging/pack.proj /nologo /t:Pack'
 
-#repack-tools .remove-intermediates target='compile' if='Directory.Exists("src") && !IsLinux'
-  @{
-        var configurationX86 = E("Configuration") + "_x86";
-        DotnetBuild("src/ef", configurationX86, "net451");
-        Dotnet("run -p tools/CommandsPackager " + E("Configuration"));
-   }
+#push-packages target="verify"
+    @{
+        if (IsTeamCity)
+        {
+            Environment.SetEnvironmentVariable("NUGET_PUBLISH_FEED", "https://dotnet.myget.org/F/aspnetcore-feature-work/api/v2/package");
+            CallTarget("nuget-install");
+        }
+    }

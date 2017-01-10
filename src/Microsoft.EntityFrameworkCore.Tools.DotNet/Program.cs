@@ -2,61 +2,39 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Reflection;
-using Microsoft.DotNet.Cli.Utils;
-using Microsoft.EntityFrameworkCore.Tools.DotNet.Internal;
+using Microsoft.DotNet.Cli.CommandLine;
 
-namespace Microsoft.EntityFrameworkCore.Tools.DotNet
+namespace Microsoft.EntityFrameworkCore.Tools
 {
-    public class Program
+    internal static class Program
     {
-        public static int Main(string[] args)
+        private static int Main(string[] args)
         {
-            DebugHelper.HandleDebugSwitch(ref args);
+            var app = new CommandLineApplication(throwOnUnexpectedArg: false)
+            {
+                Name = "dotnet ef"
+            };
+
+            new RootCommand().Configure(app);
 
             try
             {
-                var options = CommandLineOptions.Parse(args);
-                if (options.IsHelp)
-                {
-                    return 2;
-                }
-
-                HandleVerboseContext(options);
-
-                return new DispatchOperationExecutor(
-                    new ProjectContextFactory(),
-                    new EfConsoleCommandSpecFactory(new EfConsoleCommandResolver()),
-                    new DotNetProjectBuilder())
-                    .Execute(options);
+                return app.Execute(args);
             }
             catch (Exception ex)
             {
-                if (ex is TargetInvocationException)
+                if (ex is CommandException || ex is CommandParsingException)
                 {
-                    ex = ex.InnerException;
+                    Reporter.WriteVerbose(ex.ToString());
+                }
+                else
+                {
+                    Reporter.WriteInformation(ex.ToString());
                 }
 
-                if (!(ex is OperationErrorException))
-                {
-                    Reporter.Error.WriteLine(ex.ToString());
-                }
+                Reporter.WriteError(ex.Message);
 
-                Reporter.Error.WriteLine(ex.Message.Bold().Red());
                 return 1;
-            }
-        }
-
-        private static void HandleVerboseContext(CommandLineOptions options)
-        {
-            bool isVerbose;
-            bool.TryParse(Environment.GetEnvironmentVariable(CommandContext.Variables.Verbose), out isVerbose);
-
-            options.IsVerbose = options.IsVerbose || isVerbose;
-
-            if (options.IsVerbose)
-            {
-                Environment.SetEnvironmentVariable(CommandContext.Variables.Verbose, bool.TrueString);
             }
         }
     }

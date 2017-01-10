@@ -1,21 +1,21 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Microsoft.Extensions.CommandLineUtils;
+using Microsoft.DotNet.Cli.CommandLine;
+using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    public class DatabaseCommand
+    internal class DatabaseCommand : HelpCommandBase
     {
-        public static void Configure(CommandLineApplication command, CommandLineOptions options)
+        public override void Configure(CommandLineApplication command)
         {
-            command.Description = "Commands to manage your database";
-            command.HelpOption();
+            command.Description = Resources.DatabaseDescription;
 
-            command.Command("update", c => DatabaseUpdateCommand.Configure(c, options));
-            command.Command("drop", c => DatabaseDropCommand.Configure(c, options));
+            command.Command("drop", new DatabaseDropCommand().Configure);
+            command.Command("update", new DatabaseUpdateCommand().Configure);
 
-            command.OnExecute(() => command.ShowHelp());
+            base.Configure(command);
         }
     }
 }
