@@ -6,16 +6,15 @@ using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    internal class ContextCommandBase : ProjectCommandBase
+    internal partial class DbContextInfoCommand : ContextCommandBase
     {
-        private CommandOption _context;
-
-        protected CommandOption Context
-            => _context;
+        private CommandOption _json;
 
         public override void Configure(CommandLineApplication command)
         {
-            _context = command.Option("-c|--context <DBCONTEXT>", Resources.ContextDescription);
+            command.Description = Resources.DbContextInfoDescription;
+
+            _json = Json.ConfigureOption(command);
 
             base.Configure(command);
         }

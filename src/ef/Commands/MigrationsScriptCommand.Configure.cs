@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using Microsoft.DotNet.Cli.CommandLine;
+using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
@@ -14,21 +15,13 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
 
         public override void Configure(CommandLineApplication command)
         {
-            command.Description = "Generates a SQL script from migrations.";
+            command.Description = Resources.MigrationsScriptDescription;
 
-            _from = command.Argument(
-                "<FROM>",
-                "The starting migration. Defaults to '0' (the initial database).");
-            _to = command.Argument(
-                "<TO>",
-                "The ending migration. Defaults to the last migration.");
+            _from = command.Argument("<FROM>", Resources.MigrationFromDescription);
+            _to = command.Argument("<TO>", Resources.MigrationToDescription);
 
-            _output = command.Option(
-                "-o|--output <FILE>",
-                "The file to write the script to.");
-            _idempotent = command.Option(
-                "-i|--idempotent",
-                "Generate a script that can be used on a database at any migration.");
+            _output = command.Option("-o|--output <FILE>", Resources.OutputDescription);
+            _idempotent = command.Option("-i|--idempotent", Resources.IdempotentDescription);
 
             base.Configure(command);
         }

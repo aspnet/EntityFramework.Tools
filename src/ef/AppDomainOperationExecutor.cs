@@ -8,6 +8,7 @@ using System.Collections;
 using System.IO;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools
 {
@@ -32,6 +33,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
             var configurationFile = (startupAssembly ?? assembly) + ".config";
             if (File.Exists(configurationFile))
             {
+                Reporter.WriteVerbose(string.Format(Resources.UsingConfigurationFile, configurationFile));
                 info.ConfigurationFile = configurationFile;
             }
 

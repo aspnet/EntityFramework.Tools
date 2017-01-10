@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    partial class MigrationsAddCommand : ContextCommandBase
+    partial class MigrationsAddCommand
     {
         protected override void Validate()
         {
@@ -28,7 +28,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
             }
             else
             {
-                Reporter.WriteInformation("Done. To undo this action, use 'dotnet ef migrations remove'");
+                Reporter.WriteInformation(Resources.MigrationsAddCompleted);
             }
 
             return base.Execute();

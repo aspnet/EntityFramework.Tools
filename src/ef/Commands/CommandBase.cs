@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using Microsoft.DotNet.Cli.CommandLine;
+using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
@@ -9,9 +10,9 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
     {
         public virtual void Configure(CommandLineApplication command)
         {
-            var verbose = command.Option("-v|--verbose", "Show verbose output.");
-            var noColor = command.Option("--no-color", "Don't colorize output.");
-            var prefixOutput = command.Option("--prefix-output", "Prefix output with level.");
+            var verbose = command.Option("-v|--verbose", Resources.VerboseDescription);
+            var noColor = command.Option("--no-color", Resources.NoColorDescription);
+            var prefixOutput = command.Option("--prefix-output", Resources.PrefixDescription);
 
             command.OnExecute(
                 () =>

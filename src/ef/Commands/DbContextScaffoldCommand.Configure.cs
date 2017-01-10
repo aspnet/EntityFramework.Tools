@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using Microsoft.DotNet.Cli.CommandLine;
+using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
@@ -19,33 +20,17 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
 
         public override void Configure(CommandLineApplication command)
         {
-            command.Description = "Scaffolds a DbContext and entity types for a database.";
+            command.Description = Resources.DbContextScaffoldDescription;
 
-            _connection = command.Argument(
-                "<CONNECTION>",
-                "The connection string to the database.");
-            _provider = command.Argument(
-                "<PROVIDER>",
-                "The provider to use. (E.g. Microsoft.EntityFrameworkCore.SqlServer)");
+            _connection = command.Argument("<CONNECTION>", Resources.ConnectionDescription);
+            _provider = command.Argument("<PROVIDER>", Resources.ProviderDescription);
 
-            _dataAnnotations = command.Option(
-                "-d|--data-annotations",
-                "Use attributes to configure the model (where possible). If omitted, only the fluent API is used.");
-            _context = command.Option(
-                "-c|--context <NAME>",
-                "The name of the DbContext to generate.");
-            _force = command.Option(
-                "-f|--force",
-                "Overwrite existing files.");
-            _outputDir = command.Option(
-                "-o|--output-dir <PATH>",
-                "The directory to put files in. Paths are relaive to the project directory.");
-            _schemas = command.Option(
-                "--schema <SCHEMA_NAME>...",
-                "The schemas of tables to generate entity types for.");
-            _tables = command.Option(
-                "-t|--table <TABLE_NAME>...",
-                "The tables to generate entity types for.");
+            _dataAnnotations = command.Option("-d|--data-annotations", Resources.DataAnnotationsDescription);
+            _context = command.Option("-c|--context <NAME>", Resources.ContextNameDescription);
+            _force = command.Option("-f|--force", Resources.DbContextScaffoldForceDescription);
+            _outputDir = command.Option("-o|--output-dir <PATH>", Resources.OutputDirDescription);
+            _schemas = command.Option("--schema <SCHEMA_NAME>...", Resources.SchemasDescription);
+            _tables = command.Option("-t|--table <TABLE_NAME>...", Resources.TablesDescription);
             _json = Json.ConfigureOption(command);
 
             base.Configure(command);

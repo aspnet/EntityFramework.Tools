@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    partial class MigrationsRemoveCommand : ContextCommandBase
+    partial class MigrationsRemoveCommand
     {
         protected override int Execute()
         {

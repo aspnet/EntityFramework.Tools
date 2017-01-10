@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Tools.Properties;
 
 namespace Microsoft.EntityFrameworkCore.Tools.Commands
 {
-    partial class DbContextScaffoldCommand : ProjectCommandBase
+    partial class DbContextScaffoldCommand
     {
         protected override void Validate()
         {
