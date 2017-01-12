@@ -67,7 +67,8 @@ function Add-Migration
 
     $params += GetParams $Context $Environment
 
-    $result = EF $dteProject $dteStartupProject $params | ConvertFrom-Json
+    # NB: -join is here to support ConvertFrom-Json on PowerShell 3.0
+    $result = (EF $dteProject $dteStartupProject $params) -join "`n" | ConvertFrom-Json
     Write-Output 'To undo this action, use Remove-Migration.'
 
     $dteProject.ProjectItems.AddFromFile($result.migrationFile) | Out-Null
@@ -129,7 +130,8 @@ function Drop-Database
     $params = 'dbcontext', 'info', '--json'
     $params += GetParams $Context $Environment
 
-    $info = EF $dteProject $dteStartupProject $params | ConvertFrom-Json
+    # NB: -join is here to support ConvertFrom-Json on PowerShell 3.0
+    $info = (EF $dteProject $dteStartupProject $params) -join "`n" | ConvertFrom-Json
 
     if ($PSCmdlet.ShouldProcess("database '$($info.databaseName)' on server '$($info.dataSource)'"))
     {
@@ -208,7 +210,8 @@ function Remove-Migration
 
     $params += GetParams $Context $Environment
 
-    $result = EF $dteProject $dteStartupProject $params | ConvertFrom-Json
+    # NB: -join is here to support ConvertFrom-Json on PowerShell 3.0
+    $result = (EF $dteProject $dteStartupProject $params) -join "`n" | ConvertFrom-Json
 
     $result | %{
         $projectItem = GetProjectItem $dteProject $_
@@ -321,7 +324,8 @@ function Scaffold-DbContext
 
     $params += GetParams -Environment $Environment
 
-    $result = EF $dteProject $dteStartupProject $params | ConvertFrom-Json
+    # NB: -join is here to support ConvertFrom-Json on PowerShell 3.0
+    $result = (EF $dteProject $dteStartupProject $params) -join "`n" | ConvertFrom-Json
 
     $result | %{ $dteProject.ProjectItems.AddFromFile($_) | Out-Null }
     $DTE.ItemOperations.OpenFile($result[0]) | Out-Null
@@ -523,7 +527,8 @@ function GetContextTypes($environment, $projectName, $startupProjectName)
     $params = 'dbcontext', 'list', '--json'
     $params += GetParams -Environment $environment
 
-    $result = EF $project $startupProject $params -skipBuild | ConvertFrom-Json
+    # NB: -join is here to support ConvertFrom-Json on PowerShell 3.0
+    $result = (EF $project $startupProject $params -skipBuild) -join "`n" | ConvertFrom-Json
 
     return $result | %{ $_.safeName }
 }
@@ -536,7 +541,8 @@ function GetMigrations($context, $environment, $projectName, $startupProjectName
     $params = 'migrations', 'list', '--json'
     $params += GetParams $context $environment
 
-    $result = EF $project $startupProject $params -skipBuild | ConvertFrom-Json
+    # NB: -join is here to support ConvertFrom-Json on PowerShell 3.0
+    $result = (EF $project $startupProject $params -skipBuild) -join "`n" | ConvertFrom-Json
 
     return $result | %{ $_.safeName }
 }
@@ -772,7 +778,8 @@ function EF($project, $startupProject, $params, [switch] $skipBuild)
 
         if ($projectAssetsFile)
         {
-            $projectAssets = Get-Content $projectAssetsFile | ConvertFrom-Json
+            # NB: -Raw is here to support ConvertFrom-Json on PowerShell 3.0
+            $projectAssets = Get-Content $projectAssetsFile -Raw | ConvertFrom-Json
             $projectAssets.packageFolders.psobject.Properties.Name | %{
                 $dotnetParams += '--additionalprobingpath', $_.TrimEnd('\')
             }
@@ -843,7 +850,7 @@ function EF($project, $startupProject, $params, [switch] $skipBuild)
     while ($line = $process.StandardOutput.ReadLine())
     {
         $level = $null
-        $text = $line
+        $text = $null
 
         $parts = $line.Split(':', 2)
         if ($parts.Length -eq 2)
@@ -856,9 +863,10 @@ function EF($project, $startupProject, $params, [switch] $skipBuild)
         {
             'error' { throw $text }
             'warn' { Write-Warning $text }
+            'info' { Write-Host $text }
             'data' { Write-Output $text }
             'verbose' { Write-Verbose $text }
-            default { Write-Host $text }
+            default { Write-Host $line }
         }
     }
 
