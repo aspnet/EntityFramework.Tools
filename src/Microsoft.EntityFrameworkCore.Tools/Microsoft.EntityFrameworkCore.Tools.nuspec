@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>Microsoft.EntityFrameworkCore.Tools</id>
@@ -13,11 +13,11 @@
     <dependencies>
       <group targetFramework=".NETStandard1.3">
         <!-- this is only a "dependency" to make installing easier. It's not actaully build against this assembly. -->
-        <dependency id="Microsoft.EntityFrameworkCore.Design" version="1.0.1" />
+        <dependency id="Microsoft.EntityFrameworkCore.Design" version="1.1.0" />
       </group>
       <group targetFramework=".NETFramework4.5.1">
         <!-- this is only a "dependency" to make installing easier. It's not actaully build against this assembly. -->
-        <dependency id="Microsoft.EntityFrameworkCore.Design" version="1.0.1" />
+        <dependency id="Microsoft.EntityFrameworkCore.Design" version="1.1.0" />
       </group>
     </dependencies>
   </metadata>
