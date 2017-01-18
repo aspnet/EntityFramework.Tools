@@ -19,6 +19,7 @@
             <OutputPath>$(MSBuildThisFileDirectory)..\artifacts\build</OutputPath>
             <Version>$(VersionPrefix)</Version>
             <Version Condition="'$(VersionSuffix)'!=''">$(Version)-$(VersionSuffix)</Version>
+            <PackageVersion Condition="'$(PackageVersion)'==''">$(Version)</PackageVersion>
         </PropertyGroup>
 
         <!-- todo use PackNuGetTask when it is implemented -->
@@ -26,14 +27,14 @@
         <Exec Command="dotnet nuget pack
             &quot;$(MSBuildThisFileDirectory)..\src\Microsoft.EntityFrameworkCore.Tools\Microsoft.EntityFrameworkCore.Tools.nuspec&quot;
             --base-path &quot;$(MSBuildThisFileDirectory)..\src\Microsoft.EntityFrameworkCore.Tools&quot;
-            --version $(Version)
+            --version $(PackageVersion)
             --output-directory &quot;$(OutputPath)&quot;
             --properties configuration=$(Configuration)"/>
 
         <Exec Command="dotnet nuget pack
             &quot;$(MSBuildThisFileDirectory)..\src\Microsoft.EntityFrameworkCore.Tools.DotNet\Microsoft.EntityFrameworkCore.Tools.DotNet.nuspec&quot;
             --base-path &quot;$(MSBuildThisFileDirectory)..\src\Microsoft.EntityFrameworkCore.Tools.DotNet&quot;
-            --version $(Version)
+            --version $(PackageVersion)
             --output-directory &quot;$(OutputPath)&quot;
             --properties configuration=$(Configuration)" />
     </Target>
