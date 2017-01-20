@@ -1,18 +1,11 @@
 
 var VERSION='0.1'
 var FULL_VERSION='0.1'
+using namespace='System.IO'
 
 use-standard-lifecycle
 k-standard-goals
 
 #build-pack target='compile'
-   dotnet command='msbuild packaging/pack.proj /nologo /t:Pack'
-
-#push-packages target="verify"
-    @{
-        if (IsTeamCity)
-        {
-            Environment.SetEnvironmentVariable("NUGET_PUBLISH_FEED", "https://dotnet.myget.org/F/aspnetcore-feature-work/api/v2/package");
-            CallTarget("nuget-install");
-        }
-    }
+   var nugetExe='${E("KOREBUILD_NUGET_EXE") ?? Path.Combine(Directory.GetCurrentDirectory(), ".build/nuget.exe")}'
+   dotnet command='msbuild packaging/pack.proj /nologo /t:Pack /p:NuGetExe="${nugetExe}"'
