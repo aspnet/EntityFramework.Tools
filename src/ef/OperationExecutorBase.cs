@@ -42,7 +42,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
             AppBasePath = Path.GetDirectoryName(startupAssembly ?? assembly);
             if (!Path.IsPathRooted(AppBasePath))
             {
-                AppBasePath = Path.GetFullPath(AppBasePath);
+                AppBasePath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), AppBasePath));
             }
 
             ContentRootPath = contentRootPath ?? AppBasePath;
