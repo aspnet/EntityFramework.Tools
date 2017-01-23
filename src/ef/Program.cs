@@ -11,7 +11,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
     {
         private static int Main(string[] args)
         {
-            var app = new CommandLineApplication(throwOnUnexpectedArg: false)
+            var app = new CommandLineApplication()
             {
                 Name = "ef"
             };
