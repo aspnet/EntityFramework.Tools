@@ -360,6 +360,9 @@ Register-TabExpansion Script-Migration @{
 .PARAMETER Idempotent
     Generate a script that can be used on a database at any migration.
 
+.PARAMETER Output
+    The file to write the result to.
+
 .PARAMETER Context
     The DbContext to use.
 
@@ -386,6 +389,7 @@ function Script-Migration
         [Parameter(ParameterSetName = 'WithTo', Position = 1, Mandatory = $true)]
         [string] $To,
         [switch] $Idempotent,
+        [string] $Output,
         [string] $Context,
         [string] $Environment,
         [string] $Project,
@@ -394,17 +398,24 @@ function Script-Migration
     $dteProject = GetProject $Project
     $dteStartupProject = GetStartupProject $StartupProject $dteProject
 
-    $intermediatePath = GetIntermediatePath $dteProject
-    if (!(Split-Path $intermediatePath -IsAbsolute))
+    if (!$Output)
     {
-        $projectDir = GetProperty $dteProject.Properties 'FullPath'
-        $intermediatePath = Join-Path $projectDir $intermediatePath -Resolve
+        $intermediatePath = GetIntermediatePath $dteProject
+        if (!(Split-Path $intermediatePath -IsAbsolute))
+        {
+            $projectDir = GetProperty $dteProject.Properties 'FullPath'
+            $intermediatePath = Join-Path $projectDir $intermediatePath -Resolve
+        }
+
+        $scriptFileName = [IO.Path]::ChangeExtension([IO.Path]::GetRandomFileName(), '.sql')
+        $Output = Join-Path $intermediatePath $scriptFileName
+    }
+    elseif (!(Split-Path $Output -IsAbsolute))
+    {
+        $Output = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Output)
     }
 
-    $scriptFileName = [IO.Path]::ChangeExtension([IO.Path]::GetRandomFileName(), '.sql')
-    $scriptPath = Join-Path $intermediatePath $scriptFileName
-
-    $params = 'migrations', 'script', '--output', $scriptPath
+    $params = 'migrations', 'script', '--output', $Output
 
     if ($From)
     {
@@ -425,7 +436,7 @@ function Script-Migration
 
     EF $dteProject $dteStartupProject $params
 
-    $DTE.ItemOperations.OpenFile($scriptPath) | Out-Null
+    $DTE.ItemOperations.OpenFile($Output) | Out-Null
     ShowConsole
 }
 
