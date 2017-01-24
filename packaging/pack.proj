@@ -4,7 +4,7 @@
 
     <Target Name="Pack">
         <MSBuild Projects="$(MSBuildThisFileDirectory)..\src\ef\ef.csproj"
-                 Properties="TargetFramework=net451;Platform=x86;Configuration=$(Configuration)"
+                 Properties="TargetFramework=net451;Platform=x86;RuntimeIdentifier=win7-x86;Configuration=$(Configuration)"
                  Targets="Build"
             />
 
@@ -22,7 +22,7 @@
         </PropertyGroup>
 
         <MakeDir Directories="$(OutputPath)" />
-        
+
         <!-- todo use PackTask when it is implemented -->
 
         <Exec Command="$(NuGetExe) pack
