@@ -26,7 +26,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
             => WriteLine(Prefix("info:    ", message));
 
         public static void WriteData(string message)
-            => WriteLine(Prefix("data:    ", message));
+            => WriteLine(Prefix("data:    ", Colorize(message, x => Bold + Gray + x + Reset)));
 
         public static void WriteVerbose(string message)
         {
