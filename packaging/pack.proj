@@ -8,11 +8,6 @@
                  Targets="Build"
             />
 
-        <MSBuild Projects="$(MSBuildThisFileDirectory)..\src\Microsoft.EntityFrameworkCore.Tools.DotNet\Microsoft.EntityFrameworkCore.Tools.DotNet.csproj"
-                 Properties="Configuration=$(Configuration)"
-                 Targets="Publish"
-            />
-
         <PropertyGroup>
             <OutputPath>$(MSBuildThisFileDirectory)..\artifacts\build</OutputPath>
             <Version>$(VersionPrefix)</Version>
