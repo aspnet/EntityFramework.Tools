@@ -20,9 +20,8 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="bin/$configuration$/netcoreapp1.0/publish/dotnet-ef.dll" target="lib/netcoreapp1.0/" />
-    <file src="bin/$configuration$/netcoreapp1.0/publish/dotnet-ef.deps.json" target="lib/netcoreapp1.0/" />
-    <file src="bin/$configuration$/netcoreapp1.0/publish/dotnet-ef.runtimeconfig.json" target="lib/netcoreapp1.0/" />
+    <file src="bin/$configuration$/netcoreapp1.0/dotnet-ef.dll" target="lib/netcoreapp1.0/" />
+    <file src="bin/$configuration$/netcoreapp1.0/dotnet-ef.runtimeconfig.json" target="lib/netcoreapp1.0/" />
     <file src="../ef/bin/$configuration$/net451/ef.exe" target="tools/net451/" />
     <file src="../ef/bin/x86/$configuration$/net451/ef.x86.exe" target="tools/net451/" />
     <file src="../ef/bin/$configuration$/netcoreapp1.0/ef.dll" target="tools/netcoreapp1.0/" />
