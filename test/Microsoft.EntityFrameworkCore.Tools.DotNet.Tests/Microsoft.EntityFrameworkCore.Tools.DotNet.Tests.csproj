@@ -1,8 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <Import Project="..\..\build\common.props" />
+
   <PropertyGroup>
     <TargetFramework>netcoreapp1.0</TargetFramework>
   </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.Tools.DotNet\Microsoft.EntityFrameworkCore.Tools.DotNet.csproj" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0-*" />
@@ -10,4 +13,5 @@
     <PackageReference Include="xunit" Version="2.2.0-*" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0-*" />
   </ItemGroup>
+
 </Project>

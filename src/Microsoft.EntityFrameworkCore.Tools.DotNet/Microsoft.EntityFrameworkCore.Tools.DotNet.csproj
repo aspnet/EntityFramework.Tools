@@ -1,14 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <Import Project="..\..\build\common.props" />
+
   <PropertyGroup>
     <Description>Entity Framework Core .NET Command Line Tools. Includes dotnet-ef.</Description>
     <TargetFramework>netcoreapp1.0</TargetFramework>
     <AssemblyName>dotnet-ef</AssemblyName>
     <OutputType>Exe</OutputType>
-    <IsPackable>false</IsPackable>
     <RootNamespace>Microsoft.EntityFrameworkCore.Tools</RootNamespace>
-    <NetCoreAppImplicitPackageVersion>1.0.0</NetCoreAppImplicitPackageVersion>
+    <RuntimeFrameworkVersion>1.0.0</RuntimeFrameworkVersion>
+    <NuspecFile>$(MSBuildThisFileDirectory)$(MSBuildProjectName).nuspec</NuspecFile>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
   </PropertyGroup>
+
   <ItemGroup>
     <Compile Include="..\ef\CommandLineUtils\CommandArgument.cs" />
     <Compile Include="..\ef\CommandLineUtils\CommandLineApplication.cs" />
@@ -34,7 +38,15 @@
     <Compile Include="..\ef\Commands\**\*.Configure.cs" />
     <EmbeddedResource Include="Resources\EntityFrameworkCore.targets" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
   </ItemGroup>
+
+  <Target Name="SetPackageProperties" BeforeTargets="GenerateNuspec">
+    <PropertyGroup>
+      <NuspecProperties>version=$(PackageVersion);configuration=$(Configuration)</NuspecProperties>
+    </PropertyGroup>
+  </Target>
+
 </Project>
