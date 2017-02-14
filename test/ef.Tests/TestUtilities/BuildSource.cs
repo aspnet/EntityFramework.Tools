@@ -15,7 +15,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.TestUtilities
     {
         public ICollection<BuildReference> References { get; } = new List<BuildReference>
         {
-#if NET451
+#if NET452
             BuildReference.ByName("mscorlib")
 #else
                 BuildReference.ByName("System.Runtime")
@@ -97,7 +97,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.TestUtilities
                         $"Build failed. Diagnostics: {string.Join(Environment.NewLine, result.Diagnostics)}");
                 }
 
-#if NET451
+#if NET452
                 assembly = Assembly.Load(stream.ToArray());
 #else
                 assembly = (Assembly)typeof(Assembly).GetTypeInfo().GetDeclaredMethods("Load")
