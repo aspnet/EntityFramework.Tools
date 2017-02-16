@@ -1,9 +1,4 @@
 <Project>
-
-  <ItemGroup>
-    <ExcludeFromTest Include="$(RepositoryRoot)test\ef.Tests\*.csproj" Condition="'$(OS)' != 'Windows_NT'" />
-  </ItemGroup>
-
   <Target Name="Compile_x86" AfterTargets="Compile">
     <MSBuild Projects="$(MSBuildThisFileDirectory)..\src\ef\ef.csproj"
              Properties="TargetFramework=net451;Platform=x86;RuntimeIdentifier=win7-x86;Configuration=$(Configuration)"

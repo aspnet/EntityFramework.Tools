@@ -1,0 +1,5 @@
+<Project>
+  <ItemGroup>
+    <ExcludeFromTest Include="$(RepositoryRoot)test\ef.Tests\*.csproj" Condition="'$(OS)' != 'Windows_NT'" />
+  </ItemGroup>
+</Project>
