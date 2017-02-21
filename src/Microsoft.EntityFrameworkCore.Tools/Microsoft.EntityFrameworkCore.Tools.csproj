@@ -2,6 +2,9 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
   <Import Project="..\..\build\common.props" />
 
+  <UsingTask TaskName="Microsoft.NET.Build.Tasks.ResolvePackageDependencies"
+             AssemblyFile="$(MicrosoftNETBuildTasksAssembly)" />
+
   <PropertyGroup>
     <TargetFrameworks>net451;netstandard1.3</TargetFrameworks>
     <NuspecFile>$(MSBuildThisFileDirectory)Microsoft.EntityFrameworkCore.Tools.nuspec</NuspecFile>
@@ -10,9 +13,24 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
 
-  <Target Name="SetPackageProperties" BeforeTargets="GenerateNuspec">
+  <ItemGroup>
+    <!-- this is only a "dependency" to make installing easier. It's not actaully build against this assembly. -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.2.0-*" />
+  </ItemGroup>
+
+  <Target Name="SetPackageProperties" BeforeTargets="GenerateNuspec">  
+    <ResolvePackageDependencies ProjectPath="$(MSBuildProjectFullPath)"
+                                ProjectAssetsFile="$(ProjectAssetsFile)"
+                                ProjectLanguage="$(Language)">
+      <Output TaskParameter="PackageDefinitions" ItemName="_PackageDefinitions" />
+    </ResolvePackageDependencies>
+
     <PropertyGroup>
-      <NuspecProperties>version=$(PackageVersion);configuration=$(Configuration)</NuspecProperties>
+      <NuspecProperties>
+        version=$(PackageVersion);
+        configuration=$(Configuration);
+        designVersion=@(_PackageDefinitions->WithMetadataValue('Name', 'Microsoft.EntityFrameworkCore.Design')->Metadata('Version'))
+      </NuspecProperties>
     </PropertyGroup>
   </Target>
 
