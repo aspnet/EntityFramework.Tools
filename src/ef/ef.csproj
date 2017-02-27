@@ -5,7 +5,6 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.0;net451</TargetFrameworks>
     <Description>Entity Framework Core Command Line Tools</Description>
-    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(TargetFramework)' != 'netcoreapp1.0'">win7-any</RuntimeIdentifier>
     <RuntimeIdentifiers>win7-x86</RuntimeIdentifiers>
     <OutputType>Exe</OutputType>
     <AssemblyName>ef</AssemblyName>

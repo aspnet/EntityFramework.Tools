@@ -23,7 +23,7 @@
     <file src="bin/$configuration$/netcoreapp1.0/dotnet-ef.dll" target="lib/netcoreapp1.0/" />
     <file src="bin/$configuration$/netcoreapp1.0/dotnet-ef.runtimeconfig.json" target="lib/netcoreapp1.0/" />
     <file src="../ef/bin/$configuration$/net451/ef.exe" target="tools/net451/" />
-    <file src="../ef/bin/x86/$configuration$/net451/ef.x86.exe" target="tools/net451/" />
+    <file src="../ef/bin/x86/$configuration$/net451/win7-x86/ef.x86.exe" target="tools/net451/" />
     <file src="../ef/bin/$configuration$/netcoreapp1.0/ef.dll" target="tools/netcoreapp1.0/" />
     <file src="../ef/bin/$configuration$/netcoreapp1.0/ef.runtimeconfig.json" target="tools/netcoreapp1.0/" />
     <file src="prefercliruntime" target="prefercliruntime" />
