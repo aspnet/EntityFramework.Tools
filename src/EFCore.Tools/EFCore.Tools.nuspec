@@ -9,13 +9,13 @@
     <description>Entity Framework Core Package Manager Console Tools. Includes Scaffold-DbContext, Add-Migration, and Update-Database.</description>
     <tags>Entity Framework Core,entity-framework-core,EF,Data,O/RM</tags>
     <serviceable>true</serviceable>
-    <repository type="git" url="https://github.com/aspnet/EntityFramework.Tools" />
+    <repository type="git" url="https://github.com/aspnet/EntityFramework.Tools.git" />
     <dependencies>
       <group targetFramework=".NETStandard1.3">
-        <dependency id="Microsoft.EntityFrameworkCore.Design" version="$designVersion$" />
+        <dependency id="Microsoft.EntityFrameworkCore.Design" version="$version$" exclude="Build,Analyzers" />
       </group>
       <group targetFramework=".NETFramework4.5.1">
-        <dependency id="Microsoft.EntityFrameworkCore.Design" version="$designVersion$" />
+        <dependency id="Microsoft.EntityFrameworkCore.Design" version="$version$" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>
@@ -23,7 +23,7 @@
     <file src="lib/**/*" target="" />
     <file src="tools/**/*" target=""/>
     <file src="../ef/bin/$configuration$/net451/ef.exe" target="tools/net451/" />
-    <file src="../ef/bin/x86/$configuration$/net451/win7-x86/ef.x86.exe" target="tools/net451/" />
+    <file src="../ef/bin/x86/$configuration$/net451/ef.x86.exe" target="tools/net451/" />
     <file src="../ef/bin/$configuration$/netcoreapp1.0/ef.dll" target="tools/netcoreapp1.0/" />
     <file src="../ef/bin/$configuration$/netcoreapp1.0/ef.runtimeconfig.json" target="tools/netcoreapp1.0/" />
   </files>

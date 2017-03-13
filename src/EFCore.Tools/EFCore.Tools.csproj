@@ -6,12 +6,16 @@
              AssemblyFile="$(MicrosoftNETBuildTasksAssembly)" />
 
   <PropertyGroup>
-    <TargetFrameworks>net451;netstandard1.3</TargetFrameworks>
-    <NuspecFile>$(MSBuildThisFileDirectory)Microsoft.EntityFrameworkCore.Tools.nuspec</NuspecFile>
+    <TargetFrameworks>net451;netcoreapp1.0</TargetFrameworks>
+    <NuspecFile>$(MSBuildThisFileDirectory)$(MSBuildProjectName).nuspec</NuspecFile>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\ef\ef.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <!-- this is only a "dependency" to make installing easier. It's not actaully build against this assembly. -->

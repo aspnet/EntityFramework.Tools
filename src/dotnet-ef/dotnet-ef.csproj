@@ -3,23 +3,16 @@
   <Import Project="..\..\build\common.props" />
 
   <PropertyGroup>
-    <Description>Entity Framework Core .NET Command Line Tools. Includes dotnet-ef.</Description>
+    <Description>Entity Framework Core .NET Command Line Tools</Description>
     <TargetFramework>netcoreapp1.0</TargetFramework>
-    <AssemblyName>dotnet-ef</AssemblyName>
     <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
     <RootNamespace>Microsoft.EntityFrameworkCore.Tools</RootNamespace>
     <RuntimeFrameworkVersion>1.0.0</RuntimeFrameworkVersion>
-    <NuspecFile>$(MSBuildThisFileDirectory)$(MSBuildProjectName).nuspec</NuspecFile>
-    <NoPackageAnalysis>true</NoPackageAnalysis>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\ef\CommandLineUtils\CommandArgument.cs" />
-    <Compile Include="..\ef\CommandLineUtils\CommandLineApplication.cs" />
-    <Compile Include="..\ef\CommandLineUtils\CommandLineApplicationExtensions.cs" />
-    <Compile Include="..\ef\CommandLineUtils\CommandOption.cs" />
-    <Compile Include="..\ef\CommandLineUtils\CommandOptionType.cs" />
-    <Compile Include="..\ef\CommandLineUtils\CommandParsingException.cs" />
+    <Compile Include="..\ef\CommandLineUtils\*.cs" />
     <Compile Include="..\ef\Commands\CommandBase.cs" />
     <Compile Include="..\ef\Commands\ContextCommandBase.cs" />
     <Compile Include="..\ef\Commands\DatabaseCommand.cs" />
@@ -42,11 +35,5 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
   </ItemGroup>
-
-  <Target Name="SetPackageProperties" BeforeTargets="GenerateNuspec">
-    <PropertyGroup>
-      <NuspecProperties>version=$(PackageVersion);configuration=$(Configuration)</NuspecProperties>
-    </PropertyGroup>
-  </Target>
 
 </Project>

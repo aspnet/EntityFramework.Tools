@@ -7,23 +7,23 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Entity Framework Core .NET Command Line Tools. Includes dotnet-ef.</description>
     <tags>Entity Framework Core,entity-framework-core,EF,Data,O/RM</tags>
-    <repository type="git" url="https://github.com/aspnet/EntityFramework.Tools" />
+    <repository type="git" url="https://github.com/aspnet/EntityFramework.Tools.git" />
     <serviceable>true</serviceable>
     <packageTypes>
       <packageType name="DotnetCliTool" />
     </packageTypes>
     <dependencies>
       <group targetFramework=".NETCoreApp1.0">
-        <dependency id="Microsoft.NETCore.App" version="1.0.0" />
-        <dependency id="Newtonsoft.Json" version="9.0.1" />
+        <dependency id="Microsoft.NETCore.App" version="1.0.0" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="9.0.1" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>
   <files>
-    <file src="bin/$configuration$/netcoreapp1.0/dotnet-ef.dll" target="lib/netcoreapp1.0/" />
-    <file src="bin/$configuration$/netcoreapp1.0/dotnet-ef.runtimeconfig.json" target="lib/netcoreapp1.0/" />
+    <file src="../dotnet-ef/bin/$configuration$/netcoreapp1.0/dotnet-ef.dll" target="lib/netcoreapp1.0/" />
+    <file src="../dotnet-ef/bin/$configuration$/netcoreapp1.0/dotnet-ef.runtimeconfig.json" target="lib/netcoreapp1.0/" />
     <file src="../ef/bin/$configuration$/net451/ef.exe" target="tools/net451/" />
-    <file src="../ef/bin/x86/$configuration$/net451/win7-x86/ef.x86.exe" target="tools/net451/" />
+    <file src="../ef/bin/x86/$configuration$/net451/ef.x86.exe" target="tools/net451/" />
     <file src="../ef/bin/$configuration$/netcoreapp1.0/ef.dll" target="tools/netcoreapp1.0/" />
     <file src="../ef/bin/$configuration$/netcoreapp1.0/ef.runtimeconfig.json" target="tools/netcoreapp1.0/" />
     <file src="prefercliruntime" target="prefercliruntime" />
