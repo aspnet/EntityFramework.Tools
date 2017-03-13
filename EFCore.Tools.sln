@@ -1,63 +1,10 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0A0CB496-89D6-49CB-8C53-20B6580BFB83}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{74258BAD-FFED-4862-8E5E-D81DE377B284}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ef", "src\ef\ef.csproj", "{EA4F8FFB-0A8B-4E04-A6D8-17E4B3D9FC27}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCore.Tools.DotNet", "src\EFCore.Tools.DotNet\EFCore.Tools.DotNet.csproj", "{31132653-55A2-4ADB-BABB-60F386D2A98E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ef.Tests", "test\ef.Tests\ef.Tests.csproj", "{98E0021C-8333-4338-BF9C-B73F5DAAAA2E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet-ef.Tests", "test\dotnet-ef.Tests\dotnet-ef.Tests.csproj", "{203132D7-AE7F-49F0-8F4E-75E99A28E989}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCore.Tools", "src\EFCore.Tools\EFCore.Tools.csproj", "{71A1121D-027F-4770-BC74-2BCFBF762D16}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet-ef", "src\dotnet-ef\dotnet-ef.csproj", "{5BC12852-A623-46D6-AD5C-5BBDD889246A}"
-EndProject
 Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EA4F8FFB-0A8B-4E04-A6D8-17E4B3D9FC27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EA4F8FFB-0A8B-4E04-A6D8-17E4B3D9FC27}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EA4F8FFB-0A8B-4E04-A6D8-17E4B3D9FC27}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EA4F8FFB-0A8B-4E04-A6D8-17E4B3D9FC27}.Release|Any CPU.Build.0 = Release|Any CPU
-		{31132653-55A2-4ADB-BABB-60F386D2A98E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{31132653-55A2-4ADB-BABB-60F386D2A98E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{31132653-55A2-4ADB-BABB-60F386D2A98E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{31132653-55A2-4ADB-BABB-60F386D2A98E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{98E0021C-8333-4338-BF9C-B73F5DAAAA2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{98E0021C-8333-4338-BF9C-B73F5DAAAA2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{98E0021C-8333-4338-BF9C-B73F5DAAAA2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{98E0021C-8333-4338-BF9C-B73F5DAAAA2E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{203132D7-AE7F-49F0-8F4E-75E99A28E989}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{203132D7-AE7F-49F0-8F4E-75E99A28E989}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{203132D7-AE7F-49F0-8F4E-75E99A28E989}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{203132D7-AE7F-49F0-8F4E-75E99A28E989}.Release|Any CPU.Build.0 = Release|Any CPU
-		{71A1121D-027F-4770-BC74-2BCFBF762D16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{71A1121D-027F-4770-BC74-2BCFBF762D16}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{71A1121D-027F-4770-BC74-2BCFBF762D16}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{71A1121D-027F-4770-BC74-2BCFBF762D16}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5BC12852-A623-46D6-AD5C-5BBDD889246A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5BC12852-A623-46D6-AD5C-5BBDD889246A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5BC12852-A623-46D6-AD5C-5BBDD889246A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5BC12852-A623-46D6-AD5C-5BBDD889246A}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{EA4F8FFB-0A8B-4E04-A6D8-17E4B3D9FC27} = {0A0CB496-89D6-49CB-8C53-20B6580BFB83}
-		{31132653-55A2-4ADB-BABB-60F386D2A98E} = {0A0CB496-89D6-49CB-8C53-20B6580BFB83}
-		{98E0021C-8333-4338-BF9C-B73F5DAAAA2E} = {74258BAD-FFED-4862-8E5E-D81DE377B284}
-		{203132D7-AE7F-49F0-8F4E-75E99A28E989} = {74258BAD-FFED-4862-8E5E-D81DE377B284}
-		{71A1121D-027F-4770-BC74-2BCFBF762D16} = {0A0CB496-89D6-49CB-8C53-20B6580BFB83}
-		{5BC12852-A623-46D6-AD5C-5BBDD889246A} = {0A0CB496-89D6-49CB-8C53-20B6580BFB83}
 	EndGlobalSection
 EndGlobal
