@@ -8,8 +8,8 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Versioning;
 using Microsoft.DotNet.Cli.CommandLine;
-using Microsoft.EntityFrameworkCore.Tools.Properties;
 using Microsoft.EntityFrameworkCore.Tools.Commands;
+using Microsoft.EntityFrameworkCore.Tools.Properties;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -144,6 +144,11 @@ namespace Microsoft.EntityFrameworkCore.Tools
                 {
                     args.Add("--runtimeconfig");
                     args.Add(runtimeConfig);
+                }
+                else if (startupProject.RuntimeFrameworkVersion.Length != 0)
+                {
+                    args.Add("--fx-version");
+                    args.Add(startupProject.RuntimeFrameworkVersion);
                 }
 
                 args.Add(Path.Combine(toolsPath, "netcoreapp1.0", "ef.dll"));

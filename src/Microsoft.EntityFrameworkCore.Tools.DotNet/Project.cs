@@ -1,7 +1,6 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -35,6 +34,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
         public string ProjectAssetsFile { get; set; }
         public string ProjectDir { get; set; }
         public string RootNamespace { get; set; }
+        public string RuntimeFrameworkVersion { get; set; }
         public string TargetFileName { get; set; }
         public string TargetFrameworkMoniker { get; set; }
 
@@ -54,16 +54,12 @@ namespace Microsoft.EntityFrameworkCore.Tools
             var efTargetsPath = Path.Combine(
                 buildExtensionsDir,
                 Path.GetFileName(file) + ".EntityFrameworkCore.targets");
-            if (!File.Exists(efTargetsPath))
+            using (var input = typeof(Resources).GetTypeInfo().Assembly.GetManifestResourceStream(
+                "Microsoft.EntityFrameworkCore.Tools.Resources.EntityFrameworkCore.targets"))
+            using (var output = File.OpenWrite(efTargetsPath))
             {
                 Reporter.WriteVerbose(string.Format(Resources.WritingFile, efTargetsPath));
-
-                using (var input = typeof(Resources).GetTypeInfo().Assembly.GetManifestResourceStream(
-                    "Microsoft.EntityFrameworkCore.Tools.Resources.EntityFrameworkCore.targets"))
-                using (var output = File.OpenWrite(efTargetsPath))
-                {
-                    input.CopyTo(output);
-                }
+                input.CopyTo(output);
             }
 
             IDictionary<string, string> metadata;
@@ -122,6 +118,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
                 ProjectAssetsFile = metadata["ProjectAssetsFile"],
                 ProjectDir = metadata["ProjectDir"],
                 RootNamespace = metadata["RootNamespace"],
+                RuntimeFrameworkVersion = metadata["RuntimeFrameworkVersion"],
                 TargetFileName = metadata["TargetFileName"],
                 TargetFrameworkMoniker = metadata["TargetFrameworkMoniker"]
             };
