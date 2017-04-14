@@ -1,26 +1,50 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <Import Project="..\..\build\common.props" />
+
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.0;net451</TargetFrameworks>
     <Description>Entity Framework Core Command Line Tools</Description>
-    <RuntimeIdentifier Condition="'$(TargetFramework)' != 'netcoreapp1.0'">win7-x64</RuntimeIdentifier>
-    <PlatformTarget Condition="'$(TargetFramework)' == 'net451'">$(Platform)</PlatformTarget>
-    <Prefer32Bit Condition="'$(TargetFramework)' == 'net451'">false</Prefer32Bit>
     <OutputType>Exe</OutputType>
-    <AssemblyName>ef</AssemblyName>
     <AssemblyName Condition="'$(Platform)' == 'x86'">ef.x86</AssemblyName>
     <IsPackable>false</IsPackable>
     <RootNamespace>Microsoft.EntityFrameworkCore.Tools</RootNamespace>
+    <RuntimeFrameworkVersion>1.0.0</RuntimeFrameworkVersion>
   </PropertyGroup>
+
   <ItemGroup>
-    <Compile Include="**\*.cs" />
-    <EmbeddedResource Include="**\*.resx" />
+    <Compile Include="..\Shared\CodeAnnotations.cs" />
+    <Compile Include="..\EFCore.Design\Design\IOperationReportHandler.cs" />
+    <Compile Include="..\EFCore.Design\Design\IOperationResultHandler.cs" />
+    <Compile Include="..\EFCore.Design\Design\OperationReportHandler.cs" />
+    <Compile Include="..\EFCore.Design\Design\OperationResultHandler.cs" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
-    <PackageReference Include="Microsoft.NETCore.App" Version="1.0.0" />
+
+  <ItemGroup>
+    <None Update="Properties\Resources.Designer.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.Designer.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
-    <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
+
+  <Target Name="BuildX86" AfterTargets="Build">
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Properties="Platform=x86;Configuration=$(Configuration)" Targets="Build" />
+  </Target>
+
 </Project>

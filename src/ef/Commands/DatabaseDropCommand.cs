@@ -18,14 +18,14 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
 
             if (_dryRun.HasValue())
             {
-                Reporter.WriteInformation(string.Format(Resources.DatabaseDropDryRun, databaseName, dataSource));
+                Reporter.WriteInformation(Resources.DatabaseDropDryRun(databaseName, dataSource));
 
                 return 0;
             }
 
             if (!_force.HasValue())
             {
-                Reporter.WriteInformation(string.Format(Resources.DatabaseDropPrompt, databaseName, dataSource));
+                Reporter.WriteInformation(Resources.DatabaseDropPrompt(databaseName, dataSource));
                 var response = Console.ReadLine().Trim().ToUpperInvariant();
                 if (response != "Y")
                 {

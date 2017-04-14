@@ -14,7 +14,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
 
             if (string.IsNullOrEmpty(_name.Value))
             {
-                throw new CommandException(string.Format(Resources.MissingArgument, _name.Name));
+                throw new CommandException(Resources.MissingArgument(_name.Name));
             }
         }
 

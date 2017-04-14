@@ -23,7 +23,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
         {
             Reporter.WriteData("[");
 
-            for (int i = 0; i < files.Count; i++)
+            for (var i = 0; i < files.Count; i++)
             {
                 var line = "  \"" + Json.Escape(files[i]) + "\"";
                 if (i != files.Count - 1)

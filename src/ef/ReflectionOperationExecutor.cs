@@ -32,6 +32,9 @@ namespace Microsoft.EntityFrameworkCore.Tools
         {
 #if NET451
             AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
+#elif NETCOREAPP1_0
+#else
+#error target frameworks need to be updated.
 #endif
 
             _commandsAssembly = Assembly.Load(new AssemblyName { Name = DesignAssemblyName });
@@ -95,6 +98,9 @@ namespace Microsoft.EntityFrameworkCore.Tools
 
         public override void Dispose()
             => AppDomain.CurrentDomain.AssemblyResolve -= ResolveAssembly;
+#elif NETCOREAPP1_0
+#else
+#error target frameworks need to be updated.
 #endif
     }
 }

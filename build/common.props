@@ -1,17 +1,19 @@
 <Project>
+  <Import Project="dependencies.props" />
   <Import Project="..\version.props" />
 
   <PropertyGroup>
-    <Product>Microsoft EntityFramework Core</Product>
-    <RepositoryUrl>https://github.com/aspnet/EntityFramework.Tools</RepositoryUrl>
+    <Product>Microsoft Entity Framework Core</Product>
+    <RepositoryUrl>https://github.com/aspnet/EntityFramework.Tools.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)Key.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
+    <VersionSuffix Condition="'$(VersionSuffix)' != '' And '$(BuildNumber)' != ''">$(VersionSuffix)-$(BuildNumber)</VersionSuffix>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Internal.AspNetCore.Sdk" Version="1.0.0-alpha-15156" PrivateAssets="All" />
+    <PackageReference Include="Internal.AspNetCore.Sdk" Version="1.0.1-rc2-15218" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

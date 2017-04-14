@@ -50,16 +50,16 @@ namespace Microsoft.EntityFrameworkCore.Tools
             ProjectDirectory = projectDir ?? Directory.GetCurrentDirectory();
             EnvironmentName = environment;
 
-            Reporter.WriteVerbose(string.Format(Resources.UsingAssembly, AssemblyFileName));
-            Reporter.WriteVerbose(string.Format(Resources.UsingStartupAssembly, StartupAssemblyFileName));
-            Reporter.WriteVerbose(string.Format(Resources.UsingApplicationBase, AppBasePath));
-            Reporter.WriteVerbose(string.Format(Resources.UsingContentRoot, ContentRootPath));
-            Reporter.WriteVerbose(string.Format(Resources.UsingRootNamespace, RootNamespace));
-            Reporter.WriteVerbose(string.Format(Resources.UsingProjectDir, ProjectDirectory));
+            Reporter.WriteVerbose(Resources.UsingAssembly(AssemblyFileName));
+            Reporter.WriteVerbose(Resources.UsingStartupAssembly(StartupAssemblyFileName));
+            Reporter.WriteVerbose(Resources.UsingApplicationBase(AppBasePath));
+            Reporter.WriteVerbose(Resources.UsingContentRoot(ContentRootPath));
+            Reporter.WriteVerbose(Resources.UsingRootNamespace(RootNamespace));
+            Reporter.WriteVerbose(Resources.UsingProjectDir(ProjectDirectory));
 
             if (dataDirectory != null)
             {
-                Reporter.WriteVerbose(string.Format(Resources.UsingDataDir, dataDirectory));
+                Reporter.WriteVerbose(Resources.UsingDataDir(dataDirectory));
                 Environment.SetEnvironmentVariable(DataDirEnvName, dataDirectory);
             }
         }

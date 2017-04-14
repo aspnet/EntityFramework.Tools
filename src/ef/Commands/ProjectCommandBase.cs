@@ -35,7 +35,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
 
             if (!_assembly.HasValue())
             {
-                throw new CommandException(string.Format(Resources.MissingOption, _assembly.LongName));
+                throw new CommandException(Resources.MissingOption(_assembly.LongName));
             }
         }
 
@@ -54,6 +54,9 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
                     _rootNamespace.Value(),
                     Environment.Value());
             }
+#elif NETCOREAPP1_0
+#else
+#error target frameworks need to be updated.
 #endif
             return new ReflectionOperationExecutor(
                 _assembly.Value(),

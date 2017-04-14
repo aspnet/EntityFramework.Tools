@@ -58,7 +58,8 @@ namespace Microsoft.EntityFrameworkCore.Tools
                 "Microsoft.EntityFrameworkCore.Tools.Resources.EntityFrameworkCore.targets"))
             using (var output = File.OpenWrite(efTargetsPath))
             {
-                Reporter.WriteVerbose(string.Format(Resources.WritingFile, efTargetsPath));
+                // NB: Copy always in case it changes
+                Reporter.WriteVerbose(Resources.WritingFile(efTargetsPath));
                 input.CopyTo(output);
             }
 

@@ -1,9 +1,0 @@
-
-var VERSION='0.1'
-var FULL_VERSION='0.1'
-
-use-standard-lifecycle
-k-standard-goals
-
-#build-pack target='compile'
-   dotnet command='msbuild packaging/pack.proj /nologo /t:Pack'

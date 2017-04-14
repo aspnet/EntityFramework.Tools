@@ -15,11 +15,11 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
 
             if (string.IsNullOrEmpty(_connection.Value))
             {
-                throw new CommandException(string.Format(Resources.MissingArgument, _connection.Name));
+                throw new CommandException(Resources.MissingArgument(_connection.Name));
             }
             if (string.IsNullOrEmpty(_provider.Value))
             {
-                throw new CommandException(string.Format(Resources.MissingArgument, _provider.Name));
+                throw new CommandException(Resources.MissingArgument(_provider.Name));
             }
         }
 

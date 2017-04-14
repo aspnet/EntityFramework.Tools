@@ -29,7 +29,7 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
                     Directory.CreateDirectory(directory);
                 }
 
-                Reporter.WriteVerbose(string.Format(Resources.WritingFile, _output.Value()));
+                Reporter.WriteVerbose(Resources.WritingFile(_output.Value()));
                 File.WriteAllText(_output.Value(), sql, Encoding.UTF8);
             }
 

@@ -223,13 +223,13 @@
     <value>More than one project was found in the current working directory. Use the --project option.</value>
   </data>
   <data name="MultipleProjectsInDirectory" xml:space="preserve">
-    <value>More than one project was found in directory '{0}'. Specify one using its file name.</value>
+    <value>More than one project was found in directory '{projectDir}'. Specify one using its file name.</value>
   </data>
   <data name="MultipleStartupProjects" xml:space="preserve">
     <value>More than one project was found in the current working directory. Use the --startup-project option.</value>
   </data>
   <data name="NETStandardStartupProject" xml:space="preserve">
-    <value>Startup project '{0}' targets framework '.NETStandard'. This framework is not intended for execution and may fail to resolve runtime dependencies. If so, specify a different project using the --startup-project option and try again.</value>
+    <value>Startup project '{startupProject}' targets framework '.NETStandard'. This framework is not intended for execution and may fail to resolve runtime dependencies. If so, specify a different project using the --startup-project option and try again.</value>
   </data>
   <data name="NoColorDescription" xml:space="preserve">
     <value>Don't colorize output.</value>
@@ -238,7 +238,7 @@
     <value>No project was found. Change the current working directory or use the --project option.</value>
   </data>
   <data name="NoProjectInDirectory" xml:space="preserve">
-    <value>No project was found in directory '{0}'.</value>
+    <value>No project was found in directory '{projectDir}'.</value>
   </data>
   <data name="NoStartupProject" xml:space="preserve">
     <value>No project was found. Change the current working directory or use the --startup-project option.</value>
@@ -271,18 +271,18 @@
     <value>The tables to generate entity types for.</value>
   </data>
   <data name="UnsupportedFramework" xml:space="preserve">
-    <value>Startup project '{0}' targets framework '{1}'. The Entity Framework Core .NET Command Line Tools don't support this framework.</value>
+    <value>Startup project '{startupProject}' targets framework '{targetFramework}'. The Entity Framework Core .NET Command Line Tools don't support this framework.</value>
   </data>
   <data name="UsingProject" xml:space="preserve">
-    <value>Using project '{0}'.</value>
+    <value>Using project '{project}'.</value>
   </data>
   <data name="UsingStartupProject" xml:space="preserve">
-    <value>Using startup project '{0}'.</value>
+    <value>Using startup project '{startupProject}'.</value>
   </data>
   <data name="VerboseDescription" xml:space="preserve">
     <value>Show verbose output.</value>
   </data>
   <data name="WritingFile" xml:space="preserve">
-    <value>Writing '{0}'...</value>
+    <value>Writing '{file}'...</value>
   </data>
 </root>

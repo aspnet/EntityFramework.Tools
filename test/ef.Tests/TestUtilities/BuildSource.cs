@@ -9,16 +9,19 @@ using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace Microsoft.EntityFrameworkCore.Tools.TestUtilities
+namespace Microsoft.EntityFrameworkCore.Relational.Design.Specification.Tests.TestUtilities
 {
     public class BuildSource
     {
         public ICollection<BuildReference> References { get; } = new List<BuildReference>
         {
-#if NET451
-            BuildReference.ByName("mscorlib")
+#if NET452
+            BuildReference.ByName("mscorlib"),
+            BuildReference.ByName("System.Runtime, Version=4.0.20.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"),
+#elif NETCOREAPP1_0
+            BuildReference.ByName("System.Runtime")
 #else
-                BuildReference.ByName("System.Runtime")
+#error target frameworks need to be updated.
 #endif
         };
 
@@ -38,7 +41,6 @@ namespace Microsoft.EntityFrameworkCore.Tools.TestUtilities
                     {
                         throw new InvalidOperationException("Could not find path for reference " + reference);
                     }
-
                     File.Copy(reference.Path, Path.Combine(TargetDir, Path.GetFileName(reference.Path)), overwrite: true);
                 }
 
@@ -97,9 +99,9 @@ namespace Microsoft.EntityFrameworkCore.Tools.TestUtilities
                         $"Build failed. Diagnostics: {string.Join(Environment.NewLine, result.Diagnostics)}");
                 }
 
-#if NET451
+#if NET452
                 assembly = Assembly.Load(stream.ToArray());
-#else
+#elif NETCOREAPP1_0
                 assembly = (Assembly)typeof(Assembly).GetTypeInfo().GetDeclaredMethods("Load")
                     .First(
                         m =>
@@ -109,6 +111,8 @@ namespace Microsoft.EntityFrameworkCore.Tools.TestUtilities
                             return parameters.Length == 1 && parameters[0].ParameterType == typeof(byte[]);
                         })
                     .Invoke(null, new[] { stream.ToArray() });
+#else
+#error target frameworks need to be updated.
 #endif
             }
 

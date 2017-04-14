@@ -1,15 +1,11 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System.Collections;
-using System.Reflection;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.DotNet.Cli.CommandLine;
 using Microsoft.EntityFrameworkCore.Tools.Commands;
 using Xunit;
-using System;
-using System.Text;
-using System.Collections.Generic;
 
 namespace Microsoft.EntityFrameworkCore.Tools
 {

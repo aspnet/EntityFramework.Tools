@@ -34,8 +34,8 @@ namespace Microsoft.EntityFrameworkCore.Tools.Commands
 
         private static void ReportResult(IDictionary result)
         {
-            Reporter.WriteData(string.Format(Resources.DatabaseName, result["DatabaseName"]));
-            Reporter.WriteData(string.Format(Resources.DataSource, result["DataSource"]));
+            Reporter.WriteData(Resources.DatabaseName(result["DatabaseName"]));
+            Reporter.WriteData(Resources.DataSource(result["DataSource"]));
         }
     }
 }

@@ -1,12 +1,13 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-#if NET451
+#if NET452
 
 using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
+using Microsoft.EntityFrameworkCore.Relational.Design.Specification.Tests.TestUtilities;
 using Microsoft.EntityFrameworkCore.Tools.TestUtilities;
 using Xunit;
 
@@ -204,4 +205,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
         }
     }
 }
+#elif NETCOREAPP1_0
+#else
+#error target frameworks need to be updated.
 #endif

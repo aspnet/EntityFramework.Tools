@@ -142,7 +142,7 @@
     <value>Drops the database.</value>
   </data>
   <data name="DatabaseDropDryRun" xml:space="preserve">
-    <value>This would drop the database '{0}' on server '{1}'.</value>
+    <value>This would drop the database '{database}' on server '{dataSource}'.</value>
   </data>
   <data name="DatabaseDropDryRunDescription" xml:space="preserve">
     <value>Show which database would be dropped, but don't drop it.</value>
@@ -151,10 +151,10 @@
     <value>Don't confirm.</value>
   </data>
   <data name="DatabaseDropPrompt" xml:space="preserve">
-    <value>Are you sure you want to drop the database '{0}' on server '{1}'? (y/N)</value>
+    <value>Are you sure you want to drop the database '{database}' on server '{dataSource}'? (y/N)</value>
   </data>
   <data name="DatabaseName" xml:space="preserve">
-    <value>Database name: {0}</value>
+    <value>Database name: {database}</value>
   </data>
   <data name="DatabaseUpdateDescription" xml:space="preserve">
     <value>Updates the database to a specified migration.</value>
@@ -163,7 +163,7 @@
     <value>The data directory.</value>
   </data>
   <data name="DataSource" xml:space="preserve">
-    <value>Data source: {0}</value>
+    <value>Data source: {dataSource}</value>
   </data>
   <data name="DbContextDescription" xml:space="preserve">
     <value>Commands to manage DbContext types.</value>
@@ -229,10 +229,10 @@
     <value>The ending migration. Defaults to the last migration.</value>
   </data>
   <data name="MissingArgument" xml:space="preserve">
-    <value>Missing required argument '{0}'.</value>
+    <value>Missing required argument '{arg}'.</value>
   </data>
   <data name="MissingOption" xml:space="preserve">
-    <value>Missing required option '--{0}'.</value>
+    <value>Missing required option '--{option}'.</value>
   </data>
   <data name="NoAppDomainDescription" xml:space="preserve">
     <value>Don't use app domains. Always implied on .NET Core.</value>
@@ -274,33 +274,33 @@
     <value>The tables to generate entity types for.</value>
   </data>
   <data name="UsingApplicationBase" xml:space="preserve">
-    <value>Using application base '{0}'.</value>
+    <value>Using application base '{appBase}'.</value>
   </data>
   <data name="UsingAssembly" xml:space="preserve">
-    <value>Using assembly '{0}'.</value>
+    <value>Using assembly '{assembly}'.</value>
   </data>
   <data name="UsingConfigurationFile" xml:space="preserve">
-    <value>Using configuration file '{0}'.</value>
+    <value>Using configuration file '{config}'.</value>
   </data>
   <data name="UsingContentRoot" xml:space="preserve">
-    <value>Using content root '{0}'.</value>
+    <value>Using content root '{contentRoot}'.</value>
   </data>
   <data name="UsingDataDir" xml:space="preserve">
-    <value>Using data directory '{0}'.</value>
+    <value>Using data directory '{dataDir}'.</value>
   </data>
   <data name="UsingProjectDir" xml:space="preserve">
-    <value>Using project directory '{0}'.</value>
+    <value>Using project directory '{projectDir}'.</value>
   </data>
   <data name="UsingRootNamespace" xml:space="preserve">
-    <value>Using root namespace '{0}'.</value>
+    <value>Using root namespace '{rootNamespace}'.</value>
   </data>
   <data name="UsingStartupAssembly" xml:space="preserve">
-    <value>Using startup assembly '{0}'.</value>
+    <value>Using startup assembly '{startupAssembly}'.</value>
   </data>
   <data name="VerboseDescription" xml:space="preserve">
     <value>Show verbose output.</value>
   </data>
   <data name="WritingFile" xml:space="preserve">
-    <value>Writing '{0}'...</value>
+    <value>Writing '{file}'...</value>
   </data>
 </root>

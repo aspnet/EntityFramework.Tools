@@ -33,7 +33,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
             var configurationFile = (startupAssembly ?? assembly) + ".config";
             if (File.Exists(configurationFile))
             {
-                Reporter.WriteVerbose(string.Format(Resources.UsingConfigurationFile, configurationFile));
+                Reporter.WriteVerbose(Resources.UsingConfigurationFile(configurationFile));
                 info.ConfigurationFile = configurationFile;
             }
 
@@ -44,7 +44,11 @@ namespace Microsoft.EntityFrameworkCore.Tools
                 _domain.SetData("DataDirectory", dataDirectory);
             }
 
-            var reportHandler = new OperationReportHandler();
+            var reportHandler = new OperationReportHandler(
+                Reporter.WriteError,
+                Reporter.WriteWarning,
+                Reporter.WriteInformation,
+                Reporter.WriteVerbose);
 
             _executor = _domain.CreateInstanceAndUnwrap(
                 DesignAssemblyName,
@@ -93,5 +97,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
         }
     }
 }
-
+#elif NETCOREAPP1_0
+#else
+#error target frameworks need to be updated.
 #endif

@@ -6,20 +6,15 @@ using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
 
-#if NETCOREAPP1_0
-using System.Linq;
+#if !NET452
 using Microsoft.Extensions.DependencyModel;
+using System.Linq;
+using IOPath = System.IO.Path;
 #endif
-
-namespace Microsoft.EntityFrameworkCore.Tools.TestUtilities
+namespace Microsoft.EntityFrameworkCore.Relational.Design.Specification.Tests.TestUtilities
 {
     public class BuildReference
     {
-#if NETCOREAPP1_0
-        private static readonly DependencyContext DefaultDependencyContext =
-            DependencyContext.Load(typeof(BuildReference).GetTypeInfo().Assembly);
-#endif
-
         private BuildReference(IEnumerable<MetadataReference> references, bool copyLocal = false, string path = null)
         {
             References = references;
@@ -32,39 +27,32 @@ namespace Microsoft.EntityFrameworkCore.Tools.TestUtilities
         public bool CopyLocal { get; }
         public string Path { get; }
 
-        public static BuildReference ByName(string name, bool copyLocal = false, Assembly depContextAssembly = null)
+        public static BuildReference ByName(string name, bool copyLocal = false)
         {
-#if NETCOREAPP1_0
-            var depContext = depContextAssembly == null
-                ? DefaultDependencyContext
-                : DependencyContext.Load(depContextAssembly);
-
-            if (depContext != null)
-            {
-                var library = depContext
-                    .CompileLibraries
-                    .FirstOrDefault(l => l.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-
-                if (library != null)
-                {
-                    return new BuildReference(
-                        library.ResolveReferencePaths().Select(file => MetadataReference.CreateFromFile(file)),
-                        copyLocal);
-                }
-            }
-#else
+#if NET452
             var assembly = Assembly.Load(name);
-            if (!string.IsNullOrEmpty(assembly.Location))
+            return new BuildReference(
+                new[] { MetadataReference.CreateFromFile(assembly.Location) },
+                copyLocal,
+                new Uri(assembly.CodeBase).LocalPath);
+#elif NETCOREAPP1_0
+            var references = Enumerable.ToList(
+                from l in DependencyContext.Default.CompileLibraries
+                from r in l.ResolveReferencePaths()
+                where IOPath.GetFileNameWithoutExtension(r) == name
+                select MetadataReference.CreateFromFile(r));
+            if (references.Count == 0)
             {
-                return new BuildReference(
-                    new[] { MetadataReference.CreateFromFile(assembly.Location) },
-                    copyLocal,
-                    new Uri(assembly.CodeBase).LocalPath);
+                throw new InvalidOperationException(
+                    $"Assembly '{name}' not found.");
             }
-#endif
 
-            throw new InvalidOperationException(
-                $"Assembly '{name}' not found.");
+            return new BuildReference(
+                references,
+                copyLocal);
+#else
+#error target frameworks need to be updated.
+#endif
         }
 
         public static BuildReference ByPath(string path)

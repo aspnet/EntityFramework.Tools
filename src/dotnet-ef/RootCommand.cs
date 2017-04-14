@@ -63,13 +63,13 @@ namespace Microsoft.EntityFrameworkCore.Tools
                 _project.Value(),
                 Resources.NoProject,
                 Resources.MultipleProjects);
-            Reporter.WriteVerbose(string.Format(Resources.UsingProject, projectFile));
+            Reporter.WriteVerbose(Resources.UsingProject(projectFile));
 
             var starupProjectFile = FindProjects(
                 _startupProject.Value(),
                 Resources.NoStartupProject,
                 Resources.MultipleStartupProjects);
-            Reporter.WriteVerbose(string.Format(Resources.UsingStartupProject, starupProjectFile));
+            Reporter.WriteVerbose(Resources.UsingStartupProject(starupProjectFile));
 
             var project = Project.FromFile(projectFile, _msbuildprojectextensionspath.Value());
             var startupProject = Project.FromFile(
@@ -116,8 +116,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
             {
                 if (targetFramework.Identifier == ".NETStandard")
                 {
-                    Reporter.WriteWarning(
-                        string.Format(Resources.NETStandardStartupProject, startupProject.ProjectName));
+                    Reporter.WriteWarning(Resources.NETStandardStartupProject(startupProject.ProjectName));
                 }
 
                 executable = "dotnet";
@@ -156,10 +155,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
             else
             {
                 throw new CommandException(
-                    string.Format(
-                        Resources.UnsupportedFramework,
-                        startupProject.ProjectName,
-                        targetFramework.Identifier));
+                    Resources.UnsupportedFramework(startupProject.ProjectName, targetFramework.Identifier));
             }
 
             args.AddRange(_args);
@@ -221,14 +217,14 @@ namespace Microsoft.EntityFrameworkCore.Tools
             {
                 throw new CommandException(
                     specified
-                        ? string.Format(Resources.NoProjectInDirectory, path)
+                        ? Resources.NoProjectInDirectory(path)
                         : errorWhenNoProject);
             }
             if (projectFiles.Count != 1)
             {
                 throw new CommandException(
                     specified
-                        ? string.Format(Resources.MultipleProjectsInDirectory, path)
+                        ? Resources.MultipleProjectsInDirectory(path)
                         : errorWhenMultipleProjects);
             }
 
