@@ -35,7 +35,7 @@ namespace Microsoft.EntityFrameworkCore.Relational.Design.Specification.Tests.Te
                 new[] { MetadataReference.CreateFromFile(assembly.Location) },
                 copyLocal,
                 new Uri(assembly.CodeBase).LocalPath);
-#elif NETCOREAPP1_0
+#elif NETCOREAPP1_1
             var references = Enumerable.ToList(
                 from l in DependencyContext.Default.CompileLibraries
                 from r in l.ResolveReferencePaths()

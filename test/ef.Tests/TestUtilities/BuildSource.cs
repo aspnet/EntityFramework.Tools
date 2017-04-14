@@ -18,7 +18,7 @@ namespace Microsoft.EntityFrameworkCore.Relational.Design.Specification.Tests.Te
 #if NET452
             BuildReference.ByName("mscorlib"),
             BuildReference.ByName("System.Runtime, Version=4.0.20.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"),
-#elif NETCOREAPP1_0
+#elif NETCOREAPP1_1
             BuildReference.ByName("System.Runtime")
 #else
 #error target frameworks need to be updated.
@@ -101,7 +101,7 @@ namespace Microsoft.EntityFrameworkCore.Relational.Design.Specification.Tests.Te
 
 #if NET452
                 assembly = Assembly.Load(stream.ToArray());
-#elif NETCOREAPP1_0
+#elif NETCOREAPP1_1
                 assembly = (Assembly)typeof(Assembly).GetTypeInfo().GetDeclaredMethods("Load")
                     .First(
                         m =>

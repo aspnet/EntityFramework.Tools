@@ -3,8 +3,8 @@
   <Import Project="..\..\build\common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net452;netcoreapp1.0</TargetFrameworks>
-    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netcoreapp1.0</TargetFrameworks>
+    <TargetFrameworks>net452;netcoreapp1.1</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netcoreapp1.1</TargetFrameworks>
     <RootNamespace>Microsoft.EntityFrameworkCore.Tools</RootNamespace>
     <!-- TODO: Remove when Microsoft/vstest#428 is fixed. -->
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
