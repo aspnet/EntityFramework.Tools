@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <EntityFrameworkCoreVersion>1.1.1</EntityFrameworkCoreVersion>
+    <EntityFrameworkCoreVersion>1.1.2</EntityFrameworkCoreVersion>
     <JsonNetVersion>9.0.1</JsonNetVersion>
     <MoqVersion>4.6.38-alpha</MoqVersion>
     <RoslynVersion>1.3.0</RoslynVersion>
