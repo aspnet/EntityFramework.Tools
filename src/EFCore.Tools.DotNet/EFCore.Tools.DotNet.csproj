@@ -9,7 +9,7 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <EnableApiCheck>false</EnableApiCheck>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\dotnet-ef\dotnet-ef.csproj" />
     <ProjectReference Include="..\ef\ef.csproj" />
