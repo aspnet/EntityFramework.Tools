@@ -184,6 +184,7 @@ namespace Microsoft.EntityFrameworkCore.Tools
                             }" }
                 };
                 var build = source.Build();
+                File.Copy(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile, build.TargetPath + ".config");
                 Executor = new AppDomainOperationExecutor(build.TargetPath,
                     build.TargetPath,
                     build.TargetDir,

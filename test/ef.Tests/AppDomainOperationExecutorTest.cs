@@ -18,13 +18,17 @@ namespace Microsoft.EntityFrameworkCore.Tools
     public class AppDomainOperationExecutorTest
     {
         private IOperationExecutor CreateExecutorFromBuildResult(BuildFileResult build, string rootNamespace = null)
-            => new AppDomainOperationExecutor(build.TargetPath,
+        {
+            File.Copy(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile, build.TargetPath + ".config");
+
+            return new AppDomainOperationExecutor(build.TargetPath,
                 build.TargetPath,
                 build.TargetDir,
                 build.TargetDir,
                 build.TargetDir,
                 rootNamespace,
                 environment: null);
+        }
 
         [Fact]
         public void Assembly_load_errors_are_wrapped()
