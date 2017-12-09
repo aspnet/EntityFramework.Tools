@@ -9,7 +9,6 @@
     <AssemblyName Condition="'$(Platform)' == 'x86'">ef.x86</AssemblyName>
     <IsPackable>false</IsPackable>
     <RootNamespace>Microsoft.EntityFrameworkCore.Tools</RootNamespace>
-    <RuntimeFrameworkVersion>1.0.0</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <ItemGroup>
